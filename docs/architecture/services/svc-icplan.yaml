@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: icplan
 functions:
 - us-icp-01
@@ -42,7 +43,7 @@ functions:
 - task-3-7-icplan
 - task-4-6-icplan
 objectives:
-- text: Нагрузка и производительность
+- text: 'выполняется: p95 < 300 мс'
   quality: Q-1
-- text: Нагрузка и производительность
+- text: 'выполняется: постановка в очередь < 1 с'
   quality: Q-14

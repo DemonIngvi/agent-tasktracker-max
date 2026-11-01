@@ -5,7 +5,7 @@ lifecycle: planned
 criticality: medium
 trigger: Задача создана или вошла в шаг
 actors:
-- pol-zovatel
+- polzovatel
 inputs: []
 outputs:
 - RunBundle
@@ -15,7 +15,7 @@ journeys:
 - UJ-7
 steps:
 - title: Человек делает шаг
-  actor: pol-zovatel
+  actor: polzovatel
   inputs: []
   outputs: []
 - title: Делегат + запуск в очередь агента

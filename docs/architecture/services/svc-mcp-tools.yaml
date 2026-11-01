@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: agent-platform
 functions:
 - us-mcp-01
@@ -16,5 +17,5 @@ functions:
 - task-2-4-mcp-tools
 - task-4-6-mcp-tools
 objectives:
-- text: Нагрузка и производительность
+- text: 'выполняется: профиль выдерживается без ошибок'
   quality: Q-13

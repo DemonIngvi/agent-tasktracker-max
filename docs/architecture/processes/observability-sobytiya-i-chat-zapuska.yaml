@@ -6,7 +6,7 @@ criticality: medium
 trigger: Шаг запуска
 actors:
 - harness-runner
-- pol-zovatel
+- polzovatel
 inputs: []
 outputs:
 - RunEvent
@@ -27,6 +27,6 @@ steps:
   inputs: []
   outputs: []
 - title: Чат запуска и затраты
-  actor: pol-zovatel
+  actor: polzovatel
   inputs: []
   outputs: []

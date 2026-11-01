@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: agent-platform
 functions:
 - us-llm-01
@@ -16,5 +17,5 @@ functions:
 - task-4-5-llm-gateway
 - task-4-6-llm-gateway
 objectives:
-- text: Нагрузка и производительность
+- text: 'выполняется: профиль выдерживается без ошибок'
   quality: Q-9

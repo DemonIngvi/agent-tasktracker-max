@@ -30,7 +30,7 @@ SPEC_COMPONENT = {
     "icplan-integration": "icplan", "icplan-agent-autopickup": "icplan",
 }
 OWN = {"common": {"owner": "владелец платформы", "lifecycle": "planned", "criticality": "medium"}}
-TR = dict(zip("абвгдеёжзийклмнопрстуфхцчшщъыьэюя", "a b v g d e e zh z i y k l m n o p r s t u f h ts ch sh sch - y - e yu ya".split()))
+TR = dict(zip("абвгдеёжзийклмнопрстуфхцчшщъыьэюя", "a b v g d e e zh z i y k l m n o p r s t u f h ts ch sh sch _ y _ e yu ya".split()))
 report = collections.Counter()
 lost = collections.defaultdict(list)
 
@@ -40,7 +40,7 @@ def load(path):
 
 
 def slug(text):
-    out = "".join(TR.get(c, c) for c in text.lower())
+    out = "".join(TR.get(c, c) for c in text.lower()).replace("_", "")
     out = re.sub(r"[^a-z0-9]+", "-", out).strip("-")
     return out if out and out[0].isalpha() else f"x-{out}"
 
@@ -400,14 +400,14 @@ def write_quality(names):
         case = req["cases"][0] if req["cases"] else ("нагрузка по профилю", "требование выполнено", "требование выполнено")
         rows.append({"id": f"Q-{index}", "nfr": req["id"], "attribute": "Производительность", "priority": "M", "stimulus": line(case[1], 240),
                      "response": line(case[2], 240), "response_measure": line(case[2], 240), "fitness": "нагрузочный тест, способ уточнить"})
-        services[SPEC_COMPONENT[req["spec"]]].append({"text": line(req["title"], 120), "quality": f"Q-{index}"})
+        services[SPEC_COMPONENT[req["spec"]]].append({"text": line(case[2], 160), "quality": f"Q-{index}"})
     write("quality.yaml", {"scenarios": rows})
     story_folder = {"icplan": "icplan"}
     for component, objectives in services.items():
         functions = [names[code] for folder, _, items in EPICS if folder == component for code, _, _ in items]
         system = "icplan" if component == "icplan" else "agent-platform"
         if functions:
-            obj("services", f"svc-{component}", f"Сервис {COMPONENTS[component]['name']}", consumers=[ROLE_ID["П"]], provider=system, functions=functions, objectives=objectives)
+            obj("services", f"svc-{component}", f"Сервис {COMPONENTS[component]['name']}", consumers=[ROLE_ID["П"], ROLE_ID["А"]], provider=system, functions=functions, objectives=objectives)
     obj("nodes", "k3s-node", "Узел k3s", environment="production", runs=[k for k in COMPONENTS], tech="k3s")
     (ARCH / "domains.yaml").write_text("""domains:
 - {domain: аутентификация, status: decided, rule: AD-7}

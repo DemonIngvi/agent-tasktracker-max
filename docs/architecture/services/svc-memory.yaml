@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: agent-platform
 functions:
 - us-mem-01
@@ -21,5 +22,5 @@ functions:
 - task-4-4-memory
 - task-4-6-memory
 objectives:
-- text: Нагрузка и производительность
+- text: 'выполняется: запись M3 до 16 КБ (`m3_max_kb`); p95 < 200 мс'
   quality: Q-3

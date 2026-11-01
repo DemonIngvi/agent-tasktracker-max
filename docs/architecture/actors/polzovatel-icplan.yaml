@@ -1,5 +1,5 @@
-id: pol-zovatel
-title: Пользователь
+id: polzovatel-icplan
+title: Пользователь ICPlan
 owner: владелец платформы
 lifecycle: planned
 criticality: medium

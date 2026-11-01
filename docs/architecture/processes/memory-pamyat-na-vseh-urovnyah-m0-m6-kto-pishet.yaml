@@ -7,7 +7,7 @@ trigger: Старт запуска
 actors:
 - harness-agent
 - icplan-runner
-- lyudi-pol-zovatel-administrator
+- lyudi-polzovatel-administrator
 inputs: []
 outputs: []
 journeys:
@@ -46,7 +46,7 @@ steps:
   inputs: []
   outputs: []
 - title: Вердикт пользователя → M2
-  actor: lyudi-pol-zovatel-administrator
+  actor: lyudi-polzovatel-administrator
   inputs: []
   outputs: []
 - title: Очистка по срокам M1–M3

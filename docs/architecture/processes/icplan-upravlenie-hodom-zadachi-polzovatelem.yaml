@@ -1,4 +1,4 @@
-id: icplan-upravlenie-hodom-zadachi-pol-zovatelem
+id: icplan-upravlenie-hodom-zadachi-polzovatelem
 title: Управление ходом задачи пользователем
 owner: владелец платформы
 lifecycle: planned
@@ -6,7 +6,7 @@ criticality: medium
 trigger: Шаг завершён или идёт
 actors:
 - agent-runner-harness
-- pol-zovatel
+- polzovatel
 inputs: []
 outputs: []
 journeys:
@@ -33,6 +33,6 @@ steps:
   inputs: []
   outputs: []
 - title: 'Сводка: в работе, время, $; почему не берут'
-  actor: pol-zovatel
+  actor: polzovatel
   inputs: []
   outputs: []

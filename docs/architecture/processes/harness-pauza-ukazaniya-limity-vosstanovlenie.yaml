@@ -6,18 +6,18 @@ criticality: medium
 trigger: Шаг цикла
 actors:
 - guardrails-checkpoint
-- pol-zovatel
+- polzovatel
 inputs: []
 outputs: []
 journeys:
 - UJ-6
 steps:
 - title: Вопрос → ответ пользователя
-  actor: pol-zovatel
+  actor: polzovatel
   inputs: []
   outputs: []
 - title: Указание в контекст
-  actor: pol-zovatel
+  actor: polzovatel
   inputs: []
   outputs: []
 - title: Продолжить с checkpoint

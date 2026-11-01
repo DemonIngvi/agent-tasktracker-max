@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: agent-platform
 functions:
 - us-obs-01
@@ -16,5 +17,5 @@ functions:
 - task-3-9-observability
 - task-4-6-observability
 objectives:
-- text: Нагрузка и производительность
+- text: 'выполняется: чат запуска обновляется < 3 с'
   quality: Q-10

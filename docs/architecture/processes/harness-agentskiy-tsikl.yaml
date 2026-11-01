@@ -6,7 +6,7 @@ criticality: medium
 trigger: RunBundle
 actors:
 - litellm-mcp-opa
-- pol-zovatel
+- polzovatel
 inputs: []
 outputs:
 - ApprovalDecision
@@ -22,7 +22,7 @@ steps:
   inputs: []
   outputs: []
 - title: Подтверждение
-  actor: pol-zovatel
+  actor: polzovatel
   inputs: []
   outputs:
   - ApprovalDecision

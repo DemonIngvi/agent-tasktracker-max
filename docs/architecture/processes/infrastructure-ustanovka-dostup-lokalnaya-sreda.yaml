@@ -1,4 +1,4 @@
-id: infrastructure-ustanovka-dostup-lokal-naya-sreda
+id: infrastructure-ustanovka-dostup-lokalnaya-sreda
 title: Установка, доступ, локальная среда
 owner: владелец платформы
 lifecycle: planned
@@ -7,7 +7,7 @@ trigger: Чистый сервер
 actors:
 - ekspluatatsiya-qa
 - k3s-helm
-- pol-zovatel
+- polzovatel
 inputs: []
 outputs: []
 journeys:
@@ -22,7 +22,7 @@ steps:
   inputs: []
   outputs: []
 - title: ICPlan по HTTPS
-  actor: pol-zovatel
+  actor: polzovatel
   inputs: []
   outputs: []
 - title: Локальная среда с mock-LLM

@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: agent-platform
 functions:
 - us-grd-01
@@ -18,5 +19,5 @@ functions:
 - task-4-5-guardrails
 - task-4-6-guardrails
 objectives:
-- text: Нагрузка и производительность
+- text: 'выполняется: p95 ≤ 20 мс (AD-18)'
   quality: Q-8

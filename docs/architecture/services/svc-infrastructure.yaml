@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: agent-platform
 functions:
 - us-inf-01
@@ -17,7 +18,7 @@ functions:
 - task-4-6-infrastructure
 - task-4-7-infrastructure
 objectives:
-- text: Профиль нагрузки и ёмкость
+- text: p95 ответа API < 300 мс, запуски не теряются, лишние ждут в очереди
   quality: Q-11
-- text: Нагрузка и производительность
+- text: 'выполняется: потребление ~13 ГБ RAM и ~5 vCPU не более ёмкости узла 8 vCPU / 32 ГБ / 400 ГБ'
   quality: Q-12

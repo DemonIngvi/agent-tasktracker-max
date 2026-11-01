@@ -4,7 +4,8 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 consumers:
-- pol-zovatel-icplan
+- polzovatel-icplan
+- administrator-platformy
 provider: agent-platform
 functions:
 - us-run-01
@@ -16,5 +17,5 @@ functions:
 - task-2-1-agent-runner
 - task-2-2-agent-runner
 objectives:
-- text: Нагрузка и производительность
+- text: 'выполняется: до 6 запусков в очереди; старт запуска после взятия < 5 с (с пулом < 1 с)'
   quality: Q-5
