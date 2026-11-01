@@ -1,0 +1,6 @@
+.doc-kit/
+_bmad/
+.claude/skills/
+node_modules/
+__pycache__/
+.env
