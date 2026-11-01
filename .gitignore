@@ -4,3 +4,4 @@ _bmad/
 node_modules/
 __pycache__/
 .env
+_quality/publish-progress.json
