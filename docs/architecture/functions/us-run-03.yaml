@@ -1,0 +1,11 @@
+id: us-run-03
+title: чтобы агенты не перегружали общую модель
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-67
+reads: []
+writes:
+- scheduler-slot

@@ -1,0 +1,15 @@
+id: I15
+title: выдача virtual key, бюджеты
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-module
+to: llm-gateway
+purpose: выдача virtual key, бюджеты
+integration_type: sync-api
+protocol: HTTP REST `/key/generate`, `/key/update`
+format: JSON
+auth: master key (Secret)
+timeout: 5 с
+retry: 3 раза
+idempotent: true

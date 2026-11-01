@@ -1,0 +1,12 @@
+id: AD-24
+title: Экраны настроек Platform module
+binds:
+- FR-54
+prevents: отход реализации от решения «Экраны настроек Platform module»
+rule: 'Решено по исследованию (R&D: где администратор задаёт настройки Platform module), закрывает ОВ-control-plane-1
+  и Z-ICP-19. / Уровень / Экран ICPlan / Права / Эндпоинты Platform module (I20) / /---/---/---/---/ /
+  агент / карточка агента → раздел «Платформа» / ресурс `ai_agents` форка (чтение и `edit`) / `/platform/agents/:agentId/settings`,
+  история и откат версий, экспорт и импорт, kill switch `agent:<id>` / / проект / Проект → ИИ-команда
+  → «Платформа» / ресурс `ai_agents` форка в разделе проекта / `/platform/projects/:projectKey/guidance`,
+  `/budget`, `/access`, ресурсы проекта и шаг подготовки / / экземпляр / God mode → «Платформа», через
+  точку расширения `@/cloud` / владелец экземпляра / …'

@@ -1,0 +1,13 @@
+id: us-mem-01
+title: знать, что сделал предыдущий агент по задаче
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-39
+- FR-44
+reads:
+- issue-activity
+writes:
+- memory-m3

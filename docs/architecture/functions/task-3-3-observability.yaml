@@ -1,0 +1,13 @@
+id: task-3-3-observability
+title: 3.3. События запуска и чат запуска в задаче
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-154
+- FR-155
+- FR-156
+- FR-157
+reads: []
+writes: []

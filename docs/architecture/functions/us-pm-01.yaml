@@ -1,0 +1,22 @@
+id: us-pm-01
+title: задать агенту бюджет, профиль среды и памяти
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-95
+- FR-105
+reads:
+- ai-agent
+writes:
+- LiteLLM-BudgetTable
+- LiteLLM-VerificationToken
+- access-policy
+- agent-settings
+- agent-settings-version
+- kill-switch
+- memory-profile
+- project-platform
+- project-resource
+- sandbox-profile

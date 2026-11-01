@@ -1,0 +1,11 @@
+id: us-run-06
+title: вывести Runner из работы для обновления
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-81
+reads: []
+writes:
+- run-checkpoint

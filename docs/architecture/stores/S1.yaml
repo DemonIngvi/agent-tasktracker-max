@@ -1,0 +1,68 @@
+id: S1
+title: PostgreSQL 17 (CloudNativePG), БД `itsaplan`, схема `public`
+owner: icplan
+lifecycle: planned
+criticality: medium
+objects:
+- agent-chat-message
+- agent-chat-thread
+- agent-run
+- agent-run-delivery
+- ai-agent
+- issue
+- issue-activity
+- issue-checklist-item
+- issue-process-state
+- LiteLLM-BudgetTable
+- LiteLLM-ProxyModelTable
+- LiteLLM-SpendLogs
+- LiteLLM-VerificationToken
+- process
+- process-step
+- process-version
+- project
+- project-column
+- issue-type
+- issue-checklist
+- project-action
+- agent-schedule
+- user
+- apikey
+- project-document
+- issue-attachment
+tables:
+- agent_chat_message
+- agent_chat_thread
+- agent_run
+- agent_run_delivery
+- ai_agent
+- issue
+- issue_activity
+- issue_checklist_item
+- issue_process_state
+- LiteLLM_BudgetTable
+- LiteLLM_ProxyModelTable
+- LiteLLM_SpendLogs
+- LiteLLM_VerificationToken
+- process
+- process_step
+- process_version
+- project
+- project_column
+- issue_type
+- issue_checklist
+- project_action
+- agent_schedule
+- user
+- apikey
+- project_document
+- issue_attachment
+writes:
+- icplan
+reads:
+- icplan
+deletes: icplan
+delete_trigger: базовые копии + WAL в S3 вне узла; запуски и треды чата — по `runs.retention_days` и `chat.retention_days`,
+  `issue_activity` — пока жива задача (AD-25)
+backup: базовые копии + WAL в S3 вне узла; запуски и треды чата — по `runs.retention_days` и `chat.retention_days`,
+  `issue_activity` — пока жива задача (AD-25)

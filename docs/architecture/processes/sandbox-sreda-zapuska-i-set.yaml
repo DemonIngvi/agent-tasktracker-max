@@ -1,0 +1,35 @@
+id: sandbox-sreda-zapuska-i-set
+title: Среда запуска и сеть
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Нужна среда
+actors:
+- vneshnie-hosty
+inputs: []
+outputs:
+- SandboxClaim
+journeys:
+- UJ-23
+steps:
+- title: Создать контейнер
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Выдать контейнер
+  actor: agent-platform
+  inputs: []
+  outputs:
+  - SandboxClaim
+- title: Исходящий запрос
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Запрос, секрет подставлен
+  actor: vneshnie-hosty
+  inputs: []
+  outputs: []
+- title: Destroy, долив пула
+  actor: agent-platform
+  inputs: []
+  outputs: []

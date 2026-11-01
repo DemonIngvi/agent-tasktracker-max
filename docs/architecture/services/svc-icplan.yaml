@@ -1,0 +1,48 @@
+id: svc-icplan
+title: Сервис ICPlan
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: icplan
+functions:
+- us-icp-01
+- us-icp-02
+- us-icp-03
+- us-icp-04
+- us-icp-05
+- us-icp-06
+- us-icp-07
+- us-icp-08
+- us-icp-09
+- us-icp-10
+- us-icp-11
+- us-icp-12
+- us-icp-13
+- us-icp-14
+- us-icp-15
+- us-icp-16
+- us-icp-17
+- us-icp-18
+- us-icp-19
+- us-icp-20
+- us-icp-21
+- us-icp-22
+- us-icp-23
+- us-icp-24
+- us-icp-25
+- us-icp-26
+- us-icp-27
+- us-icp-28
+- us-icp-29
+- task-2-1-icplan
+- task-3-1-icplan
+- task-3-6-icplan
+- task-3-7-icplan
+- task-4-6-icplan
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-1
+- text: Нагрузка и производительность
+  quality: Q-14

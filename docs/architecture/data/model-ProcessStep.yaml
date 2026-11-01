@@ -1,0 +1,30 @@
+id: ProcessStep
+title: шаг процесса (AD-17, AD-20)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: id
+  type: string
+- name: column
+  type: string
+- name: agentId
+  type: int
+- name: onSuccess / onFailure
+  type: '{step} · {process} · {done: true}'
+- name: maxRuns
+  type: int
+- name: transitions
+  type: '{reason, to}[]'
+- name: maxTotalRuns
+  type: int
+- name: requireReview
+  type: bool
+- name: deliverable
+  type: string
+- name: doneCriteria
+  type: Criterion[]
+- name: criteriaApproval
+  type: 'enum: auto · review · always'

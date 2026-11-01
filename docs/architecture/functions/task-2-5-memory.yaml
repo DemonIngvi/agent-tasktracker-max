@@ -1,0 +1,13 @@
+id: task-2-5-memory
+title: '2.5. Память M1–M3: контекст, управление'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-48
+- FR-49
+- FR-50
+- FR-51
+reads: []
+writes: []

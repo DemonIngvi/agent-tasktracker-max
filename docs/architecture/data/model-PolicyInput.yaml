@@ -1,0 +1,18 @@
+id: PolicyInput
+title: вход OPA (G1, G2)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: point
+  type: 'enum: g1 · g2'
+- name: agentId
+  type: int
+- name: run
+  type: '{id, issueId, stepId}'
+- name: tool / argsHash
+  type: string
+- name: spent
+  type: '{dayUsd, monthUsd}'

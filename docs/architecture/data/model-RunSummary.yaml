@@ -1,0 +1,22 @@
+id: RunSummary
+title: итог прошлого запуска для памяти M2 — строка `agent_run` форка
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: id
+  type: int
+- name: agentId
+  type: int
+- name: status
+  type: 'enum: pending · success · failed · canceled'
+- name: output
+  type: string | null
+- name: lastError
+  type: string | null
+- name: inputTokens / outputTokens
+  type: int | null
+- name: finishedAt
+  type: timestamp | null

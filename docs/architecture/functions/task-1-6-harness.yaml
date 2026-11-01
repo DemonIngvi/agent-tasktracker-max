@@ -1,0 +1,10 @@
+id: task-1-6-harness
+title: '1.6. Harness: лимиты, завершение, контекст'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-27
+reads: []
+writes: []

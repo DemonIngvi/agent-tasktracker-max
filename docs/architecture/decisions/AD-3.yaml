@@ -1,0 +1,10 @@
+id: AD-3
+title: Go для Runner, TypeScript для Platform module (в ICPlan), Python для Harness
+binds:
+- all
+prevents: отход реализации от решения «Go для Runner, TypeScript для Platform module (в ICPlan), Python
+  для Harness»
+rule: 'Go — долгоживущий Runner, конкурентность, работа с Docker/K8s API. Platform module — модуль форка
+  ICPlan на его стеке. Python — экосистема LLM (LangGraph, LiteLLM, MCP). - Граница: Runner ↔ Harness
+  по gRPC или HTTP + поток событий; Harness — образ контейнера. - Альтернатива: всё на Python — проще,
+  но слабее для Runner под нагрузкой.'

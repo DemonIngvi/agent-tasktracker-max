@@ -1,0 +1,14 @@
+id: S11
+title: OPA в памяти (bundle)
+owner: guardrails
+lifecycle: planned
+criticality: medium
+objects: []
+tables: []
+writes:
+- guardrails
+reads:
+- guardrails
+deletes: guardrails
+delete_trigger: не источник правды — пересобирается из S2 и S8
+backup: не источник правды — пересобирается из S2 и S8

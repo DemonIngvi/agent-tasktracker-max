@@ -1,0 +1,11 @@
+id: us-mem-09
+title: находить факты по смыслу из прошлых работ (M4)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-41
+- FR-37
+reads: []
+writes: []

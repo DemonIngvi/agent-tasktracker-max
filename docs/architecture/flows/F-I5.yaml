@@ -1,0 +1,13 @@
+id: F-I5
+title: допуск запуска G1
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: guardrails
+objects:
+- PolicyInput
+- PolicyDecision
+trigger: допуск запуска G1
+flow_type: command
+over: I5

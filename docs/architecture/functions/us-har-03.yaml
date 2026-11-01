@@ -1,0 +1,10 @@
+id: us-har-03
+title: получить проверенный результат
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-26
+reads: []
+writes: []

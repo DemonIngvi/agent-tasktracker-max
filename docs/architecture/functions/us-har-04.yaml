@@ -1,0 +1,12 @@
+id: us-har-04
+title: чтобы агент не зацикливался и не тратил лишнее
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-118
+- FR-119
+- FR-121
+reads: []
+writes: []

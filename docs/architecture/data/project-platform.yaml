@@ -1,0 +1,18 @@
+id: project-platform
+title: Таблица project_platform
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: project_id
+  type: int
+- name: guidance
+  type: text
+- name: budget_month_usd
+  type: numeric
+- name: setup_script
+  type: text
+- name: lock_files
+  type: jsonb

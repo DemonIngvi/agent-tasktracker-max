@@ -1,0 +1,12 @@
+id: us-llm-01
+title: сменить модель агента без изменения агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-134
+- FR-58
+reads:
+- LiteLLM-ProxyModelTable
+writes: []

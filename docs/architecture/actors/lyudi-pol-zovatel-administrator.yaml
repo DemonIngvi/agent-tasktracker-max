@@ -1,0 +1,6 @@
+id: lyudi-pol-zovatel-administrator
+title: Люди (пользователь, администратор)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

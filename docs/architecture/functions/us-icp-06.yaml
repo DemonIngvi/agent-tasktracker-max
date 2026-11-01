@@ -1,0 +1,25 @@
+id: us-icp-06
+title: видеть, в сети ли платформа агентов
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-8
+- FR-9
+reads:
+- apikey
+writes:
+- access-policy
+- agent-run
+- agent-schedule
+- agent-settings
+- ai-agent
+- apikey
+- kill-switch
+- memory-profile
+- project
+- project-platform
+- project-resource
+- run-event
+- sandbox-profile

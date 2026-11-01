@@ -1,0 +1,31 @@
+id: infrastructure-ustanovka-dostup-lokal-naya-sreda
+title: Установка, доступ, локальная среда
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Чистый сервер
+actors:
+- ekspluatatsiya-qa
+- k3s-helm
+- pol-zovatel
+inputs: []
+outputs: []
+journeys:
+- UJ-12
+steps:
+- title: helm install по порядку готовности
+  actor: k3s-helm
+  inputs: []
+  outputs: []
+- title: Ingress, TLS (ACME)
+  actor: k3s-helm
+  inputs: []
+  outputs: []
+- title: ICPlan по HTTPS
+  actor: pol-zovatel
+  inputs: []
+  outputs: []
+- title: Локальная среда с mock-LLM
+  actor: ekspluatatsiya-qa
+  inputs: []
+  outputs: []

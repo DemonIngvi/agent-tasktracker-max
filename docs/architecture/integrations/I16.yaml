@@ -1,0 +1,15 @@
+id: I16
+title: 'бандл правил: данные из Platform module + Rego из git'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-module
+to: guardrails
+purpose: 'бандл правил: данные из Platform module + Rego из git'
+integration_type: sync-api
+protocol: OPA bundles API, HTTP pull
+format: tar.gz bundle
+auth: токен bundle-сервера
+timeout: 10 с
+retry: встроенный в OPA
+idempotent: true

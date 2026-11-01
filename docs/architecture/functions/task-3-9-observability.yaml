@@ -1,0 +1,10 @@
+id: task-3-9-observability
+title: 3.9. Сводка задач с агентами и статистика агентов
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-153
+reads: []
+writes: []

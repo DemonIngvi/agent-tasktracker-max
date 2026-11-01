@@ -1,0 +1,10 @@
+id: task-1-2-harness
+title: 1.2. Формат определения агента (YAML)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-31
+reads: []
+writes: []

@@ -1,0 +1,6 @@
+id: pol-zovatel-icplan
+title: Пользователь ICPlan
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

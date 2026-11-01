@@ -1,0 +1,8 @@
+id: AD-8
+title: Контракт ICPlan
+binds:
+- all
+prevents: отход реализации от решения «Контракт ICPlan»
+rule: 'Agent Runner работает как внешний раннер ICPlan: опрашивает очередь запусков по ключу агента и
+  стримит результат обратно (протокол `@itsaplan/runner`). Прежний вариант `POST /runs` (push) заменён
+  — см. `add-icplan-integration`.'

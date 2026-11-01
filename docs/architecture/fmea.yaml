@@ -1,0 +1,309 @@
+rows:
+- target: icplan
+  failure: Runner не в сети
+  detection: нет опроса дольше порога
+  behavior: агенты платформы «не в сети», запуски ждут
+  recovery: запуск Runner
+- target: icplan
+  failure: Несовместимая версия протокола
+  detection: проверка версии
+  behavior: Runner не берёт запуски
+  recovery: обновление Runner
+- target: I19
+  failure: Объектное хранилище недоступно
+  detection: ошибка I19
+  behavior: итог публикуется без вложений, повтор загрузки
+  recovery: досылка вложений
+- target: S1
+  failure: БД ICPlan (S1) недоступна
+  detection: ошибки 5xx API ICPlan (проверка жизни `GET /` базу не проверяет)
+  behavior: выдача запусков и приём итогов останавливаются; Runner повторяет с backoff, итог держит до восстановления
+  recovery: итог и события досылаются по `seq` без дублей
+- target: I8
+  failure: LiteLLM недоступен
+  detection: ошибки I8
+  behavior: повтор с backoff; после `circuit.max_errors` — `failed`
+  recovery: запуск заново
+- target: I9
+  failure: MCP-сервер недоступен
+  detection: таймаут I9
+  behavior: ошибка тула возвращается агенту, цикл продолжается
+  recovery: circuit breaker
+- target: I12
+  failure: Checkpointer недоступен
+  detection: ошибка I12
+  behavior: пауза на approve невозможна — опасные действия отклоняются
+  recovery: восстановление БД
+- target: I11
+  failure: Memory API недоступен
+  detection: ошибка I11
+  behavior: запуск идёт без M3/M2, событие-предупреждение
+  recovery: повтор записи M3 в конце
+- target: harness
+  failure: Битое определение агента
+  detection: валидация Bootstrap
+  behavior: запуск не стартует, `invalid_definition`
+  recovery: исправление определения
+- target: memory
+  failure: БД недоступна
+  detection: ошибка Memory API
+  behavior: чтение — пустой контекст с предупреждением; запись — повтор
+  recovery: восстановление БД
+- target: memory
+  failure: Конфликт записи M3
+  detection: две записи одной области
+  behavior: последняя версия, прежняя в истории
+  recovery: не задано
+- target: memory
+  failure: Очистка M3 не прошла
+  detection: ошибка `POST /retention/run`, задание CronJob неуспешно
+  behavior: записи остаются; M3 закрытых задач не отдаётся в контекст; уведомление эксплуатации
+  recovery: повтор задания CronJob
+- target: memory
+  failure: Профиль памяти не задан
+  detection: нет профиля у агента
+  behavior: применяются значения по умолчанию из таблицы параметров
+  recovery: администратор задаёт профиль
+- target: platform-module
+  failure: БД ICPlan недоступна
+  detection: ошибки API
+  behavior: определения не читаются — запуски не стартуют
+  recovery: восстановление БД
+- target: platform-module
+  failure: Удалён ресурс, на который ссылаются
+  detection: валидация связей
+  behavior: удаление отклоняется
+  recovery: не задано
+- target: platform-module
+  failure: Импорт с неверной схемой
+  detection: валидация YAML
+  behavior: импорт отклоняется
+  recovery: исправление YAML
+- target: I1
+  failure: ICPlan недоступен
+  detection: ошибки I1
+  behavior: опрос с backoff, активные запуски продолжаются, события буферизуются
+  recovery: досылка событий по `seq`
+- target: I4
+  failure: Platform module недоступен
+  detection: ошибки I4
+  behavior: новые запуски не стартуют (нет настроек)
+  recovery: повтор; кэш настроек не используется — безопасность
+- target: I6
+  failure: Docker / пул недоступен
+  detection: ошибки I6
+  behavior: запуск остаётся в `queued`
+  recovery: повтор, событие оператору
+- target: I9
+  failure: MCP-сервер недоступен
+  detection: ошибка I9
+  behavior: агент получает ошибку тула, цикл продолжается
+  recovery: повтор чтения 2 раза
+- target: agent-runner
+  failure: Шаг подготовки упал или превысил `setup.timeout_s`
+  detection: код выхода, таймаут
+  behavior: запуск `failed` с причиной «подготовка среды»
+  recovery: исправить скрипт или реестр; повторить запуск
+- target: agent-runner
+  failure: Runner упал
+  detection: истечение аренды
+  behavior: запуски возвращаются в очередь, слоты освобождаются
+  recovery: новый экземпляр подхватывает
+- target: I4
+  failure: Нет настроек агента / ключа
+  detection: пустой ответ I4
+  behavior: запуск `agent_unavailable`
+  recovery: администратор заполняет настройки
+- target: S2
+  failure: Postgres платформы (S2, S3) недоступен
+  detection: ошибки записи `run_event`, `scheduler_slot`
+  behavior: новые запуски не стартуют; события активных буферизуются в памяти Runner
+  recovery: досылка по `seq` после восстановления; слоты пересчитываются по активным запускам
+- target: sandbox
+  failure: Нет ресурсов хоста
+  detection: ошибка create
+  behavior: запуск ждёт в `queued`
+  recovery: освобождение ресурсов, пул уменьшается
+- target: sandbox
+  failure: Образ недоступен
+  detection: ошибка pull
+  behavior: профиль помечен недоступным, запуски отклоняются
+  recovery: восстановление реестра образов
+- target: sandbox
+  failure: Реестр пакетов недоступен на шаге подготовки
+  detection: ошибка установки
+  behavior: шаг подготовки завершается ошибкой, запуск `failed` с причиной; при наличии кэша — используется кэш
+  recovery: повтор после восстановления реестра
+- target: sandbox
+  failure: Egress-прокси упал
+  detection: нет соединений
+  behavior: исходящий трафик запрещён (fail-closed)
+  recovery: перезапуск прокси
+- target: sandbox
+  failure: Переполнен диск workspace
+  detection: ошибка записи
+  behavior: запись отклоняется, агент получает ошибку
+  recovery: запуск завершает с частичным итогом
+- target: S3
+  failure: Объектное хранилище (RustFS) недоступно при подключении или выгрузке папки
+  detection: ошибка S3 API (I19)
+  behavior: старт без папки — запуск с ошибкой «нет рабочего пространства»; выгрузка — повтор 3 раза, затем итог
+    с пометкой «артефакты не сохранены»
+  recovery: повторная выгрузка из сохранённой копии до уничтожения среды
+- target: I15
+  failure: LiteLLM admin API недоступен
+  detection: ошибка I15
+  behavior: изменение помечено «не применено», повтор
+  recovery: автоповтор, предупреждение
+- target: platform-module
+  failure: OPA не забрал bundle
+  detection: версия bundle в OPA устарела
+  behavior: решения по старым данным, предупреждение администратору
+  recovery: повтор опроса
+- target: S2
+  failure: Рассинхронизация настроек
+  detection: сверка S2 и S6
+  behavior: предупреждение, новые запуски используют S2
+  recovery: повторная раздача
+- target: S2
+  failure: Postgres платформы (S2) недоступен
+  detection: ошибки чтения и записи настроек
+  behavior: сохранение настроек отклоняется с причиной; Runner не стартует новые запуски (нет настроек)
+  recovery: повтор после восстановления; данные — из бэкапа S1/S2
+- target: I5
+  failure: OPA недоступен
+  detection: таймаут I5 / I10
+  behavior: 'по `on_engine_error`: deny (по умолчанию) или allow с пометкой'
+  recovery: восстановление OPA
+- target: guardrails
+  failure: Битый Rego
+  detection: '`opa test` / ошибка загрузки bundle'
+  behavior: OPA остаётся на прежнем bundle
+  recovery: исправление в git
+- target: guardrails
+  failure: Точка выключена
+  detection: конфиг L0
+  behavior: проверка не выполняется, запись в лог старта
+  recovery: включение конфигом
+- target: guardrails
+  failure: Нет данных правил агента
+  detection: пустые данные
+  behavior: deny всех тулов кроме явно разрешённых в L0
+  recovery: заполнение в Platform module
+- target: S2
+  failure: Хранилище правил недоступно (S2 — БД платформы, S8 git, бандл S11)
+  detection: ошибка загрузки бандла OPA
+  behavior: OPA работает на последнем загруженном бандле; без бандла — `on_engine_error` (deny)
+  recovery: загрузка бандла после восстановления
+- target: I13
+  failure: Провайдер недоступен
+  detection: ошибки I13
+  behavior: fallback-модель; если нет — ошибка вызова
+  recovery: переключение алиаса
+- target: I14
+  failure: БД `litellm` недоступна
+  detection: ошибки I14
+  behavior: проверка бюджетов невозможна — вызовы отклоняются
+  recovery: восстановление БД
+- target: llm-gateway
+  failure: Нет ключа провайдера
+  detection: ошибка авторизации провайдера
+  behavior: алиас недоступен
+  recovery: добавление ключа в Secret
+- target: llm-gateway
+  failure: LiteLLM упал
+  detection: health-check
+  behavior: вызовы Harness получают ошибку, circuit breaker
+  recovery: реплики, перезапуск
+- target: I2
+  failure: Нет записи событий
+  detection: ошибка I2
+  behavior: буфер в Runner, досылка
+  recovery: не задано
+- target: observability
+  failure: Нет цены модели
+  detection: пустая цена в LiteLLM
+  behavior: токены учтены, стоимость «неизвестна»
+  recovery: задать цену
+- target: observability
+  failure: Переполнение таблицы событий
+  detection: размер таблицы
+  behavior: очистка по сроку, предупреждение эксплуатации; уровень детализации меняет только эксплуатация (`events.level`)
+  recovery: изменение `retention_days`
+- target: S3
+  failure: Postgres событий (S3) недоступен
+  detection: ошибки записи `run_event`
+  behavior: события буферизуются у Runner, запуск продолжается; чат запуска временно неполный
+  recovery: досылка по `seq` без дублей
+- target: infrastructure
+  failure: Узел недоступен
+  detection: health-check узла
+  behavior: вся платформа недоступна (один узел)
+  recovery: восстановление узла, данные — из бэкапа вне узла
+- target: infrastructure
+  failure: Postgres недоступен
+  detection: проверки готовности сервисов
+  behavior: сервисы не готовы, запуски не стартуют
+  recovery: CloudNativePG перезапускает; восстановление из бэкапа
+- target: infrastructure
+  failure: PgBouncer исчерпал пул
+  detection: ожидание соединения
+  behavior: запросы ждут до таймаута, ошибка с причиной
+  recovery: увеличить пул, найти утечку соединений
+- target: infrastructure
+  failure: Истёк TLS-сертификат
+  detection: мониторинг срока
+  behavior: Traefik обновляет по ACME; при сбое — предупреждение
+  recovery: ручное обновление
+- target: infrastructure
+  failure: Переполнен диск
+  detection: метрика диска
+  behavior: запись в БД и хранилище останавливается
+  recovery: очистка по срокам, расширение диска
+- target: S7
+  failure: RustFS (S7) недоступен
+  detection: проверка готовности RustFS, ошибки S3 API
+  behavior: вложения и артефакты не сохраняются, итоги публикуются без вложений; копии БД вне площадки не затронуты
+  recovery: перезапуск пода; данные — с тома; вложения дозагружаются повтором
+- target: mcp-tools
+  failure: MCP-сервер недоступен
+  detection: таймаут
+  behavior: ошибка тула агенту
+  recovery: circuit breaker
+- target: mcp-tools
+  failure: Секрет MCP не задан
+  detection: ошибка авторизации
+  behavior: тулы сервера недоступны агенту, предупреждение
+  recovery: задать секрет
+- target: mcp-tools
+  failure: Сервер изменил набор тулов
+  detection: сверка `tools/list`
+  behavior: новые тулы не видны без allowlist
+  recovery: обновление allowlist
+- target: S1
+  failure: БД ICPlan (S1) недоступна
+  detection: ошибки MCP `itsaplan-core`
+  behavior: тулы ICPlan возвращают ошибку агенту с типом «недоступно»; агент не повторяет записи сам
+  recovery: повтор вызова агентом после восстановления по политике тула
+- target: icplan
+  failure: Агент правила не участник проекта
+  detection: проверка при срабатывании
+  behavior: запуск не создаётся, предупреждение в истории
+  recovery: администратор правит правило
+- target: icplan
+  failure: Очередь недоступна
+  detection: ошибка постановки
+  behavior: делегат установлен, worker повторяет постановку с backoff до 60 с, не более 5 попыток; не удалось —
+    запись «запуск не поставлен» в истории задачи и уведомление владельцу процесса
+  recovery: «повторить шаг» владельцем процесса или исполнителем (FR-202)
+- target: icplan
+  failure: Цикл переходов (задача возвращается на шаг)
+  detection: вход в шаг в (`step.max_runs` + 1)-й раз
+  behavior: запуск не создаётся, переход при ошибке с причиной «лимит шага», уведомление владельцу процесса
+  recovery: правка процесса; повтор сверх лимита — владелец процесса (FR-202)
+- target: S1
+  failure: БД ICPlan (S1) недоступна
+  detection: ошибки 5xx API ICPlan при приёме итога
+  behavior: итог не принимается и остаётся у Runner, Runner повторяет отправку с backoff (FR-17); переход по итогу
+    не выполняется
+  recovery: итог принят после восстановления → переход по итогу, идемпотентно по `run_id`

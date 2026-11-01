@@ -1,0 +1,12 @@
+id: task-4-5-guardrails
+title: '4.5. LiteLLM: бюджеты, fallback, G4'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-114
+- FR-123
+- FR-132
+reads: []
+writes: []

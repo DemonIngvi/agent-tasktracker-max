@@ -1,0 +1,6 @@
+id: mcp-server
+title: MCP-сервер
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

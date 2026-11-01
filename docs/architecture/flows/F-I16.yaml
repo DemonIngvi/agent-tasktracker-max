@@ -1,0 +1,12 @@
+id: F-I16
+title: 'бандл правил: данные из Platform module + Rego из git'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-module
+to: guardrails
+objects:
+- OpaBundleData
+trigger: 'бандл правил: данные из Platform module + Rego из git'
+flow_type: command
+over: I16

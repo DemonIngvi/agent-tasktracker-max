@@ -1,0 +1,10 @@
+id: us-grd-05
+title: просматривать журнал срабатываний guardrails
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-125
+reads: []
+writes: []

@@ -1,0 +1,20 @@
+id: svc-mcp-tools
+title: Сервис MCP / Tools
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-mcp-01
+- us-mcp-02
+- us-mcp-03
+- us-mcp-04
+- us-mcp-05
+- task-1-4-mcp-tools
+- task-2-4-mcp-tools
+- task-4-6-mcp-tools
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-13

@@ -1,0 +1,14 @@
+id: S10
+title: '`/workspace` в контейнере'
+owner: infrastructure
+lifecycle: planned
+criticality: medium
+objects: []
+tables: []
+writes:
+- infrastructure
+reads:
+- infrastructure
+deletes: infrastructure
+delete_trigger: удаляется с контейнером
+backup: удаляется с контейнером

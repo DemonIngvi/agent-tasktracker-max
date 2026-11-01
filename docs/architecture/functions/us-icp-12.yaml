@@ -1,0 +1,17 @@
+id: us-icp-12
+title: 'видеть сводку по своим задачам с агентами: что выполняется и в очереди, сколько идёт, сколько открыто и
+  закрыто, сколько потрачено токенов и денег'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-152
+- FR-150
+- FR-146
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

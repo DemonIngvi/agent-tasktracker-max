@@ -1,0 +1,14 @@
+id: AD-26
+title: Уточнения по замечаниям ролей ICPlan (без отдельного R&D — по фактам кода форка и решениям AD-9,
+  AD-20, AD-23)
+binds:
+- FR-136
+prevents: отход реализации от решения «Уточнения по замечаниям ролей ICPlan (без отдельного R&D — по фактам
+  кода форка и решениям AD-9, AD-20, AD-23)»
+rule: '/ Вопрос / Решение / Основание / /---/---/---/ / Формат навыка (ОВ-agent-registry-1) / Anthropic
+  Agent Skill: `SKILL.md` с frontmatter `name`, `description`, справочные файлы, без исполняемых скриптов
+  / так в форке: `apps/api/src/modules/agents/skills/skill-format.ts` / / Каталог для валидатора определения
+  (ОВ-agent-registry-3) / офлайн-валидатор (задача 1.2) проверяет схему `agent/v1` и внутренние ссылки
+  файла; ссылки на ресурсы (навыки, тулы, MCP, профили) проверяет импорт Platform module `POST /platform/agents/import`
+  по БД / один источник каталога — БД (AD-9) / / Где YAML дополнений до Platform module (ОВ-agent-registry-4)
+  / отдельного файла нет: дополнения — настройки Platform module …'

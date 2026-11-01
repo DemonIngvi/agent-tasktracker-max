@@ -1,0 +1,9 @@
+id: issue-attachment
+title: Таблица issue_attachment
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes: []
+states: []

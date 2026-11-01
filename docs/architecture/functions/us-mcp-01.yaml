@@ -1,0 +1,14 @@
+id: us-mcp-01
+title: подключить агенту новый MCP-сервер без кода
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-176
+- FR-177
+reads:
+- access-policy
+- project-resource
+writes:
+- issue-activity

@@ -1,0 +1,27 @@
+id: platform-module-izmenenie-nastroek-agenta
+title: Изменение настроек агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Изменить настройки
+actors:
+- litellm-opa
+inputs: []
+outputs:
+- AgentSettings
+journeys:
+- UJ-21
+steps:
+- title: Новая версия
+  actor: agent-platform
+  inputs: []
+  outputs:
+  - AgentSettings
+- title: Раздать настройки
+  actor: litellm-opa
+  inputs: []
+  outputs: []
+- title: «Не применено», повтор
+  actor: agent-platform
+  inputs: []
+  outputs: []

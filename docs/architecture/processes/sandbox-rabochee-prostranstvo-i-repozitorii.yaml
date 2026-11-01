@@ -1,0 +1,34 @@
+id: sandbox-rabochee-prostranstvo-i-repozitorii
+title: Рабочее пространство и репозитории
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Политика доступа
+actors:
+- administrator
+- agent
+inputs: []
+outputs: []
+journeys:
+- UJ-24
+steps:
+- title: Агент × ресурс × право
+  actor: administrator
+  inputs: []
+  outputs: []
+- title: Манифест workspace запуска
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Клон, чтение прошлых шагов
+  actor: agent
+  inputs: []
+  outputs: []
+- title: Запись в свою подпапку / ветку
+  actor: agent
+  inputs: []
+  outputs: []
+- title: Вложения и PR в задаче
+  actor: icplan
+  inputs: []
+  outputs: []

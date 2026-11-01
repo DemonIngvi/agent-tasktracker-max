@@ -1,0 +1,26 @@
+id: infrastructure-nagruzka-bekap-i-vosstanovlenie-sekrety
+title: Нагрузка, бэкап и восстановление, секреты
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Плановая работа или инцидент
+actors:
+- dannye
+- klaster
+inputs: []
+outputs: []
+journeys:
+- UJ-13
+steps:
+- title: Нагрузочный тест, очередь при пике
+  actor: klaster
+  inputs: []
+  outputs: []
+- title: Бэкап вне узла / восстановление
+  actor: dannye
+  inputs: []
+  outputs: []
+- title: Смена секрета без простоя
+  actor: klaster
+  inputs: []
+  outputs: []

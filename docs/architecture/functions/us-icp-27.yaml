@@ -1,0 +1,29 @@
+id: us-icp-27
+title: настроить Действие «делегировать агенту» по условию
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-190
+reads:
+- process
+- process-step
+- process-version
+- project-action
+writes:
+- access-policy
+- agent-run
+- agent-schedule
+- agent-settings
+- ai-agent
+- apikey
+- issue
+- issue-activity
+- issue-process-state
+- kill-switch
+- memory-profile
+- project
+- project-platform
+- project-resource
+- sandbox-profile

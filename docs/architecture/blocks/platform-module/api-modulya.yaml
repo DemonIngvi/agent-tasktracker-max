@@ -1,0 +1,82 @@
+id: platform-module-api-modulya
+title: API модуля
+kind: service
+does:
+- 'CRUD наших настроек агента: права по роли ICPlan, проверка границ и потолков, каждое изменение — версия'
+- Отдаёт настройки Runner, LiteLLM, OPA
+- Отдаёт Runner определение и настройки версии запуска одним ответом — `GET /platform/runs/:runId/agent` (I4, AD-23);
+  таблицы Registry читает той же ролью `itsaplan`
+tech: Модуль форка ICPlan (TypeScript), схема platform в Postgres
+stories:
+- '10.1'
+- '10.2'
+- '10.4'
+- '10.7'
+io:
+- dir: in
+  with: ICPlan UI
+  what: настройки агента и проекта, профили, kill switch
+  via: I20
+- dir: in
+  with: Agent Runner
+  what: запрос определения и настроек версии запуска
+  via: I4
+- dir: out
+  with: LiteLLM
+  what: лимиты и алиасы ключей
+  via: I15
+- dir: out
+  with: OPA
+  what: данные правил — bundle
+  via: I16
+data:
+- table: agent_settings
+  access: read-write
+  why: настройки агента
+- table: agent_settings_version
+  access: read-write
+  why: версия при каждом изменении
+- table: project_platform
+  access: read-write
+  why: руководство, бюджет, шаг подготовки проекта
+- table: project_resource
+  access: read-write
+  why: ресурсы проекта
+- table: access_policy
+  access: read-write
+  why: доступы агентов к ресурсам
+- table: kill_switch
+  access: read-write
+  why: аварийная остановка
+- table: ai_agent
+  access: read
+  why: определение агента для ответа Runner
+params:
+- concurrency
+- prompt.guidance_max_chars
+- version
+reqs:
+- FR-95
+- FR-96
+- FR-97
+- FR-101
+- FR-108
+tasks:
+- '4.4'
+on_failure: 'БД платформы (S2) недоступна: сохранение настроек отклоняется с причиной, Runner не стартует новые
+  запуски; Нет права `ai_agents`: запрос отклоняется 403, данные не меняются; Значение вне границ или выше потолка
+  L0: 400 с названием поля'
+why: Одна БД и одна авторизация с ICPlan.
+operations:
+- name: PATCH /platform/agents/:agentId/settings
+  caller: Администратор
+  via: I20
+- name: PUT /platform/projects/:projectKey/guidance
+  caller: Администратор
+  via: I20
+- name: GET /platform/runs/:runId/agent
+  caller: Agent Runner
+  via: I4
+- name: GET /platform/audit
+  caller: Безопасность
+  via: I20

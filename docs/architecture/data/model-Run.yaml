@@ -1,0 +1,30 @@
+id: Run
+title: запуск, выданный раннеру (`POST /agent-runs/claim` → `run`)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: id
+  type: int
+- name: trigger
+  type: 'enum: mention · delegation · field · schedule · manual · process_step'
+- name: prompt
+  type: string
+- name: systemPrompt
+  type: string
+- name: attempts
+  type: int
+- name: issueId
+  type: int | null
+- name: issueIdentifier
+  type: string | null
+- name: rule
+  type: '{process, stepId}'
+- name: parentRunId
+  type: int | null
+- name: startReason
+  type: 'enum: first · return · retry · manual'
+- name: settingsVersionId
+  type: int | null

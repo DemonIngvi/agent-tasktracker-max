@@ -1,0 +1,21 @@
+id: S3
+title: 'Postgres ICPlan (база `itsaplan`): `run_event` — схема `platform`; `scheduler_slot`, `setup_cache` — схема
+  `runner` …'
+owner: infrastructure
+lifecycle: planned
+criticality: medium
+objects:
+- run-event
+- scheduler-slot
+- setup-cache
+tables:
+- run_event
+- scheduler_slot
+- setup_cache
+writes:
+- infrastructure
+reads:
+- infrastructure
+deletes: infrastructure
+delete_trigger: события — 90 дней; слоты — оперативные
+backup: события — 90 дней; слоты — оперативные

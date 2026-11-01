@@ -1,0 +1,16 @@
+id: AD-23
+title: Определение агента для запуска — через API Platform module
+binds:
+- FR-54
+- FR-55
+- FR-56
+- FR-97
+- FR-99
+prevents: отход реализации от решения «Определение агента для запуска — через API Platform module»
+rule: 'Решено по исследованию (R&D: откуда Agent Runner берёт определение агента), закрывает Z-ICP-3.
+  / Вопрос / Решение / Почему / /---/---/---/ / Через какой стык Runner получает определение / I4: `GET
+  /platform/runs/:runId/agent` → `{version, definition: AgentDefinition, settings: AgentSettings}`; определение
+  в формате `agent/v1` экспорта (FR-56). Claim форка (I1) не меняется / Platform module уже владеет единой
+  версией и снимком (`agent_settings_version`) и читает таблицы Registry той же ролью `itsaplan` (AD-3,
+  AD-22); код форка вне нашего модуля не меняется (AD-18) / / Как закрепляется версия / версию задаёт
+  задача (FR-55) или Platform module при первом вызове пишет её в …'

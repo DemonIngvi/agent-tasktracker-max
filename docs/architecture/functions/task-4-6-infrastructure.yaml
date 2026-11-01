@@ -1,0 +1,14 @@
+id: task-4-6-infrastructure
+title: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-167
+- FR-170
+- FR-172
+- FR-174
+- FR-175
+reads: []
+writes: []

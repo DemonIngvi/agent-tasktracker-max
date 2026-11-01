@@ -1,0 +1,18 @@
+id: us-pm-07
+title: видеть, кто и когда менял настройки агентов и политики
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-98
+- FR-101
+reads:
+- ai-agent
+writes:
+- access-policy
+- agent-settings
+- agent-settings-version
+- kill-switch
+- project-platform
+- project-resource

@@ -1,0 +1,20 @@
+id: OpaBundleData
+title: данные бандла OPA (`data.json`)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: agents.<id>.tools_allow
+  type: string[]
+- name: agents.<id>.approval
+  type: string[]
+- name: agents.<id>.autonomy
+  type: 'enum: R0–R5'
+- name: agents.<id>.budget
+  type: '{run_usd, day_usd}'
+- name: projects.<id>.budget.month_usd
+  type: number
+- name: platform.kill_switch
+  type: bool

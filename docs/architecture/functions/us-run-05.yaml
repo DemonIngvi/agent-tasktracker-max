@@ -1,0 +1,13 @@
+id: us-run-05
+title: чтобы падение Runner не теряло работу
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-71
+- FR-80
+reads:
+- agent-run
+writes:
+- scheduler-slot

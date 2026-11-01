@@ -1,0 +1,11 @@
+id: task-4-6-platform-module
+title: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-63
+- FR-109
+reads: []
+writes: []

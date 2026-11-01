@@ -1,0 +1,25 @@
+id: platform-module-perenos-agenta-i-zhurnal-izmeneniy
+title: Перенос агента и журнал изменений
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Перенести агента
+actors:
+- administrator-bezopasnost
+inputs: []
+outputs: []
+journeys:
+- UJ-22
+steps:
+- title: Экспорт YAML
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Новая версия, журнал
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Просмотр журнала изменений
+  actor: administrator-bezopasnost
+  inputs: []
+  outputs: []

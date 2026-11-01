@@ -1,0 +1,14 @@
+id: F-I4
+title: настройки, определение версии запуска (`GET /platform/runs/:runId/agent`, AD-23), манифест
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: platform-module
+objects:
+- AgentSettings
+- AgentDefinition
+- WorkspaceSource
+trigger: настройки, определение версии запуска (`GET /platform/runs/:runId/agent`, AD-23), манифест
+flow_type: query
+over: I4

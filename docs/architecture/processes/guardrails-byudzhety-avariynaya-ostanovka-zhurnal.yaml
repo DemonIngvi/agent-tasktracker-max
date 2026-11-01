@@ -1,0 +1,25 @@
+id: guardrails-byudzhety-avariynaya-ostanovka-zhurnal
+title: Бюджеты, аварийная остановка, журнал
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Расход или инцидент
+actors:
+- vladelets-produkta-ekspluatatsiya-bezopasnost
+inputs: []
+outputs: []
+journeys:
+- UJ-4
+steps:
+- title: Отказ G1 / стоп при аномалии
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Kill switch агента или платформы
+  actor: vladelets-produkta-ekspluatatsiya-bezopasnost
+  inputs: []
+  outputs: []
+- title: Журнал срабатываний
+  actor: vladelets-produkta-ekspluatatsiya-bezopasnost
+  inputs: []
+  outputs: []

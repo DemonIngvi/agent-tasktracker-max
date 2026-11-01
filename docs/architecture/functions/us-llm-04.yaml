@@ -1,0 +1,12 @@
+id: us-llm-04
+title: чтобы сбой провайдера не останавливал работу
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-139
+- FR-140
+reads: []
+writes:
+- LiteLLM-SpendLogs

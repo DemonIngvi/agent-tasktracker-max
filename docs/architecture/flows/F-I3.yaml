@@ -1,0 +1,16 @@
+id: F-I3
+title: Runner продлевает аренду (`POST /agent-runs/:runId/heartbeat`); сейчас ответ 204 без тела, отмена — ответом
+  404; после …
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: icplan
+objects:
+- Heartbeat
+- ApprovalDecision
+- UserMessage
+trigger: Runner продлевает аренду (`POST /agent-runs/:runId/heartbeat`); сейчас ответ 204 без тела, отмена — ответом
+  404; после доработки (FR-10) в ответе — отмена, решения по approve и указания пользователя
+flow_type: query
+over: I3

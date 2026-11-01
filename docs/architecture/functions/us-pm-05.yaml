@@ -1,0 +1,14 @@
+id: us-pm-05
+title: назначить агенту уровень автономии R0–R5
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-117
+- FR-95
+reads: []
+writes:
+- access-policy
+- agent-settings
+- kill-switch

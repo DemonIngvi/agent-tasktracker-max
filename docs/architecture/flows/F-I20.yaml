@@ -1,0 +1,16 @@
+id: F-I20
+title: интерфейс ICPlan ↔ API (в том числе экраны Platform module, чат запуска, сводка)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: icplan
+to: icplan
+objects:
+- Process
+- Verdict
+- CostAggregate
+- AgentDefinition
+- AgentSettings
+trigger: интерфейс ICPlan ↔ API (в том числе экраны Platform module, чат запуска, сводка)
+flow_type: command
+over: I20

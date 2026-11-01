@@ -1,0 +1,12 @@
+id: us-mem-05
+title: работать в рабочем контексте запуска (M0) и не переполнить окно модели
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-36
+- FR-25
+reads:
+- project-platform
+writes: []

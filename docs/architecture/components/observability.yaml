@@ -1,0 +1,8 @@
+id: observability
+title: Observability
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Прозрачность: что агент делал по шагам и сколько это стоило.'
+host: icplan

@@ -1,0 +1,12 @@
+id: F-I15
+title: выдача virtual key, бюджеты
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-module
+to: llm-gateway
+objects:
+- VirtualKey
+trigger: выдача virtual key, бюджеты
+flow_type: command
+over: I15

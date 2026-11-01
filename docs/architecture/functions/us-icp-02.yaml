@@ -1,0 +1,15 @@
+id: us-icp-02
+title: видеть, как агент работает над задачей
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-4
+- FR-147
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

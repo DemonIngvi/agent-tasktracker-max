@@ -1,0 +1,24 @@
+id: us-icp-16
+title: повторить шаг после ошибки или перезапустить задачу с выбранного шага
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-197
+- FR-193
+- FR-202
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- process
+- process-step
+- process-version
+- project-action
+- run-event
+writes:
+- agent-run
+- agent-run-delivery
+- issue
+- issue-activity
+- issue-process-state

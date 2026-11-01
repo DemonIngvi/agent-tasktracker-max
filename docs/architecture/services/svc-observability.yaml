@@ -1,0 +1,20 @@
+id: svc-observability
+title: Сервис Observability
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-obs-01
+- us-obs-02
+- us-obs-03
+- us-obs-04
+- us-obs-05
+- task-3-3-observability
+- task-3-9-observability
+- task-4-6-observability
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-10

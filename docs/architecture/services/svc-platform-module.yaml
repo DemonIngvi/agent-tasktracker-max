@@ -1,0 +1,25 @@
+id: svc-platform-module
+title: Сервис Platform module
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-pm-01
+- us-pm-02
+- us-pm-03
+- us-pm-04
+- us-pm-05
+- us-pm-06
+- us-pm-07
+- us-pm-08
+- task-2-3-platform-module
+- task-4-4-platform-module
+- task-4-6-platform-module
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-4
+- text: Нагрузка и производительность
+  quality: Q-7

@@ -1,0 +1,12 @@
+id: us-har-02
+title: подтвердить опасное действие агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-23
+- FR-112
+reads: []
+writes:
+- run-checkpoint

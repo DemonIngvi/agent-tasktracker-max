@@ -1,0 +1,16 @@
+id: UserMessage
+title: указание пользователя во время работы
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: id
+  type: string
+- name: text
+  type: string
+- name: by
+  type: string
+- name: at
+  type: timestamp

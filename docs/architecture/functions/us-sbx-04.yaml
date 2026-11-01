@@ -1,0 +1,11 @@
+id: us-sbx-04
+title: получить файлы, созданные агентом
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-84
+reads:
+- sandbox-profile
+writes: []

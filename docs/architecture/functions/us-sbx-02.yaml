@@ -1,0 +1,13 @@
+id: us-sbx-02
+title: дать агенту доступ только к нужным репозиториям
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-85
+- FR-88
+reads:
+- access-policy
+- project-resource
+writes: []

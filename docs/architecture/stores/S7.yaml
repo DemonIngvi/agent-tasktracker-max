@@ -1,0 +1,14 @@
+id: S7
+title: RustFS (S3 API), бакет `planner-attachments`
+owner: infrastructure
+lifecycle: planned
+criticality: medium
+objects: []
+tables: []
+writes:
+- infrastructure
+reads:
+- infrastructure
+deletes: infrastructure
+delete_trigger: копия вне узла
+backup: копия вне узла

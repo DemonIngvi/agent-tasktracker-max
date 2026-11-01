@@ -1,0 +1,15 @@
+id: I22
+title: Postgres через PgBouncer
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-services
+to: infrastructure
+purpose: Postgres через PgBouncer
+integration_type: unknown
+protocol: протокол PostgreSQL
+format: SQL
+auth: логин / пароль из Secret, роль на схему
+timeout: 5 с на запрос
+retry: 1 раз (только чтение)
+idempotent: null

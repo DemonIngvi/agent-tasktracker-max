@@ -1,0 +1,8 @@
+id: infrastructure
+title: Инфраструктура
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Основание платформы: где и как всё запущено, как распределяется нагрузка, где лежат данные и как
+  они сохраняются.'

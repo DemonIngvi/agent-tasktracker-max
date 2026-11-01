@@ -1,0 +1,42 @@
+id: infrastructure-postgresql-17-pgvector
+title: PostgreSQL 17 + pgvector
+kind: storage
+does:
+- Хранит данные ICPlan, платформы, LiteLLM, checkpoint
+tech: PostgreSQL 17 под CloudNativePG v1.30, образ с pgvector
+stories:
+- '5.4'
+io:
+- dir: in
+  with: PgBouncer
+  what: SQL по роли на схему
+  via: I22
+- dir: out
+  with: Резервное хранилище S3 вне узла
+  what: базовые копии и WAL
+data:
+- table: agent_run
+  access: store
+  why: БД `itsaplan`, схема `public` (владелец — ICPlan)
+- table: run_checkpoint
+  access: store
+  why: БД `itsaplan`, схема `harness_ckpt` (владелец — Agent Runner)
+- table: memory_m3
+  access: store
+  why: БД `itsaplan`, схема `memory` (владелец — Memory)
+- table: LiteLLM_SpendLogs
+  access: store
+  why: БД `litellm` (владелец — LiteLLM)
+params:
+- postgres.backup.target
+reqs:
+- FR-163
+- FR-171
+- FR-173
+tasks:
+- '4.7'
+on_failure: 'Postgres недоступен: сервисы не готовы, запуски не стартуют; CloudNativePG перезапускает, восстановление
+  из бэкапа; Переполнен диск: запись в БД и хранилище останавливается; очистка по срокам, расширение диска'
+why: Одна СУБД на всё; оператор даёт бэкап и восстановление.
+schema_ref: 'Один кластер CloudNativePG: БД `itsaplan` (схемы `public`, `platform`, `harness_ckpt`) и БД `litellm`;
+  роль на схему; базовые копии и WAL — в S3 вне узла.'

@@ -1,0 +1,13 @@
+id: task-2-1-icplan
+title: 2.1. Agent Runner как внешний раннер ICPlan
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-14
+- FR-15
+- FR-16
+- FR-17
+reads: []
+writes: []

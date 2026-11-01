@@ -1,0 +1,32 @@
+id: observability-sobytiya-i-chat-zapuska
+title: События и чат запуска
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Шаг запуска
+actors:
+- harness-runner
+- pol-zovatel
+inputs: []
+outputs:
+- RunEvent
+journeys:
+- UJ-19
+steps:
+- title: Маскировать данные
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Записать событие
+  actor: agent-platform
+  inputs: []
+  outputs:
+  - RunEvent
+- title: Буфер, досылка
+  actor: harness-runner
+  inputs: []
+  outputs: []
+- title: Чат запуска и затраты
+  actor: pol-zovatel
+  inputs: []
+  outputs: []

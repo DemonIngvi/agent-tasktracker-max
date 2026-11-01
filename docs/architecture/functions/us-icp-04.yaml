@@ -1,0 +1,20 @@
+id: us-icp-04
+title: отменить текущую работу агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-7
+- FR-74
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- apikey
+- run-event
+writes:
+- agent-run
+- agent-run-delivery
+- run-checkpoint
+- run-event
+- scheduler-slot

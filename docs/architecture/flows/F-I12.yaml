@@ -1,0 +1,12 @@
+id: F-I12
+title: checkpoint цикла
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: agent-runner
+objects:
+- Checkpoint
+trigger: checkpoint цикла
+flow_type: command
+over: I12

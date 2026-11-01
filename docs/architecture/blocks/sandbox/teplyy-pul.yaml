@@ -1,0 +1,51 @@
+id: sandbox-teplyy-pul
+title: Тёплый пул
+kind: service
+does:
+- Держит `pool.size` готовых контейнеров на профиль
+- Отдаёт контейнер запуску без создания (старт < 1 с)
+- Пуст — контейнер создаётся на лету, запуск ждёт его старта
+- Уничтожает контейнер после запуска и доливает пул; повторно контейнер не выдаёт
+tech: Docker-контейнеры, заранее запущенные
+stories:
+- '11.1'
+io:
+- dir: in
+  with: Agent Runner
+  what: запрос среды по профилю
+  via: I6
+- dir: out
+  with: Agent Runner
+  what: '`sandboxId` готового контейнера'
+  via: I6
+- dir: in
+  with: Agent Runner
+  what: уничтожить контейнер по `sandboxId`
+  via: I6
+data:
+- table: sandbox_profile
+  access: read
+  why: 'через Runner: `pool_size`, `image` профиля (владелец — Platform module)'
+params:
+- pool.size
+- image
+reqs:
+- FR-82
+- FR-83
+- FR-93
+- FR-94
+tasks:
+- '4.1'
+on_failure: 'Нет ресурсов хоста: пул не доливается, запуск ждёт в `queued`; Образ недоступен: профиль помечен недоступным,
+  запуски отклоняются; Пул пуст: контейнер создаётся на лету, старт дольше'
+why: 'Подход E2B, Copilot agent: скорость без потери изоляции.'
+operations:
+- name: claim — выдать готовый контейнер профиля (`SandboxClaim` → `sandboxId`)
+  caller: Agent Runner (Sandbox claim)
+  via: I6
+- name: destroy + долив — уничтожить контейнер после запуска и поднять новый до `pool.size`
+  caller: Agent Runner (Finalizer)
+  via: I6
+- name: пересоздание пула при смене образа профиля или нового `HARNESS_IMAGE`
+  caller: внутри
+  via: внутри

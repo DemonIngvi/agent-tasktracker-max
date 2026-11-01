@@ -1,0 +1,21 @@
+id: mcp-tools-podklyuchenie-serverov-navykov-i-proverk
+title: Подключение серверов, навыков и проверка прав
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Нужен новый тул или навык
+actors:
+- administrator-bezopasnost
+inputs: []
+outputs: []
+journeys:
+- UJ-17
+steps:
+- title: Allowlist тулов агенту, навыки
+  actor: administrator-bezopasnost
+  inputs: []
+  outputs: []
+- title: 'Проверка прав: агент × тулы'
+  actor: administrator-bezopasnost
+  inputs: []
+  outputs: []

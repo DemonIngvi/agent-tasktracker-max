@@ -1,0 +1,22 @@
+id: ChatCompletionRequest
+title: запрос к модели (OpenAI Chat Completions через LiteLLM)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: model
+  type: string
+- name: messages
+  type: '{role, content}[]'
+- name: tools
+  type: '{type, function: {name, parameters}}[]'
+- name: tool_choice / parallel_tool_calls
+  type: enum / bool
+- name: temperature / max_tokens / reasoning_effort
+  type: number / enum
+- name: metadata
+  type: '{run_id, issue_key, agent}'
+- name: stream
+  type: bool

@@ -1,0 +1,12 @@
+id: task-3-1-icplan
+title: '3.1. ICPlan: процесс типа задачи и агент шага'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-208
+- FR-209
+- FR-210
+reads: []
+writes: []

@@ -1,0 +1,62 @@
+id: mcp-tools-itsaplan-core
+title: itsaplan-core
+kind: service
+does:
+- Агент читает задачу, пишет комментарий, меняет поля задачи; колонку задачи в процессе меняет ICPlan по итогу запуска
+  (AD-17)
+- Доступ к документам проекта (M6)
+tech: MCP-сервер ICPlan (POST /mcp в api ICPlan), весь REST API как тулы
+stories:
+- '7.1'
+- '7.2'
+- '4.29'
+- '3.1'
+io:
+- dir: in
+  with: MCP-прокси Agent Runner
+  what: '`McpToolCall`: `tools/list`, `tools/call` с ключом агента'
+  via: I24
+- dir: out
+  with: Harness
+  what: результат тула; ответ длиннее `max_result_kb` обрезает прокси
+  via: I9
+- dir: out
+  with: задача ICPlan
+  what: комментарий и поля задачи от имени агента
+data:
+- table: issue
+  access: read
+  why: 'чтение, запись: поля задачи через `update_issue` (колонка задачи в процессе — не меняется, AD-17; владелец
+    — ICPlan)'
+- table: issue_activity
+  access: write
+  why: комментарий агента (владелец — ICPlan)
+- table: project_resource
+  access: read
+  why: включён ли MCP проекта (`kind = mcp`, владелец Platform module)
+params:
+- servers
+- tools
+- auth.secret_ref
+- timeout_s
+reqs:
+- FR-182
+- FR-197
+- FR-185
+- FR-184
+tasks:
+- '2.4'
+on_failure: 'MCP проекта выключен: тулы ICPlan недоступны, запуск завершается с причиной (FR-182 «MCP выключен в
+  проекте»); `update_issue` со сменой колонки задачи в процессе: смена отклонена, остальные поля обновлены (FR-182
+  «Смена колонки в процессе», AD-17); БД ICPlan (S1) недоступна: тул возвращает агенту ошибку типа «недоступно»,
+  агент не повторяет записи сам (FMEA «БД ICPlan (S1) недоступна», FR-184); Ключ агента отклонён: вызов не повторяется,
+  событие с причиной (FR-185 «Аутентификация I17»); Запись прервалась сбоем сети: автоматического повтора нет, решает
+  агент (FR-185 «Неидемпотентный вызов I9»)'
+why: 'Уже есть в ICPlan; стандарт MCP: тот же сервер используют и наши агенты, и внешние CLI.'
+operations:
+- name: POST /mcp
+  caller: MCP-прокси Runner
+  via: I24
+- name: POST /mcp
+  caller: MCP-прокси Runner
+  via: I24

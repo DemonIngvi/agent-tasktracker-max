@@ -1,0 +1,26 @@
+id: mcp-tools-vyzov-tula
+title: Вызов тула
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Модель просит тул
+actors:
+- mcp-server
+- tool-executor
+inputs: []
+outputs: []
+journeys:
+- UJ-16
+steps:
+- title: tools/call
+  actor: mcp-server
+  inputs: []
+  outputs: []
+- title: Ошибка тула
+  actor: tool-executor
+  inputs: []
+  outputs: []
+- title: Обрезать, вернуть
+  actor: tool-executor
+  inputs: []
+  outputs: []

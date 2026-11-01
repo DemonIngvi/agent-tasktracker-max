@@ -1,0 +1,13 @@
+id: task-1-1-llm-gateway
+title: 1.1. Mock-LLM и LiteLLM
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-141
+- FR-142
+- FR-143
+- FR-144
+reads: []
+writes: []

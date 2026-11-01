@@ -1,0 +1,27 @@
+id: us-icp-20
+title: 'создать ИИ-агента платформы: имя, модель, инструкция, тулы, навыки, MCP, проекты'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-54
+- FR-57
+- FR-53
+- FR-8
+- FR-1
+reads:
+- agent-settings-version
+writes:
+- access-policy
+- agent-run
+- agent-schedule
+- agent-settings
+- ai-agent
+- apikey
+- kill-switch
+- memory-profile
+- project
+- project-platform
+- project-resource
+- sandbox-profile

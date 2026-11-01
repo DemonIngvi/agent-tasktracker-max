@@ -1,0 +1,13 @@
+id: us-sbx-01
+title: получить чистую среду за доли секунды
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-83
+- FR-82
+reads:
+- agent-settings
+- sandbox-profile
+writes: []

@@ -1,0 +1,12 @@
+id: us-run-04
+title: чтобы ожидание подтверждения не блокировало платформу
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-69
+reads: []
+writes:
+- run-event
+- scheduler-slot

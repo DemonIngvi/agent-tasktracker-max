@@ -1,0 +1,13 @@
+id: us-mem-07
+title: получить свою инструкцию и навыки (M5) нужной версии при старте
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-36
+- FR-19
+reads:
+- agent-settings-version
+- ai-agent
+writes: []

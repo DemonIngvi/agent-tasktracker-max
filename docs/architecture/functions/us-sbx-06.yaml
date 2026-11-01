@@ -1,0 +1,10 @@
+id: us-sbx-06
+title: одним списком видеть и менять, к каким репозиториям и папкам проекта имеет доступ каждый агент
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-76
+reads: []
+writes: []

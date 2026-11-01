@@ -1,0 +1,12 @@
+id: us-llm-05
+title: получать отчёт о затратах по агентам, проектам и моделям за период
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-136
+- FR-135
+reads: []
+writes:
+- LiteLLM-SpendLogs

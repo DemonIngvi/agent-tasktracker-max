@@ -1,0 +1,134 @@
+header:
+- Name
+- Version
+rows:
+- name: It's a Plan (наш форк)
+  version: upstream v1.4.0
+- name: Bun
+  version: 1.4.x
+- name: Elysia
+  version: 1.4.x
+- name: Next.js
+  version: 16.x
+- name: Drizzle ORM
+  version: 0.45.x
+- name: Go
+  version: 1.2x
+- name: Python
+  version: 3.12+
+- name: Node.js
+  version: 24 (образ `node:24-alpine`)
+- name: FastAPI
+  version: 0.11x
+- name: uv
+  version: 0.x
+- name: LangGraph
+  version: 1.2.14 (закреплена, AD-18)
+- name: LangChain MCP (`langchain.mcp`)
+  version: langchain 1.4.4, extra `mcp` (fastmcp ≥ 4.0.11)
+- name: MCP Python SDK
+  version: v2.3.0
+- name: ContextForge (IBM)
+  version: v1.0.11
+- name: agentgateway
+  version: v1.6.0
+- name: langchain-mcp-adapters
+  version: 0.3.2
+- name: LiteLLM Proxy
+  version: v1.104.2 (закреплена, AD-18)
+- name: Open Policy Agent
+  version: v1.21.1
+- name: LlamaFirewall (PurpleLlama)
+  version: —
+- name: Langfuse
+  version: v4.56.0
+- name: Phoenix (Arize)
+  version: —
+- name: Opik (Comet)
+  version: 2.2.96
+- name: text-embeddings-inference
+  version: закреплена cpu-1.9.4
+- name: Bifrost
+  version: —
+- name: TensorZero
+  version: 2026.6.0
+- name: PostgreSQL
+  version: '17'
+- name: Mem0
+  version: ts-v3.3.1
+- name: LangMem
+  version: —
+- name: Graphiti (Zep)
+  version: v0.30.2
+- name: pgvector
+  version: —
+- name: DSPy + GEPA
+  version: —
+- name: CloudNativePG
+  version: v1.30.1
+- name: PgBouncer
+  version: 1.26.0
+- name: RustFS
+  version: 1.0.x
+- name: SeaweedFS
+  version: '4.48'
+- name: MinIO
+  version: '2025-10-15'
+- name: k3s
+  version: v1.37.1+k3s1
+- name: k3d
+  version: v5.9.0
+- name: RKE2
+  version: v1.37.1+rke2r1
+- name: Talos
+  version: v1.14.2
+- name: Kueue
+  version: v0.20.1
+- name: Helm
+  version: v4.3.0
+- name: Traefik
+  version: v3.7 (в составе k3s)
+- name: ingress-nginx
+  version: controller-v1.15.1
+- name: Gateway API
+  version: v1.6.3
+- name: Docker Engine (Moby)
+  version: 29.x
+- name: Squid
+  version: образ `ubuntu/squid` 6.x (upstream 7.7)
+- name: gVisor (runsc)
+  version: release-20261005.0
+- name: kubernetes-sigs/agent-sandbox
+  version: v1.0.6
+- name: Daytona
+  version: v0.190.0
+- name: Firecracker
+  version: v1.17.0
+- name: k6
+  version: v2.3.0
+- name: Prometheus
+  version: v3.15.0
+- name: Grafana
+  version: v13.2.3
+- name: Loki
+  version: v3.7.8
+- name: Gitea
+  version: v28.1.0
+- name: Argo CD
+  version: v3.5.4
+- name: Sealed Secrets
+  version: v0.40.0
+- name: Trivy
+  version: v0.75.0
+- name: Syft
+  version: 1.x
+- name: distroless
+  version: '`static:nonroot`'
+- name: GitHub Container Registry
+  version: —
+- name: OpenSpec
+  version: v1.14.1
+- name: MkDocs
+  version: 1.6.1
+- name: Material for MkDocs
+  version: 9.7.7

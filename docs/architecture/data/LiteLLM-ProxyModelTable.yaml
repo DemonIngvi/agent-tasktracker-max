@@ -1,0 +1,14 @@
+id: LiteLLM-ProxyModelTable
+title: Таблица LiteLLM_ProxyModelTable
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: model_id
+  type: String
+- name: model_name
+  type: String
+- name: litellm_params
+  type: Json

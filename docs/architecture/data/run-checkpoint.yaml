@@ -1,0 +1,20 @@
+id: run-checkpoint
+title: Таблица run_checkpoint
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: run_id
+  type: int
+- name: iteration
+  type: int
+- name: parent_iteration
+  type: int
+- name: state
+  type: bytea
+- name: created_at
+  type: timestamptz
+- name: expires_at
+  type: timestamptz

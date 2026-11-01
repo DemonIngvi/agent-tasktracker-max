@@ -1,0 +1,10 @@
+id: task-1-6-guardrails
+title: '1.6. Harness: лимиты, завершение, контекст'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-122
+reads: []
+writes: []

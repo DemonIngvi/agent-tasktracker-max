@@ -1,0 +1,26 @@
+id: RunBundle
+title: задание Harness от Runner (`POST /run`)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: runId
+  type: int
+- name: agent
+  type: '{agentId, model, version, instructions, skills[]}'
+- name: prompt / systemPrompt
+  type: string
+- name: guidance
+  type: string
+- name: params
+  type: map<string, any>
+- name: workspace
+  type: WorkspaceSource[]
+- name: memory
+  type: '{m3: M3Record, m2: RunSummary[]}'
+- name: task
+  type: '{issueId, issueIdentifier, stepId, criteria: Criterion[], returnNote}'
+- name: mcp
+  type: '{server, url, tools[]}[]'

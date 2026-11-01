@@ -1,9 +1,39 @@
 url: http://localhost:3100
 credentials: ../docmost-stack/admin-credentials.txt
 space:
-  name: agent-tasktracker-max
+  name: Agent TaskTracker Max
   slug: agent-tasktracker-max
-  description: Документация проекта agent-tasktracker-max
+  description: Агентная платформа в новой структуре документации
 tree:
-  - title: Главная
-    source: README.md
+- title: Как читать проект
+  source: docs/index.md
+- title: Обзор системы
+  children:
+  - title: Панель готовности
+    view: readiness
+  - title: 'C1: система и окружение'
+    view: c1
+  - title: 'C2: контейнеры'
+    view: c2
+  - title: 'C3: блоки'
+    view: c3
+  - title: Как работает
+    view: how
+  - title: Карточки блоков
+    view: cards
+  - title: Данные
+    view: data
+  - title: Реестры
+    view: registers
+  - title: Матрица покрытия
+    view: coverage
+- title: Документы
+  children:
+  - title: PRD
+    source: _bmad-output/planning-artifacts/prds/prd-agent-tasktracker-max-2026-11-01/prd.md
+  - title: Architecture Spine
+    source: _bmad-output/planning-artifacts/architecture/architecture-agent-tasktracker-max-2026-11-01/ARCHITECTURE-SPINE.md
+  - title: Эпики и истории
+    source: _bmad-output/planning-artifacts/epics.md
+  - title: Отчёт о переносе
+    source: docs/migration.md

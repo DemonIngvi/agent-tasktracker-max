@@ -1,0 +1,24 @@
+id: m4-fact
+title: Таблица m4_fact
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: id
+  type: bigserial
+- name: scope
+  type: text
+- name: text
+  type: text
+- name: embedding
+  type: vector
+- name: source
+  type: text
+- name: valid_from
+  type: timestamptz
+- name: valid_to
+  type: timestamptz
+- name: superseded_by
+  type: bigint

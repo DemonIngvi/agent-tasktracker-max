@@ -1,0 +1,29 @@
+id: agent-runner-ekspluatatsiya-rezhim-ozhidanie-padenie
+title: 'Эксплуатация: режим, ожидание, падение, вывод из работы'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Runner работает
+actors:
+- ekspluatatsiya
+inputs: []
+outputs: []
+journeys:
+- UJ-2
+steps:
+- title: sequential / parallel
+  actor: ekspluatatsiya
+  inputs: []
+  outputs: []
+- title: Освободить глобальный и модельный слоты
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Аренда истекла → запуск снова в очереди
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Не брать новые, доделать активные
+  actor: ekspluatatsiya
+  inputs: []
+  outputs: []

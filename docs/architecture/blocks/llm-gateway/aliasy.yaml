@@ -1,0 +1,40 @@
+id: llm-gateway-aliasy
+title: Алиасы
+kind: service
+does:
+- Связывает алиас с моделью провайдера
+- Смена модели — переназначение алиаса, агенты не меняются
+tech: LiteLLM model_list
+stories:
+- '6.1'
+io:
+- dir: in
+  with: Harness
+  what: вызов модели по алиасу
+  via: I8
+- dir: out
+  with: «провайдер / mock»
+  what: вызов выбранной модели
+  via: I13
+data:
+- table: LiteLLM_ProxyModelTable
+  access: read
+  why: алиас → провайдер и модель (владелец — LiteLLM)
+params:
+- model_list
+- drop_params
+reqs:
+- FR-134
+- FR-140
+tasks:
+- '1.1'
+on_failure: 'Несуществующий алиас: вызов отклоняется с ошибкой алиаса; У провайдера нет ключа: алиас помечается
+  недоступным, вызов отклоняется'
+why: Смена модели без изменения агентов.
+operations:
+- name: переназначить алиас на другую модель
+  caller: Администратор
+  via: I13
+- name: вызов по алиасу
+  caller: Harness
+  via: I8

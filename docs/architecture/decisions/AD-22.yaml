@@ -1,0 +1,12 @@
+id: AD-22
+title: Базы, схемы и роли БД сервисов
+binds:
+- all
+prevents: отход реализации от решения «Базы, схемы и роли БД сервисов»
+rule: 'Решено по исследованию (R&D: базы, схемы и роли), уточняет AD-4 и AD-18. / Схема / База / Владелец
+  (роль БД) / Что хранит / /---/---/---/---/ / `public` / `itsaplan` / api ICPlan (`itsaplan`) / таблицы
+  форка, процесс задачи / / `platform` / `itsaplan` / api ICPlan (`itsaplan`): Platform module, Observability
+  / настройки агентов, профили, доступы, события запуска / / `runner`, `harness_ckpt` / `itsaplan` / Agent
+  Runner (`runner`) / слоты, кэш подготовки, checkpoint цикла / / `memory` / `itsaplan` / Memory API (`memory`)
+  / M3, позже M4 / / `public` / `litellm` / LiteLLM (`litellm`) / ключи, бюджеты, журнал затрат / Роль
+  сервиса — владелец своей схемы и своих миграций; чужие таблицы — только …'

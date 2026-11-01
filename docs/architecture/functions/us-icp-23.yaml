@@ -1,0 +1,23 @@
+id: us-icp-23
+title: удалить агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-195
+reads:
+- agent-settings-version
+writes:
+- access-policy
+- agent-run
+- agent-schedule
+- agent-settings
+- ai-agent
+- apikey
+- kill-switch
+- memory-profile
+- project
+- project-platform
+- project-resource
+- sandbox-profile

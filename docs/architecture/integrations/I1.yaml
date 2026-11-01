@@ -1,0 +1,15 @@
+id: I1
+title: Runner забирает запуск из очереди (`POST /agent-runs/claim`, pull, аренда 300 с); в ответе — `Run`
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: icplan
+purpose: Runner забирает запуск из очереди (`POST /agent-runs/claim`, pull, аренда 300 с); в ответе — `Run`
+integration_type: sync-api
+protocol: HTTP REST `POST /agent-runs/claim` (протокол `@itsaplan/runner`)
+format: JSON `Run`
+auth: Bearer API-ключ агента
+timeout: 10 с
+retry: backoff до 60 с
+idempotent: true

@@ -1,0 +1,7 @@
+id: mcp-tools
+title: MCP / Tools
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Руки агента: действия во внешних системах — задачи, документы, git.'

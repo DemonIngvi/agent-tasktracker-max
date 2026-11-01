@@ -1,0 +1,18 @@
+id: WorkspaceSource
+title: источник рабочего пространства
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: name
+  type: string
+- name: type
+  type: 'enum: git · folder'
+- name: url / prefix
+  type: string
+- name: branch
+  type: string
+- name: right
+  type: 'enum: read · write'

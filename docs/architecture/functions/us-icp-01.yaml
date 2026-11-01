@@ -1,0 +1,25 @@
+id: us-icp-01
+title: создать задачу нужного типа и чтобы она сама прошла шаги процесса с агентами
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-188
+- FR-197
+- FR-192
+- FR-211
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- process
+- process-step
+- process-version
+- project-action
+- run-event
+writes:
+- agent-run
+- agent-run-delivery
+- issue
+- issue-activity
+- issue-process-state

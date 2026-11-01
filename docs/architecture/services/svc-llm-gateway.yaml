@@ -1,0 +1,20 @@
+id: svc-llm-gateway
+title: Сервис LiteLLM gateway
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-llm-01
+- us-llm-02
+- us-llm-03
+- us-llm-04
+- us-llm-05
+- task-1-1-llm-gateway
+- task-4-5-llm-gateway
+- task-4-6-llm-gateway
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-9

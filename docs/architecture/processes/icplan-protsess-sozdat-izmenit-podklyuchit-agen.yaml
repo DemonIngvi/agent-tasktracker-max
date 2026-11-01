@@ -1,0 +1,29 @@
+id: icplan-protsess-sozdat-izmenit-podklyuchit-agen
+title: 'Процесс: создать, изменить, подключить агента, Действие'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Нужен процесс
+actors:
+- administrator
+inputs: []
+outputs: []
+journeys:
+- UJ-10
+steps:
+- title: Шаги, агенты, переходы
+  actor: administrator
+  inputs: []
+  outputs: []
+- title: Указать шаг для переноса
+  actor: administrator
+  inputs: []
+  outputs: []
+- title: Новая версия процесса
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Действие «делегировать агенту» (необязательно)
+  actor: administrator
+  inputs: []
+  outputs: []

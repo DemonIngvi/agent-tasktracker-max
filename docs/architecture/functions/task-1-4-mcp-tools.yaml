@@ -1,0 +1,13 @@
+id: task-1-4-mcp-tools
+title: '1.4. Harness: MCP и тулы'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-183
+- FR-184
+- FR-185
+- FR-186
+reads: []
+writes: []

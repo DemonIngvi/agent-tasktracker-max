@@ -1,0 +1,6 @@
+id: external-hosts
+title: Внешние хосты
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: external

@@ -1,0 +1,15 @@
+id: us-sbx-05
+title: получить результат предыдущего агента в своём рабочем пространстве
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-89
+- FR-29
+reads:
+- access-policy
+- project-platform
+- project-resource
+writes:
+- setup-cache

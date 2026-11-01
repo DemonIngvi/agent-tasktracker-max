@@ -1,0 +1,30 @@
+id: M3Record
+title: состояние задачи и передача следующему шагу (FR-39, AD-20)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: issueId
+  type: int
+- name: scope
+  type: 'enum: issue · agent · project · team'
+- name: agentId
+  type: int
+- name: done
+  type: string[]
+- name: next
+  type: string[]
+- name: blockers
+  type: string[]
+- name: artifacts
+  type: '{path, ref}[]'
+- name: questions
+  type: string[]
+- name: criteriaNext
+  type: Criterion[]
+- name: notesFor
+  type: '{step, text}[]'
+- name: version
+  type: int

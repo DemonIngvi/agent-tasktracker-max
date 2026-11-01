@@ -1,0 +1,11 @@
+id: us-pm-08
+title: задать руководство проекта — общие правила для всех агентов проекта
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-102
+- FR-30
+reads: []
+writes: []

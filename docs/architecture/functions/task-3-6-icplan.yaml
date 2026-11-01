@@ -1,0 +1,11 @@
+id: task-3-6-icplan
+title: '3.6. ICPlan: переходы по итогу запуска и очередь агента'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-205
+- FR-206
+reads: []
+writes: []

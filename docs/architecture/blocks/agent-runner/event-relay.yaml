@@ -1,0 +1,65 @@
+id: agent-runner-event-relay
+title: Event relay
+kind: service
+does:
+- Передаёт шаги Harness в ICPlan (таблица событий Observability) с дедупликацией по (run_id, seq)
+- Передаёт решение человека и указания обратно в Harness
+- Сообщает Scheduler о `waiting_approval` и решении — для освобождения и повторного занятия слотов
+tech: Go, поток RunEvent (NDJSON, AG-UI — D21)
+stories:
+- '9.1'
+- '1.4'
+- '4.10'
+io:
+- dir: in
+  with: Harness
+  what: '?'
+  via: I7
+- dir: out
+  with: ICPlan
+  what: '?'
+  via: I2
+- dir: in
+  with: ICPlan
+  what: '`ApprovalDecision`, `UserMessage` в ответе heartbeat'
+  via: I3
+- dir: out
+  with: Harness
+  what: '?'
+  via: I7
+- dir: out
+  with: Scheduler
+  what: '`waiting_approval`, решение'
+data:
+- table: run_event
+  access: write
+  why: (владелец Observability), напрямую не пишет
+- table: agent_run_delivery
+  access: read
+  why: 'через I3: подтверждение доставки решений и указаний (таблица ICPlan)'
+params:
+- events.level
+reqs:
+- FR-4
+- FR-10
+- FR-72
+- FR-69
+- FR-146
+- FR-24
+tasks:
+- '2.1'
+- '3.3'
+on_failure: 'ICPlan не принимает события: буфер в памяти Runner, досылка по `seq` без дублей (FMEA «ICPlan недоступен»,
+  I2); Поток Harness оборвался: переподключение с последнего `seq`; Runner перезапущен: статусы активных запусков
+  восстанавливаются, ICPlan получает актуальный статус без дублей'
+why: Один канал для чата запуска, approve и аудита.
+operations:
+- name: '`GET /run/events?seq=` — поток событий Harness, переподключение с последнего `seq`'
+  caller: Event relay
+  via: I7
+- name: POST /agent-runs/:runId/events
+  caller: Event relay
+  via: I2
+- name: '`POST /run/approval`, `POST /run/message` — решения и указания из ответа heartbeat'
+  caller: Event relay
+  via: I7

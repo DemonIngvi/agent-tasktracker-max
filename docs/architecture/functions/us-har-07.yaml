@@ -1,0 +1,12 @@
+id: us-har-07
+title: задать пользователю вопрос и подождать ответа
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-23
+- FR-5
+reads: []
+writes:
+- run-checkpoint

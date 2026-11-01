@@ -1,0 +1,15 @@
+id: I10
+title: проверка действия G2 (для MCP — повторно в Runner)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: guardrails
+purpose: проверка действия G2 (для MCP — повторно в Runner)
+integration_type: sync-api
+protocol: HTTP REST `POST /v1/data/agent/g2`
+format: JSON `PolicyInput` / `PolicyDecision`
+auth: внутренняя сеть
+timeout: 200 мс
+retry: нет → `on_engine_error`
+idempotent: true

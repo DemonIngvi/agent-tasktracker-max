@@ -1,0 +1,10 @@
+id: issue
+title: Таблица issue
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: review_with_me
+  type: bool

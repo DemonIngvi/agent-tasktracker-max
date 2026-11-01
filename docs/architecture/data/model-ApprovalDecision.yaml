@@ -1,0 +1,20 @@
+id: ApprovalDecision
+title: решение пользователя по вопросу или подтверждению
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: runId
+  type: int
+- name: seq
+  type: int
+- name: decision
+  type: 'enum: approve · reject · answer'
+- name: scope
+  type: 'enum: once · run'
+- name: by
+  type: string
+- name: comment
+  type: string | null

@@ -1,0 +1,11 @@
+id: us-llm-02
+title: разрабатывать и тестировать без ключей провайдера
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-137
+reads:
+- LiteLLM-ProxyModelTable
+writes: []

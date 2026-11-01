@@ -1,0 +1,13 @@
+id: us-obs-05
+title: видеть, сколько работы сделали агенты и во что она обошлась
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-152
+- FR-150
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+writes: []

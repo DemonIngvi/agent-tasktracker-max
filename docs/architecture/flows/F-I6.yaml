@@ -1,0 +1,15 @@
+id: F-I6
+title: Runner создаёт и уничтожает среду (Docker API) по `SandboxClaim`; `RepoGrant` задаёт правила git-прокси этой
+  среды …
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: sandbox
+objects:
+- SandboxClaim
+- RepoGrant
+trigger: Runner создаёт и уничтожает среду (Docker API) по `SandboxClaim`; `RepoGrant` задаёт правила git-прокси
+  этой среды (какие репозитории и ветки), сам токен в среду не попадает
+flow_type: command
+over: I6

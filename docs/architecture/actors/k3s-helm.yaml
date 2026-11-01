@@ -1,0 +1,6 @@
+id: k3s-helm
+title: k3s / Helm
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

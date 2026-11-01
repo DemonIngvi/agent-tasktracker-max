@@ -1,0 +1,16 @@
+id: Checkpoint
+title: состояние цикла (I12)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: runId
+  type: int
+- name: iteration
+  type: int
+- name: parentIteration
+  type: int
+- name: state
+  type: string (base64)

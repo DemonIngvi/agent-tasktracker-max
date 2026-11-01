@@ -1,0 +1,10 @@
+id: task-2-4-mcp-tools
+title: 2.4. MCP `itsaplan-core` для агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-179
+reads: []
+writes: []

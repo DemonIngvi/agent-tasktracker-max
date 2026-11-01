@@ -1,0 +1,741 @@
+params:
+- name: agent.kind
+  default: internal
+  min: internal
+  max: external
+  why: значение по умолчанию ICPlan; агент платформы создаётся явно как external
+- name: agent.enabled
+  default: да
+  min: нет
+  max: да
+  why: новый агент сразу участвует в работе
+- name: agent.runner_scope
+  default: team
+  min: owner
+  max: team
+  why: значение по умолчанию ICPlan; агенты платформы — общие для команды
+- name: agent.delegation_delay_sec
+  default: '120'
+  min: '0'
+  max: '86400'
+  why: 'значение ICPlan: время дописать задачу после делегирования человеком'
+- name: AGENT_RUN_LEASE_SECONDS
+  default: '300'
+  min: 3 × интервал heartbeat Runner
+  max: '3600'
+  why: значение ICPlan; heartbeat Runner продлевает аренду
+- name: AGENT_RUN_MAX_ATTEMPTS
+  default: '3'
+  min: '1'
+  max: '10'
+  why: 'значение ICPlan: первая выдача + 2 повтора после падения Runner'
+- name: AGENT_RUN_TIMEOUT_MS
+  default: '240000'
+  min: '10000'
+  max: '3600000'
+  why: значение ICPlan
+- name: runner.offline_after_s
+  default: '60'
+  min: 5 × `poll_interval_ms`
+  max: '600'
+  why: 20 пропущенных опросов при опросе раз в 3 с
+- name: protocol.version
+  default: 0.5 (`@itsaplan/runner` 0.5.2 в форке)
+  min: версия ICPlan (major)
+  max: версия ICPlan (major)
+  why: 'версия пакета протокола форка; сейчас форк её не передаёт — доработка: Runner шлёт заголовок `x-runner-protocol`
+    в `claim` и heartbeat, ICPlan отвечает 426 при несовпадении major (FR-9)'
+- name: runs.retention_days
+  default: '365'
+  min: 365; 0 — не чистить
+  max: нет
+  why: 'верхняя граница M2 (`retention`, agent-memory) и `retention_days` событий (observability): ни профиль памяти,
+    ни события не требуют строк дольше'
+- name: chat.retention_days
+  default: '90'
+  min: 90; 0 — не чистить
+  max: нет
+  why: 'верхняя граница M1 (`retention`, agent-memory): ни один профиль памяти не требует переписки дольше'
+- name: project.mcp_enabled
+  default: выключен
+  min: выключен
+  max: включён
+  why: 'значение ICPlan: MCP выключен по умолчанию'
+- name: model.temperature
+  default: '0.2'
+  min: '0'
+  max: '1.0'
+  why: работа по задаче требует повторяемости, а не разнообразия
+- name: model.top_p
+  default: '1.0'
+  min: '0.1'
+  max: '1.0'
+  why: регулируется температурой; не менять оба сразу
+- name: model.max_output_tokens
+  default: '8192'
+  min: '256'
+  max: лимит выхода модели
+  why: хватает на план и код одного шага
+- name: model.reasoning_effort
+  default: medium
+  min: low
+  max: high
+  why: баланс качества и стоимости
+- name: model.reasoning_budget_tokens
+  default: '8000'
+  min: '1024'
+  max: '`model.max_output_tokens` × 4'
+  why: ≈ размер ответа; минимум провайдеров — 1024
+- name: model.tool_choice
+  default: auto
+  min: none
+  max: required
+  why: модель сама решает, нужен ли тул
+- name: model.parallel_tool_calls
+  default: 'false'
+  min: 'false'
+  max: 'true'
+  why: каждый вызов проходит G2 по очереди, проще аудит
+- name: model.response_format
+  default: text
+  min: text
+  max: json_schema
+  why: итог — комментарий в задаче
+- name: prompt.platform_version
+  default: версия образа Harness
+  min: —
+  max: —
+  why: промпт поставляется с образом и меняется вместе с ним
+- name: prompt.cache
+  default: вкл
+  min: выкл
+  max: вкл
+  why: слои 1–4 стабильны между шагами — дешевле и быстрее
+- name: request.timeout_s
+  default: '120'
+  min: '10'
+  max: '600'
+  why: долгий ответ с размышлениями укладывается в 2 мин
+- name: workspace.publish
+  default: вложения + PR
+  min: ничего
+  max: вложения, PR, папка задачи
+  why: результат там, где его ждёт пользователь
+- name: limits.max_steps
+  default: '30'
+  min: '5'
+  max: '200'
+  why: типичный запуск ~9 шагов (поток Harness) × 3 запас
+- name: limits.max_tokens
+  default: 200 000
+  min: 20 000
+  max: потолок `budget.per_run_tokens` L0
+  why: ~55 тыс. токенов на запуск по профилю нагрузки × 3–4
+- name: compaction.threshold
+  default: 80% окна
+  min: 50% окна
+  max: 90% окна
+  why: оставляет 20% окна на ответ модели и вывод тула
+- name: approval.tools
+  default: из guardrails
+  min: пусто
+  max: все тулы агента
+  why: единый источник правил — guardrails
+- name: hooks
+  default: G2
+  min: G2
+  max: G2, аудит, маскирование
+  why: проверка каждого действия включена
+- name: checkpoint.ttl
+  default: 7 дней
+  min: '`approval_timeout` (24 ч)'
+  max: 30 дней
+  why: подтверждение ждёт до 24 ч + выходные + запас
+- name: m3_max_kb
+  default: '16'
+  min: '2'
+  max: '64'
+  why: 'состояние задачи — кратко: сделано, дальше, блокировки'
+- name: read
+  default: M2, M3, M5, M6
+  min: M3
+  max: M0–M6 (M4 после MVP)
+  why: M1 длинная — есть итоги M2; M4 — после MVP
+- name: write
+  default: M3
+  min: нет
+  max: M3, M4 (после MVP)
+  why: M1 и M2 пишутся автоматически; агент пишет только состояние задачи
+- name: m2_last_runs
+  default: '3'
+  min: '0'
+  max: '10'
+  why: прошлый шаг + 2 попытки (лимит шага 3)
+- name: retention
+  default: M1 30 д, M2 180 д, M3 до закрытия задачи, M4 до замены факта (`valid_to`)
+  min: M1 7 д, M2 30 д
+  max: M1 90 д, M2 365 д
+  why: M1 — оперативная; M2 — для статистики за полгода; M3 нужна, пока задача открыта; M4 — факт действует, пока
+    его не заменил новый (после MVP)
+- name: scope
+  default: задача
+  min: задача
+  max: команда
+  why: наименьшая видимость по умолчанию
+- name: learning_ttl_days
+  default: '28'
+  min: '1'
+  max: '365'
+  why: решение владельца 2026-10-14; пересмотр по замеру (agent-chain.md, ворота G9)
+- name: quarantine_n
+  default: '3'
+  min: '1'
+  max: '10'
+  why: решение владельца 2026-10-14; пересмотр по замеру (agent-chain.md, ворота G9)
+- name: agent.model
+  default: — (обязательный)
+  min: алиас из `model_list` LiteLLM
+  max: алиас из `model_list` LiteLLM
+  why: модель выбирают под задачу агента
+- name: agent.instruction
+  default: — (обязательный)
+  min: 50 символов
+  max: 20 000 символов
+  why: без инструкции агент не знает роли
+- name: agent.tools
+  default: нет
+  min: нет
+  max: весь каталог
+  why: наименьшие права
+- name: agent.skills
+  default: нет
+  min: нет
+  max: весь каталог
+  why: наименьшие права, короткий контекст
+- name: agent.mcp_servers
+  default: нет
+  min: нет
+  max: весь каталог
+  why: наименьшие права
+- name: agent.projects
+  default: нет
+  min: нет
+  max: все проекты команды
+  why: агент не видит проекты, пока его не добавили
+- name: agent.version
+  default: последняя
+  min: '1'
+  max: последняя
+  why: изменения применяются со следующего запуска
+- name: scheduling.aging_s
+  default: '600'
+  min: '60'
+  max: '3600'
+  why: низкий приоритет стартует не позже ~30 мин при 3 уровнях выше
+- name: poll_interval_ms
+  default: '3000'
+  min: '1000'
+  max: '30000'
+  why: ~0,3 RPS на агента — малая доля пика API (20 RPS)
+- name: concurrency
+  default: '1'
+  min: '1'
+  max: '`scheduling.global_max`'
+  why: задачи агента обычно в одной кодовой базе — без гонок
+- name: timeout_s
+  default: '1800'
+  min: '60'
+  max: '14400'
+  why: 30 мин — длинная задача с кодом и тестами
+- name: retry
+  default: 0 (без повтора)
+  min: '0'
+  max: '3'
+  why: повтор неидемпотентной работы даёт двойные комментарии и PR
+- name: agents
+  default: — (обязательный)
+  min: 1 ключ
+  max: все внешние агенты команды
+  why: Runner без ключей не получает запусков
+- name: guardrails.g1.enabled
+  default: 'true'
+  min: 'false'
+  max: 'true'
+  why: fail-closed по умолчанию
+- name: scheduling.mode
+  default: parallel
+  min: sequential
+  max: parallel
+  why: полезная пропускная способность
+- name: scheduling.global_max
+  default: '4'
+  min: '1'
+  max: (vCPU узла − резерв сервисов) / CPU профиля sandbox
+  why: 'профиль нагрузки: 4 активных; 8 vCPU узла − сервисы ≈ 4 CPU по 1 CPU на sandbox'
+- name: scheduling.per_issue
+  default: '1'
+  min: '1'
+  max: '1'
+  why: исключает гонки внутри задачи (FR-70)
+- name: scheduling.order
+  default: fifo
+  min: fifo
+  max: priority
+  why: предсказуемо, без голодания
+- name: scheduling.agents.<id>.parallel / max
+  default: нет / 1
+  min: '1'
+  max: '`concurrency`'
+  why: как `concurrency`
+- name: scheduling.models.<alias>.max
+  default: '3'
+  min: '1'
+  max: '`scheduling.global_max`'
+  why: rate limit типового ключа провайдера при ~1 RPS к LiteLLM
+- name: pool.size
+  default: '2'
+  min: '0'
+  max: '`scheduling.global_max`'
+  why: см. agent-sandbox
+- name: provider
+  default: docker
+  min: docker
+  max: k8s
+  why: см. agent-sandbox
+- name: workspace.sources
+  default: нет
+  min: нет
+  max: все ресурсы каталога проекта
+  why: см. agent-sandbox
+- name: setup.script
+  default: нет
+  min: нет
+  max: —
+  why: см. agent-sandbox
+- name: setup.cache_ttl_h
+  default: '168'
+  min: '0'
+  max: '720'
+  why: см. agent-sandbox
+- name: setup.timeout_s
+  default: '600'
+  min: '60'
+  max: '3600'
+  why: см. agent-sandbox
+- name: servers
+  default: itsaplan-core
+  min: itsaplan-core
+  max: каталог серверов
+  why: см. tool-integration
+- name: tools
+  default: минимальный (чтение задачи, комментарий)
+  min: пусто
+  max: все тулы сервера
+  why: см. tool-integration
+- name: auth.secret_ref
+  default: — (обязательный)
+  min: ссылка на Secret
+  max: ссылка на Secret
+  why: см. tool-integration
+- name: on_engine_error
+  default: deny
+  min: deny
+  max: allow
+  why: см. guardrails
+- name: kill_switch
+  default: выкл
+  min: выкл
+  max: вкл
+  why: см. guardrails
+- name: budget.run / agent_day / project_month
+  default: 1 $ / 5 $ / задаётся
+  min: 0,1 $ / 0 $ / 0 $
+  max: run ≤ agent_day ≤ project_month / 20
+  why: см. guardrails
+- name: limits.idle_s
+  default: '300'
+  min: '60'
+  max: '`timeout_s`'
+  why: см. guardrails
+- name: events.level
+  default: всё
+  min: итоги
+  max: всё
+  why: см. observability
+- name: image
+  default: agent-harness:<версия>
+  min: —
+  max: —
+  why: образ совпадает с версией Harness
+- name: resources.cpu
+  default: '1'
+  min: 0,25
+  max: '4'
+  why: вызовы LLM + git и тесты небольших репозиториев
+- name: resources.memory_mb
+  default: '1024'
+  min: '256'
+  max: '8192'
+  why: вызовы LLM + git и тесты небольших репозиториев
+- name: resources.disk_gb
+  default: '2'
+  min: '1'
+  max: '20'
+  why: клон небольшого репозитория и зависимости
+- name: network.egress_allow
+  default: только платформа
+  min: только платформа
+  max: список доменов
+  why: наименьшие права, без утечки
+- name: repos.clone_depth
+  default: '1'
+  min: '1'
+  max: 0 (полная история)
+  why: быстрый клон, история обычно не нужна
+- name: runtime
+  default: runc
+  min: runc
+  max: runsc
+  why: совместимость с образом Harness проверена; gVisor — после проверки 2.2.8
+- name: setup.registries
+  default: pypi.org, files.pythonhosted.org, registry.npmjs.org
+  min: пусто
+  max: список доменов
+  why: основные реестры Python и Node
+- name: prompt.guidance
+  default: нет
+  min: нет
+  max: '`prompt.guidance_max_chars`'
+  why: общие правила проекта задаёт администратор при необходимости
+- name: prompt.guidance_max_chars
+  default: '4000'
+  min: '0'
+  max: '16000'
+  why: ≈ 1 тыс. токенов — 0,5% окна
+- name: model_alias
+  default: team-default
+  min: алиас из `model_list`
+  max: алиас из `model_list`
+  why: см. `agent.model` (agent-registry)
+- name: fallback
+  default: нет
+  min: нет
+  max: список алиасов
+  why: см. `fallbacks` (llm-gateway)
+- name: budget.daily_usd
+  default: 5 $
+  min: 0 $
+  max: '`project_month` / 20 рабочих дней'
+  why: ~10 запусков × ~55 тыс. токенов ≈ 2–4 $ на средних моделях + запас
+- name: budget.per_run_tokens
+  default: 200 000
+  min: 20 000
+  max: окно модели
+  why: см. `limits.max_tokens` (agent-harness)
+- name: rate_limit
+  default: '60'
+  min: '10'
+  max: rpm ключа провайдера / число агентов
+  why: шаг агента — 1 вызов модели в 1–5 с
+- name: limits.timeout_s
+  default: '1800'
+  min: '60'
+  max: '14400'
+  why: см. `timeout_s` (agent-runner)
+- name: autonomy_level
+  default: R2
+  min: R0
+  max: R5
+  why: см. `autonomy_level` (guardrails)
+- name: sandbox_profile
+  default: light
+  min: light
+  max: heavy
+  why: light = 1 CPU, 1 ГБ, 2 ГБ (agent-sandbox)
+- name: sandbox.egress_allow
+  default: только платформа
+  min: только платформа
+  max: список доменов
+  why: см. agent-sandbox
+- name: sandbox.pool.size
+  default: '2'
+  min: '0'
+  max: '`global_max`'
+  why: см. agent-sandbox
+- name: memory_profile.read
+  default: M2, M3, M5, M6
+  min: M3
+  max: M0–M6
+  why: см. agent-memory
+- name: memory_profile.write
+  default: M3
+  min: нет
+  max: M3, M4
+  why: см. agent-memory
+- name: memory.m2_last_runs
+  default: '3'
+  min: '0'
+  max: '10'
+  why: см. agent-memory
+- name: memory.retention
+  default: M1 30 д, M2 180 д, M3 до закрытия задачи, M4 до замены факта (`valid_to`)
+  min: M1 7 д, M2 30 д
+  max: M1 90 д, M2 365 д
+  why: см. agent-memory
+- name: guardrails.tools_allow
+  default: из определения
+  min: нет
+  max: тулы агента
+  why: см. `agent.tools` (agent-registry)
+- name: guardrails.approval
+  default: запись в задачу, push
+  min: пусто
+  max: все тулы агента
+  why: необратимые и видимые людям действия
+- name: guardrails.approval_timeout
+  default: 24 ч
+  min: 15 мин
+  max: 72 ч
+  why: рабочий день + ночь
+- name: learning.<вид>
+  default: 'off'
+  min: 'off'
+  max: apply_gated
+  why: 'обучение выключено по умолчанию: польза не измерена на уровне проекта (agent-chain.md, Э9)'
+- name: snapshots.schedule
+  default: перед каждым применением изменения
+  min: перед применением
+  max: ежедневно
+  why: откат невозможен без снимка до применения
+- name: snapshots.retention_days
+  default: 30 д
+  min: 1 д
+  max: без ограничения
+  why: решение владельца 2026-10-14
+- name: toolsmith
+  default: выкл
+  min: выкл
+  max: вкл
+  why: созданные тулы небезопасны в 65,5% случаев (Misevolution); применяет только человек
+- name: repos
+  default: нет
+  min: нет
+  max: репозитории проекта
+  why: наименьшие права
+- name: version
+  default: последняя
+  min: '1'
+  max: последняя
+  why: см. `agent.version` (agent-registry)
+- name: opa.cache_ttl_s
+  default: '60'
+  min: '0'
+  max: '300'
+  why: повторы одного вызова в запуске не ждут OPA
+- name: engine
+  default: opa
+  min: opa
+  max: opa
+  why: решение AD-6
+- name: g1.enabled / g2.enabled / g3.enabled / g4.enabled
+  default: g1–g3 вкл, g4 выкл
+  min: все выкл (dev)
+  max: все вкл
+  why: G4 (модерация LLM) добавляет задержку и стоимость
+- name: tools_allow / approval
+  default: из агента
+  min: пусто
+  max: тулы агента
+  why: единый источник — настройки агента
+- name: bundles.<name>.resource
+  default: 'бандл `opa-bundle` (базовые правила AD-6: allowlist + approval)'
+  min: —
+  max: —
+  why: базовые правила AD-6
+- name: loop.repeat_calls
+  default: '3'
+  min: '2'
+  max: '10'
+  why: 2 повтора бывают законны (после ошибки), третий — цикл
+- name: loop.no_progress_steps
+  default: '8'
+  min: '3'
+  max: '`limits.max_steps`'
+  why: ~25% от `max_steps` 30
+- name: anomaly.step_x_median
+  default: '5'
+  min: '2'
+  max: '20'
+  why: шаг в 5 раз дороже медианы — огромный контекст или вывод тула
+- name: circuit.max_errors
+  default: '3'
+  min: '1'
+  max: '10'
+  why: как `AGENT_RUN_MAX_ATTEMPTS` ICPlan
+- name: learning.regression_threshold
+  default: 95%
+  min: 0%
+  max: 100%
+  why: 'пример из R&D: не хуже снимка в пределах шума повторов; принято владельцем 2026-10-14 как значение по умолчанию,
+    пересмотр по замеру'
+- name: learning.cost_ceiling_usd
+  default: 10% от `budget.project_month`
+  min: 0 $
+  max: '`budget.daily_usd`'
+  why: решение владельца 2026-10-14; без заданного бюджета проекта режим обучения выше off включить нельзя
+- name: drop_params
+  default: 'true'
+  min: 'false'
+  max: 'true'
+  why: одно определение агента работает на разных моделях
+- name: model_list
+  default: team-default → mock
+  min: 1 алиас
+  max: —
+  why: разработка без ключей провайдера (mock-LLM)
+- name: fallbacks
+  default: нет
+  min: нет
+  max: список алиасов
+  why: резервная модель может быть дороже или хуже — включать осознанно
+- name: key.max_budget
+  default: из Platform module
+  min: 0 $
+  max: '`budget.daily_usd`'
+  why: единый источник — `budget.daily_usd`
+- name: key.rpm / tpm
+  default: 60 / не ограничено
+  min: 10 / 10 000
+  max: лимиты аккаунта провайдера
+  why: rpm = `rate_limit` агента; токены ограничивает бюджет
+- name: guardrails
+  default: выкл
+  min: выкл
+  max: вкл
+  why: см. `g4.enabled` (guardrails)
+- name: retention_days
+  default: '90'
+  min: '7'
+  max: '365'
+  why: квартал для разборов и статистики
+- name: cost.source
+  default: LiteLLM spend log
+  min: LiteLLM spend log
+  max: LiteLLM spend log
+  why: единственный учёт токенов и $
+- name: k3s.version
+  default: v1.37.1+k3s1
+  min: минимальная, поддерживаемая чартами
+  max: последний патч минорной версии
+  why: актуальная стабильная (TECHNOLOGIES.md)
+- name: ingress.host / tls
+  default: ACME
+  min: ACME
+  max: свой сертификат
+  why: автоматическое продление сертификата
+- name: <сервис>.replicas
+  default: api 2, LiteLLM 2, OPA 2, остальные 1
+  min: '1'
+  max: ёмкость узла и соединений Postgres
+  why: 2 — обновление без простоя
+- name: <сервис>.resources
+  default: по таблице сайзинга
+  min: requests по таблице сайзинга
+  max: ёмкость узла
+  why: профиль нагрузки (R&D)
+- name: pgbouncer.pool_mode / size
+  default: transaction / 30
+  min: session / 10
+  max: transaction / `max_connections` − служебные
+  why: 30 соединений к Postgres с запасом при `max_connections` 100
+- name: postgres.backup.target
+  default: S3 вне узла
+  min: S3 вне узла
+  max: S3 вне узла
+  why: копия переживает потерю узла
+- name: objectStorage.endpoint
+  default: RustFS в кластере
+  min: RustFS в кластере
+  max: внешний S3
+  why: как в ICPlan
+- name: networkPolicy.enabled
+  default: 'true'
+  min: 'false'
+  max: 'true'
+  why: изоляция по умолчанию
+- name: max_result_kb
+  default: '64'
+  min: '8'
+  max: '256'
+  why: ≈ 16 тыс. токенов ≈ 8% окна 200 тыс.
+- name: process.issue_type
+  default: — (обязательный)
+  min: тип проекта
+  max: тип проекта
+  why: процесс задаётся для типа
+- name: step.column
+  default: — (обязательный)
+  min: колонка проекта
+  max: колонка проекта
+  why: шаг = колонка
+- name: step.agent
+  default: нет
+  min: нет
+  max: агент — участник проекта
+  why: шаг ручной, пока агента не назначили
+- name: step.on_success / on_failure
+  default: следующий шаг / остаться
+  min: шаг процесса
+  max: шаг, другой процесс, «завершить»
+  why: линейный процесс, ошибка не двигает задачу
+- name: step.transitions
+  default: 'пусто: только `on_success / on_failure`'
+  min: справочник причин (`done`, `defect`, `spec_question`, `blocked`)
+  max: шаг, человек, «завершить»
+  why: совместимость с линейным процессом
+- name: step.max_runs
+  default: '3'
+  min: '1'
+  max: '10'
+  why: 'как `AGENT_RUN_MAX_ATTEMPTS` ICPlan: запуск + 2 доработки'
+- name: process.max_total_runs
+  default: '8'
+  min: '1'
+  max: '30'
+  why: 'принято владельцем 2026-10-14 как значение по умолчанию, пересмотр по замеру (agent-chain.md, ворота G9):
+    цепочка из 3 шагов + 2 круга возврата'
+- name: process.no_progress_rounds
+  default: '2'
+  min: '1'
+  max: '5'
+  why: принято владельцем 2026-10-14 как значение по умолчанию, пересмотр по замеру (agent-chain.md, ворота G9)
+- name: process.verify_default
+  default: вкл
+  min: выкл
+  max: вкл
+  why: независимая проверка по умолчанию (AD-27); выкл — базовая линия «один агент»
+- name: step.require_review
+  default: выкл
+  min: выкл
+  max: вкл
+  why: процесс автоматический по умолчанию
+- name: issue.review_with_me
+  default: выкл
+  min: выкл
+  max: вкл
+  why: решает пользователь для важной задачи
+- name: issue.process_paused
+  default: нет
+  min: нет
+  max: да
+  why: процесс идёт
+- name: review_reminder_hours
+  default: '24'
+  min: '1'
+  max: '168'
+  why: рабочий день
+- name: project.actions
+  default: нет
+  min: нет
+  max: Действия проекта
+  why: автоматизация — по выбору администратора

@@ -1,0 +1,18 @@
+id: CostAggregate
+title: сводка затрат по задаче и агенту (экран «Затраты», FR-150)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: issueId
+  type: int
+- name: agentId
+  type: int
+- name: runs
+  type: int
+- name: inputTokens / outputTokens
+  type: int | null
+- name: costUsd
+  type: float | null

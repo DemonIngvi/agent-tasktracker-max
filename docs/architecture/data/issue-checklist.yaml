@@ -1,0 +1,9 @@
+id: issue-checklist
+title: Таблица issue_checklist
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes: []
+states: []

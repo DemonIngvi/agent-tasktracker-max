@@ -1,0 +1,30 @@
+id: infrastructure-obnovlenie-bez-prostoya
+title: Обновление без простоя
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Новая версия
+actors:
+- dannye
+- k3s-helm
+inputs: []
+outputs: []
+journeys:
+- UJ-11
+steps:
+- title: helm upgrade
+  actor: k3s-helm
+  inputs: []
+  outputs: []
+- title: Миграции БД
+  actor: dannye
+  inputs: []
+  outputs: []
+- title: Реплики по одной
+  actor: k3s-helm
+  inputs: []
+  outputs: []
+- title: Откат ревизии
+  actor: k3s-helm
+  inputs: []
+  outputs: []

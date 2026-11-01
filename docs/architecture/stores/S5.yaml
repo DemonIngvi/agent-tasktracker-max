@@ -1,0 +1,16 @@
+id: S5
+title: Postgres ICPlan, схема `harness_ckpt`
+owner: agent-runner
+lifecycle: planned
+criticality: medium
+objects:
+- run-checkpoint
+tables:
+- run_checkpoint
+writes:
+- agent-runner
+reads:
+- agent-runner
+deletes: agent-runner
+delete_trigger: 7 дней
+backup: 7 дней

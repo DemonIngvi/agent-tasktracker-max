@@ -1,0 +1,12 @@
+id: us-mcp-05
+title: видеть, какие тулы может вызвать каждый агент
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-177
+reads:
+- project-resource
+writes:
+- run-event

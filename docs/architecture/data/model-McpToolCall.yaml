@@ -1,0 +1,20 @@
+id: McpToolCall
+title: вызов тула MCP (JSON-RPC 2.0)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: jsonrpc / id
+  type: string / int
+- name: method
+  type: 'enum: tools/list · tools/call'
+- name: params.name
+  type: string
+- name: params.arguments
+  type: object
+- name: result.content
+  type: '{type, text}[]'
+- name: error
+  type: '{code, message}'

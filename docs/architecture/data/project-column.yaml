@@ -1,0 +1,9 @@
+id: project-column
+title: Таблица project_column
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes: []
+states: []

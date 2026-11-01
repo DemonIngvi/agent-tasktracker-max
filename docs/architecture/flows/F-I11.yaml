@@ -1,0 +1,12 @@
+id: F-I11
+title: запись и чтение M3, контекст памяти
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: memory
+objects:
+- M3Record
+trigger: запись и чтение M3, контекст памяти
+flow_type: command
+over: I11

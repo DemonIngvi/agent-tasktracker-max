@@ -1,0 +1,14 @@
+id: F-I24
+title: MCP-прокси Runner вызывает MCP-сервер itsaplan-core в api ICPlan (`POST /mcp`) с ключом агента из Secret
+  (AD-19); …
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: icplan
+objects:
+- McpToolCall
+trigger: MCP-прокси Runner вызывает MCP-сервер itsaplan-core в api ICPlan (`POST /mcp`) с ключом агента из Secret
+  (AD-19); дальше I9 — к Harness
+flow_type: command
+over: I24

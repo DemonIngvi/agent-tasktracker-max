@@ -1,0 +1,15 @@
+id: us-icp-03
+title: получить уведомление, когда агент ждёт моего решения или закончил
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-6
+- FR-5
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

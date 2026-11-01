@@ -1,0 +1,9 @@
+id: agent-schedule
+title: Таблица agent_schedule
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes: []
+states: []

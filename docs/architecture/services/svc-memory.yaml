@@ -1,0 +1,25 @@
+id: svc-memory
+title: Сервис Memory
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-mem-01
+- us-mem-02
+- us-mem-03
+- us-mem-04
+- us-mem-05
+- us-mem-06
+- us-mem-07
+- us-mem-08
+- us-mem-09
+- us-mem-10
+- task-2-5-memory
+- task-4-4-memory
+- task-4-6-memory
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-3

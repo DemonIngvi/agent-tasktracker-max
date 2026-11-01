@@ -1,0 +1,12 @@
+id: us-inf-04
+title: восстановить данные после потери сервера
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-165
+- FR-163
+- FR-164
+reads: []
+writes: []

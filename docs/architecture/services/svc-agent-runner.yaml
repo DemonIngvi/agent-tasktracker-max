@@ -1,0 +1,20 @@
+id: svc-agent-runner
+title: Сервис Agent Runner
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-run-01
+- us-run-02
+- us-run-03
+- us-run-04
+- us-run-05
+- us-run-06
+- task-2-1-agent-runner
+- task-2-2-agent-runner
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-5

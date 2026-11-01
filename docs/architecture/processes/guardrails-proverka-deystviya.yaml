@@ -1,0 +1,26 @@
+id: guardrails-proverka-deystviya
+title: Проверка действия
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Действие агента
+actors:
+- administrator
+- opa
+inputs: []
+outputs:
+- PolicyDecision
+- ApprovalDecision
+journeys:
+- UJ-3
+steps:
+- title: Решение по Rego
+  actor: opa
+  inputs: []
+  outputs:
+  - PolicyDecision
+- title: Подтверждение человеком
+  actor: administrator
+  inputs: []
+  outputs:
+  - ApprovalDecision

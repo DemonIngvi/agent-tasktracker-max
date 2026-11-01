@@ -1,0 +1,11 @@
+id: task-4-7-infrastructure
+title: 4.7. Postgres (CloudNativePG), PgBouncer, RustFS, бэкап вне узла
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-171
+- FR-173
+reads: []
+writes: []

@@ -1,0 +1,10 @@
+id: us-mcp-04
+title: дать агенту навык (skill)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-181
+reads: []
+writes: []

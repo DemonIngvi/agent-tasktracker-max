@@ -1,0 +1,12 @@
+id: us-inf-01
+title: развернуть платформу на чистом сервере одной командой
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-160
+- FR-168
+- FR-159
+reads: []
+writes: []

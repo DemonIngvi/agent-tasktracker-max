@@ -1,0 +1,6 @@
+id: pol-zovatel
+title: Пользователь
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

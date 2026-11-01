@@ -1,0 +1,20 @@
+id: VirtualKey
+title: ключ LiteLLM на агента (`/key/generate`)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: key_alias
+  type: string
+- name: models
+  type: string[]
+- name: max_budget
+  type: float
+- name: budget_duration
+  type: string
+- name: rpm_limit / tpm_limit
+  type: int
+- name: metadata
+  type: object

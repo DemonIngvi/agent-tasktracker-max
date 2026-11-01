@@ -1,0 +1,19 @@
+id: us-pm-04
+title: чтобы настройки дошли до LiteLLM и OPA
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-100
+- FR-108
+reads:
+- ai-agent
+writes:
+- LiteLLM-VerificationToken
+- access-policy
+- agent-settings
+- agent-settings-version
+- kill-switch
+- project-platform
+- project-resource

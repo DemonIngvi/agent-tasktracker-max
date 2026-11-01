@@ -1,0 +1,29 @@
+id: AgUiEvent
+title: событие протокола AG-UI
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: type
+  type: 'enum: RUN_STARTED · RUN_FINISHED · RUN_ERROR · STEP_STARTED · STEP_FINISHED · TEXT_MESSAGE_START · TEXT_MESSAGE_CONTENT
+    · TEXT_MESSAGE_END · REASONING_START · REASONING_MESSAGE_START · REASONING_MESSAGE_CONTENT · REASONING_MESSAGE_END
+    · REASONING_END · TOOL_CALL_START · TOOL_CALL_ARGS · TOOL_CALL_END · TOOL_CALL_RESULT · ACTIVITY_SNAPSHOT ·
+    CUSTOM'
+- name: runId / threadId
+  type: string
+- name: stepName
+  type: string
+- name: messageId / role / delta
+  type: string
+- name: toolCallId / toolCallName / parentMessageId / content
+  type: string
+- name: activityType / content
+  type: string / object
+- name: name
+  type: string
+- name: value
+  type: object
+- name: message / code
+  type: string

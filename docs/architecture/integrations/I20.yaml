@@ -1,0 +1,15 @@
+id: I20
+title: интерфейс ICPlan ↔ API (в том числе экраны Platform module, чат запуска, сводка)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: icplan
+to: icplan
+purpose: интерфейс ICPlan ↔ API (в том числе экраны Platform module, чат запуска, сводка)
+integration_type: sync-api
+protocol: HTTP REST (существующий)
+format: JSON
+auth: сессия пользователя
+timeout: не задан
+retry: не задан
+idempotent: null

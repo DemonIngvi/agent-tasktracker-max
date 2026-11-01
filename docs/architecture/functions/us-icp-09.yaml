@@ -1,0 +1,17 @@
+id: us-icp-09
+title: задать агенту вопрос или поручение упоминанием в комментарии
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-2
+- FR-4
+- FR-70
+- FR-204
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

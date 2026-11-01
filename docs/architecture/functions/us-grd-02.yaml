@@ -1,0 +1,13 @@
+id: us-grd-02
+title: понимать, почему агенту отказали
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-125
+- FR-116
+reads:
+- agent-settings
+- kill-switch
+writes: []

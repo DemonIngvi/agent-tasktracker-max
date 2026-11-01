@@ -1,0 +1,13 @@
+id: F-I2
+title: шаги запуска и итог
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: icplan
+objects:
+- RunEvent
+- RunResult
+trigger: шаги запуска и итог
+flow_type: command
+over: I2

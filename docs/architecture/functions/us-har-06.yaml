@@ -1,0 +1,12 @@
+id: us-har-06
+title: получить указание пользователя во время работы и учесть его
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-28
+- FR-10
+reads:
+- project-platform
+writes: []

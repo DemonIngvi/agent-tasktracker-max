@@ -1,0 +1,12 @@
+id: AD-2
+title: 'Harness: LangGraph (Python) внутри sandbox — подтверждено'
+binds:
+- all
+prevents: 'отход реализации от решения «Harness: LangGraph (Python) внутри sandbox — подтверждено»'
+rule: 'Агентский цикл — граф LangGraph: `context → llm → tools → context`. Hooks (G2) реализуются как
+  узлы/обёртки графа до и после `llm` и `tools`. LLM-клиент настроен на endpoint LiteLLM (OpenAI-совместимый
+  API). - Альтернативы (R&D v3.1, 11.10.2026): OpenAI Agents SDK (запасной: пауза через `RunState`, сравнение
+  прототипом в 1.3.9), PydanticAI, Google ADK, Microsoft Agent Framework, Claude Agent SDK (формат Anthropic,
+  CLI в образе), Hermes Agent (готовый агент: заменил бы Runner, Sandbox, Memory, Guardrails), свой минимальный
+  цикл (всё писать самим). - Почему LangGraph: `interrupt` для approve (G2), checkpoint на каждом шаге
+  для возобновления (хранится у Runner в S5, Harness пишет через I12 — …'

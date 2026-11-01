@@ -1,0 +1,12 @@
+id: us-mem-03
+title: удалить или исправить ошибочную память
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-42
+- FR-43
+reads:
+- issue-activity
+writes: []

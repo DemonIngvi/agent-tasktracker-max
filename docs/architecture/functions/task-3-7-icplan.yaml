@@ -1,0 +1,10 @@
+id: task-3-7-icplan
+title: '3.7. ICPlan: управление ходом задачи'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-207
+reads: []
+writes: []

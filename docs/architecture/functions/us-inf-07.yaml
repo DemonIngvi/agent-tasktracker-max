@@ -1,0 +1,10 @@
+id: us-inf-07
+title: сменить секреты без простоя
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-166
+reads: []
+writes: []

@@ -1,0 +1,26 @@
+id: harness-pauza-ukazaniya-limity-vosstanovlenie
+title: Пауза, указания, лимиты, восстановление
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Шаг цикла
+actors:
+- guardrails-checkpoint
+- pol-zovatel
+inputs: []
+outputs: []
+journeys:
+- UJ-6
+steps:
+- title: Вопрос → ответ пользователя
+  actor: pol-zovatel
+  inputs: []
+  outputs: []
+- title: Указание в контекст
+  actor: pol-zovatel
+  inputs: []
+  outputs: []
+- title: Продолжить с checkpoint
+  actor: guardrails-checkpoint
+  inputs: []
+  outputs: []

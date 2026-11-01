@@ -1,0 +1,11 @@
+id: us-inf-05
+title: обновлять компоненты без простоя
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-160
+- FR-168
+reads: []
+writes: []

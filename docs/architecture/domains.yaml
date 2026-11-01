@@ -1,0 +1,11 @@
+domains:
+- {domain: аутентификация, status: decided, rule: AD-7}
+- {domain: права, status: decided, rule: AD-6}
+- {domain: данные, status: decided, rule: AD-4}
+- {domain: ошибки, status: question, note: 'При переносе нет единого решения, правила разбросаны по спекам'}
+- {domain: логи, status: decided, rule: AD-12}
+- {domain: настройки, status: decided, rule: AD-9}
+- {domain: развёртывание, status: decided, rule: AD-15}
+- {domain: резервное копирование, status: question, note: 'Описано по хранилищам, единого решения нет'}
+- {domain: наблюдаемость, status: decided, rule: AD-12}
+- {domain: миграции, status: decided, rule: AD-22}

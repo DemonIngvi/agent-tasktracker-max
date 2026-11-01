@@ -1,0 +1,20 @@
+id: SandboxClaim
+title: заявка Runner на среду запуска
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: profile
+  type: string
+- name: sandboxId
+  type: string
+- name: image
+  type: string
+- name: runtime
+  type: 'enum: runc · runsc'
+- name: cpu / memoryMb / diskGb
+  type: number
+- name: readyMs
+  type: int

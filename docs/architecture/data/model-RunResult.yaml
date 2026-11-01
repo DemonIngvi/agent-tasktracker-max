@@ -1,0 +1,30 @@
+id: RunResult
+title: итог запуска (`POST /agent-runs/:runId/result`)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: status
+  type: 'enum: success · failed'
+- name: output
+  type: string | null
+- name: error
+  type: string | null
+- name: usage
+  type: '{inputTokens, outputTokens, reasoningTokens, costUsd, iterations}'
+- name: reason
+  type: 'enum: done · limit · gate_failed · error'
+- name: artifacts
+  type: '{name, url}[]'
+- name: gate
+  type: '{passed: bool, failed: Criterion[]}'
+- name: criteriaNext
+  type: Criterion[]
+- name: outcome
+  type: string | null
+- name: returnTo
+  type: string | null
+- name: returnNote
+  type: string | null

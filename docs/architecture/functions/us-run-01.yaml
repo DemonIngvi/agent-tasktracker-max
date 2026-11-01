@@ -1,0 +1,19 @@
+id: us-run-01
+title: забрать запуск из очереди и исполнить его в изолированной среде
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-66
+- FR-72
+- FR-73
+reads:
+- agent-run
+- agent-settings
+- kill-switch
+- sandbox-profile
+writes:
+- agent-run
+- run-checkpoint
+- scheduler-slot

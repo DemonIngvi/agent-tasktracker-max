@@ -1,0 +1,48 @@
+id: harness-hooks
+title: Hooks
+kind: service
+does:
+- Проверяет каждое действие (G2)
+- Ловит зацикливание и серию ошибок (FR-118, FR-122)
+- Может изменить аргументы или отклонить вызов; изменение видно в событии
+tech: Узлы графа before/after llm и tool, on_stop
+stories:
+- '3.2'
+- '3.4'
+io:
+- dir: in
+  with: LLM client
+  what: действие перед вызовом тула
+- dir: out
+  with: guardrails
+  what: '`PolicyInput` / `PolicyDecision`'
+  via: I10
+- dir: out
+  with: Pause / resume
+  what: решение «нужно подтверждение»
+- dir: out
+  with: Event stream
+  what: решение G2 событием
+data:
+- table: run_event
+  access: indirect
+  why: решение G2 — событие `CUSTOM` `guardrail_decision`, пишет Runner (владелец — Observability)
+params:
+- hooks
+reqs:
+- FR-22
+- FR-118
+- FR-122
+tasks:
+- '1.5'
+- '1.6'
+on_failure: 'Hook упал с исключением: действие отклоняется (fail-closed), событие об ошибке hook; OPA не ответил
+  за 200 мс: без повтора, по `on_engine_error`'
+why: Правила применяются на каждом шаге детерминированно.
+operations:
+- name: '`before_tool` / `after_tool`, `before_llm` / `after_llm`, `on_stop` — узлы графа'
+  caller: граф LangGraph
+  via: внутри
+- name: POST /v1/data/agent/g2
+  caller: hook `before_tool`
+  via: I10

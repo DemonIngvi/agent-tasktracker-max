@@ -1,0 +1,19 @@
+id: S4
+title: Postgres ICPlan (база `itsaplan`), схема `memory` (роль `memory`, AD-22), таблица `memory_m3`; позже pgvector
+  для M4
+owner: memory
+lifecycle: planned
+criticality: medium
+objects:
+- m4-fact
+- memory-m3
+tables:
+- m4_fact
+- memory_m3
+writes:
+- memory
+reads:
+- memory
+deletes: memory
+delete_trigger: M3 — до закрытия задачи
+backup: M3 — до закрытия задачи

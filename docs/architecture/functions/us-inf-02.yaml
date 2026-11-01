@@ -1,0 +1,10 @@
+id: us-inf-02
+title: открывать ICPlan по HTTPS
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-161
+reads: []
+writes: []

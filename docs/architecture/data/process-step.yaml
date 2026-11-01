@@ -1,0 +1,32 @@
+id: process-step
+title: Таблица process_step
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: id
+  type: serial
+- name: key
+  type: text
+- name: process_id
+  type: int
+- name: column_id
+  type: int
+- name: agent_id
+  type: int
+- name: on_success
+  type: jsonb
+- name: on_failure
+  type: jsonb
+- name: max_runs
+  type: int
+- name: require_review
+  type: bool
+- name: deliverable
+  type: text
+- name: done_criteria
+  type: jsonb
+- name: criteria_approval
+  type: text

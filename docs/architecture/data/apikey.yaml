@@ -1,0 +1,9 @@
+id: apikey
+title: Таблица apikey
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes: []
+states: []

@@ -1,0 +1,15 @@
+id: us-icp-15
+title: обязать процесс по задаче проверяться со мной перед каждым переходом
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-199
+- FR-200
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

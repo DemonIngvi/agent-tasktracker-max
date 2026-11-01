@@ -1,0 +1,89 @@
+id: icplan-run-queue-runner-api
+title: Run Queue + runner API
+kind: service
+does:
+- Хранит запуски в статусе pending
+- Отдаёт запуск внешнему раннеру (наш Agent Runner) с арендой; Runner опрашивает очередь со своим интервалом
+- Принимает стрим шагов и итог; повторный итог уже завершённого запуска — 404 (`finishRun` форка обновляет только
+  `pending`)
+- Отдаёт решения и указания пользователя в ответе heartbeat (доработка, FR-10); отмену — ответом 404 на heartbeat,
+  как в форке
+- Запуск, выданный `AGENT_RUN_MAX_ATTEMPTS` = 3 раза без итога, при следующем claim завершается `failed` с `last_error`
+  «Runner did not report a result» и записью в истории задачи (`expireExhaustedRuns` форка)
+tech: Очередь agent_run + протокол @itsaplan/runner (опрос, стрим)
+stories:
+- '4.7'
+- '4.29'
+- '4.4'
+- '4.6'
+- '4.10'
+io:
+- dir: in
+  with: Автоподхват
+  what: '`Run` (pending)'
+- dir: out
+  with: Agent Runner
+  what: выдача с арендой
+  via: I1
+- dir: in
+  with: Agent Runner
+  what: '?'
+  via: I2
+- dir: out
+  with: Agent Runner
+  what: 'heartbeat: продление аренды, решения, указания; отмена — 404'
+  via: I3
+data:
+- table: agent_run
+  access: read-write
+  why: очередь и итог, доработанные поля RunResult
+- table: run_event
+  access: write
+  why: шаги запуска — таблица Observability (схема `platform`)
+- table: agent_run_delivery
+  access: read
+  why: 'чтение, запись: решения и указания до подтверждения Runner (FR-10)'
+- table: apikey
+  access: read
+  why: ключ агента
+params:
+- AGENT_RUN_LEASE_SECONDS
+- AGENT_RUN_MAX_ATTEMPTS
+- runner.offline_after_s
+- protocol.version
+- agent.runner_scope
+- agent.delegation_delay_sec
+reqs:
+- FR-2
+- FR-3
+- FR-4
+- FR-7
+- FR-9
+- FR-10
+- FR-211
+- FR-198
+tasks:
+- '2.1'
+- '3.3'
+- '3.6'
+on_failure: 'Runner не в сети дольше `runner.offline_after_s`: агенты «не в сети», запуски ждут; Runner упал трижды
+  на одном запуске (аренда истекла `AGENT_RUN_MAX_ATTEMPTS` раз): запуск `failed`, процесс идёт по ошибке шага;
+  Несовместимая версия протокола: Runner не берёт запуски; БД ICPlan недоступна: выдача и приём итогов останавливаются,
+  Runner повторяет с backoff'
+why: Протокол уже есть — Agent Runner подключается к нему, ICPlan почти не меняем.
+operations:
+- name: POST /agent-runs/claim
+  caller: Agent Runner
+  via: I1
+- name: POST /agent-runs/:runId/events
+  caller: Agent Runner
+  via: I2
+- name: POST /agent-runs/:runId/result
+  caller: Agent Runner
+  via: I2
+- name: POST /agent-runs/:runId/heartbeat
+  caller: Agent Runner
+  via: I3
+- name: GET /agent-runs/:runId/stream
+  caller: Task UI
+  via: I20

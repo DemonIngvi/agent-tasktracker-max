@@ -1,0 +1,15 @@
+id: us-icp-13
+title: принять результат агента или вернуть его с заметкой, что не выполнено
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-200
+- FR-199
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

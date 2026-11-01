@@ -1,0 +1,16 @@
+id: process-version
+title: Таблица process_version
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: process_id
+  type: int
+- name: version
+  type: int
+- name: steps
+  type: jsonb
+- name: created_at
+  type: timestamptz

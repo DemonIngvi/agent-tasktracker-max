@@ -1,0 +1,10 @@
+id: ai-agent
+title: Таблица ai_agent
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: enabled
+  type: bool

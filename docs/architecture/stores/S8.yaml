@@ -1,0 +1,14 @@
+id: S8
+title: 'git: репозитории продукта; репозиторий политик Rego'
+owner: infrastructure
+lifecycle: planned
+criticality: medium
+objects: []
+tables: []
+writes:
+- infrastructure
+reads:
+- infrastructure
+deletes: infrastructure
+delete_trigger: история git
+backup: история git

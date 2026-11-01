@@ -1,0 +1,18 @@
+id: us-har-01
+title: выполнить задачу по инструкции, используя модель и тулы
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-20
+- FR-19
+- FR-182
+reads:
+- agent-settings-version
+- ai-agent
+- project-platform
+- project-resource
+writes:
+- issue-activity
+- memory-m3

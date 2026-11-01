@@ -1,0 +1,21 @@
+id: llm-gateway-smena-modeli-i-otchet-o-zatratah
+title: Смена модели и отчёт о затратах
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Нужна другая модель или отчёт
+actors:
+- litellm
+inputs: []
+outputs: []
+journeys:
+- UJ-15
+steps:
+- title: Алиас → новая модель
+  actor: litellm
+  inputs: []
+  outputs: []
+- title: Отчёт за период, CSV
+  actor: litellm
+  inputs: []
+  outputs: []

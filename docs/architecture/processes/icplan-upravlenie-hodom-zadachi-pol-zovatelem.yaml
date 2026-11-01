@@ -1,0 +1,38 @@
+id: icplan-upravlenie-hodom-zadachi-pol-zovatelem
+title: Управление ходом задачи пользователем
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Шаг завершён или идёт
+actors:
+- agent-runner-harness
+- pol-zovatel
+inputs: []
+outputs: []
+journeys:
+- UJ-8
+steps:
+- title: Указание в активный запуск
+  actor: agent-runner-harness
+  inputs: []
+  outputs: []
+- title: Остановить процесс, отменить запуск
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Переход при успехе
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Повтор шага с заметкой
+  actor: agent-runner-harness
+  inputs: []
+  outputs: []
+- title: Повтор / с шага N / другой исполнитель
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: 'Сводка: в работе, время, $; почему не берут'
+  actor: pol-zovatel
+  inputs: []
+  outputs: []

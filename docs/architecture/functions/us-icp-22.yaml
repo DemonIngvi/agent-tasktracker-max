@@ -1,0 +1,22 @@
+id: us-icp-22
+title: выключить агента и включить обратно
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-11
+- FR-66
+reads: []
+writes:
+- access-policy
+- agent-schedule
+- agent-settings
+- ai-agent
+- apikey
+- kill-switch
+- memory-profile
+- project
+- project-platform
+- project-resource
+- sandbox-profile

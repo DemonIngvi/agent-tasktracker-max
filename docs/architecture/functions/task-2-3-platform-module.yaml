@@ -1,0 +1,13 @@
+id: task-2-3-platform-module
+title: 2.3. Конфиг агента из ICPlan + YAML
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-59
+- FR-60
+- FR-61
+- FR-62
+reads: []
+writes: []

@@ -1,0 +1,30 @@
+id: AgentDefinition
+title: определение агента в YAML `agent/v1` — экспорт и импорт (FR-56, FR-99)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: apiVersion
+  type: 'const: agent/v1'
+- name: id
+  type: string
+- name: version
+  type: int
+- name: model
+  type: string
+- name: instructions
+  type: string
+- name: skills
+  type: string[]
+- name: mcp
+  type: '{server, tools[]}[]'
+- name: limits
+  type: '{max_steps, timeout_s, max_tokens}'
+- name: approval
+  type: '{tools[]}'
+- name: memory
+  type: '{profile, read[], write[]}'
+- name: sandbox
+  type: '{profile}'

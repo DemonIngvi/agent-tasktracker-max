@@ -1,0 +1,10 @@
+id: us-mem-04
+title: ограничить, что агент видит из памяти
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-37
+reads: []
+writes: []

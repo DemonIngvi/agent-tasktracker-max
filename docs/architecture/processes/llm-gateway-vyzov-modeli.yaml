@@ -1,0 +1,26 @@
+id: llm-gateway-vyzov-modeli
+title: Вызов модели
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Вызов модели
+actors:
+- litellm
+- provayder-mock
+inputs: []
+outputs: []
+journeys:
+- UJ-14
+steps:
+- title: Основная модель
+  actor: provayder-mock
+  inputs: []
+  outputs: []
+- title: Fallback-модель
+  actor: provayder-mock
+  inputs: []
+  outputs: []
+- title: Учёт затрат
+  actor: litellm
+  inputs: []
+  outputs: []

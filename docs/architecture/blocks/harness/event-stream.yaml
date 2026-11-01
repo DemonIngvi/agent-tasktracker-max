@@ -1,0 +1,36 @@
+id: harness-event-stream
+title: Event stream
+kind: service
+does:
+- 'Отдаёт шаги по мере работы: AG-UI RUN_*, TEXT_MESSAGE_*, REASONING_*, TOOL_CALL_*, CUSTOM (AD-21)'
+- Нумерует события `seq` для порядка и идемпотентности
+- Буферизует события, пока Runner их не принимает, и досылает без потерь
+tech: Поток RunEvent
+stories:
+- '4.2'
+- '4.24'
+io:
+- dir: in
+  with: Hooks, Pause / resume, Policy / stop
+  what: события шагов
+- dir: out
+  with: Agent Runner
+  what: '?'
+  via: I7
+data:
+- table: run_event
+  access: indirect
+  why: события пишет Runner (владелец — Observability)
+params: 'нет: поток не настраивается — формат и порядок событий заданы D21 и R-HRN-06'
+reqs:
+- FR-24
+- FR-33
+tasks:
+- '1.3'
+on_failure: 'Runner временно не принимает события: Harness буферизует и досылает с последнего `seq`; Провайдер не
+  отдаёт `reasoning_content`: событий `REASONING_*` нет, реплики агента о намерении отдаются'
+why: Чат запуска в задаче и аудит.
+operations:
+- name: '`GET /run/events?seq=` — поток `RunEvent` NDJSON, переподключение с последнего `seq`'
+  caller: Agent Runner (Event relay)
+  via: I7

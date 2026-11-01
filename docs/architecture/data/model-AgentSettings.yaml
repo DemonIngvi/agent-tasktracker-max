@@ -1,0 +1,32 @@
+id: AgentSettings
+title: настройки агента из Platform module (I4)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: agentId
+  type: int
+- name: version
+  type: int
+- name: autonomy
+  type: 'enum: R0–R5'
+- name: budget
+  type: '{runUsd, dayUsd}'
+- name: sandboxProfile
+  type: string
+- name: memoryProfile
+  type: string
+- name: toolsAllow / approvalTools
+  type: string[]
+- name: scheduling
+  type: '{parallel, max}'
+- name: learning
+  type: '{facts, playbook, skills, prompt_opt: off|suggest|apply_gated}'
+- name: snapshots
+  type: '{enabled, schedule, retentionDays}'
+- name: toolsmith
+  type: bool
+- name: guardrails
+  type: '{O1…O15: {enabled, params}}'

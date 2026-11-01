@@ -1,0 +1,6 @@
+id: icplan-users
+title: Пользователи
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: external

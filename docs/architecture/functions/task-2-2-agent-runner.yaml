@@ -1,0 +1,10 @@
+id: task-2-2-agent-runner
+title: 2.2. Harness в Docker-контейнере на запуск
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-75
+reads: []
+writes: []

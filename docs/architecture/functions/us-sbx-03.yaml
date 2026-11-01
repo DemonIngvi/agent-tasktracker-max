@@ -1,0 +1,16 @@
+id: us-sbx-03
+title: чтобы агент не мог отправить данные в интернет
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-87
+- FR-113
+reads:
+- access-policy
+- agent-settings
+- project-resource
+- sandbox-profile
+writes:
+- run-event

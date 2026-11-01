@@ -1,0 +1,13 @@
+id: us-mem-10
+title: чтобы переписка, итоги и состояния удалялись по срокам хранения
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-43
+- FR-42
+- FR-13
+reads:
+- issue-activity
+writes: []

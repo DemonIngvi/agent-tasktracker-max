@@ -1,0 +1,32 @@
+id: LiteLLM-VerificationToken
+title: Таблица LiteLLM_VerificationToken
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: token
+  type: String
+- name: key_alias
+  type: String
+- name: models
+  type: String[]
+- name: spend
+  type: Float
+- name: max_budget
+  type: Float
+- name: budget_duration
+  type: String
+- name: rpm_limit
+  type: BigInt
+- name: tpm_limit
+  type: BigInt
+- name: budget_id
+  type: String
+- name: team_id
+  type: String
+- name: metadata
+  type: Json
+- name: expires
+  type: DateTime

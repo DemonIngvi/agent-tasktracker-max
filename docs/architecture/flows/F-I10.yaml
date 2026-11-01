@@ -1,0 +1,13 @@
+id: F-I10
+title: проверка действия G2 (для MCP — повторно в Runner)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: guardrails
+objects:
+- PolicyInput
+- PolicyDecision
+trigger: проверка действия G2 (для MCP — повторно в Runner)
+flow_type: command
+over: I10

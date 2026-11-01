@@ -1,0 +1,6 @@
+id: platform-services
+title: Сервисы платформы
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: external

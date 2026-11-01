@@ -1,0 +1,12 @@
+id: us-mem-02
+title: видеть итоги прошлых запусков задачи и заметки пользователя о возврате
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-40
+- FR-38
+reads:
+- issue-activity
+writes: []

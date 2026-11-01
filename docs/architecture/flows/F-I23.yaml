@@ -1,0 +1,12 @@
+id: F-I23
+title: среды запусков через Kubernetes API (этап 4)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: sandbox
+objects:
+- SandboxClaim
+trigger: среды запусков через Kubernetes API (этап 4)
+flow_type: command
+over: I23

@@ -1,0 +1,47 @@
+id: llm-gateway-virtual-keys
+title: Virtual keys
+kind: service
+does:
+- Отделяет агентов друг от друга по учёту и лимитам
+- Ключ создаёт и обновляет Platform module через admin API (master key)
+- 'Хук атрибуции: вызов без `run_id` отклоняется; ключ не агента запуска — затраты на агента ключа и событие в аудит
+  (AD-26)'
+tech: LiteLLM virtual keys
+stories:
+- '6.3'
+io:
+- dir: in
+  with: Platform module
+  what: создание и обновление ключа `/key/generate`, `/key/update`
+  via: I15
+- dir: in
+  with: Harness
+  what: вызов модели с Bearer virtual key и `metadata.run_id`
+  via: I8
+- dir: out
+  with: PostgreSQL 17
+  what: ключи и бюджеты в БД `litellm`
+  via: I14
+data:
+- table: LiteLLM_VerificationToken
+  access: read
+  why: 'чтение и запись: ключ, бюджет, лимиты (владелец — LiteLLM)'
+params:
+- key.max_budget
+- key.rpm / tpm
+reqs:
+- FR-136
+- FR-138
+tasks:
+- '4.5'
+on_failure: 'Вызов без `run_id`: отклонён (FR-136 «Вызов без метаданных»); Ключ не агента запуска: затраты на агента
+  ключа, событие несоответствия в аудит (FR-136 «Чужой ключ»); БД `litellm` недоступна: проверка бюджетов невозможна,
+  вызовы отклоняются'
+why: Учёт и бюджет на агента без своего биллинга.
+operations:
+- name: создать или обновить ключ агента — `/key/generate`, `/key/update`
+  caller: Platform module
+  via: I15
+- name: проверка ключа, бюджета и атрибуции на каждом вызове
+  caller: Harness
+  via: I8

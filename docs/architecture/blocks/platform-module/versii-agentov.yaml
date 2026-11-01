@@ -1,0 +1,55 @@
+id: platform-module-versii-agentov
+title: Версии агентов
+kind: service
+does:
+- История изменений агента
+- Перенос dev → prod
+- Ревью через YAML
+tech: Таблица версий + экспорт / импорт YAML
+stories:
+- '10.2'
+- '10.3'
+- '10.7'
+io:
+- dir: in
+  with: ICPlan UI
+  what: история, откат, экспорт и импорт YAML
+  via: I20
+- dir: in
+  with: Agent Runner
+  what: запрос версии запуска; новая версия по хешу определения
+  via: I4
+data:
+- table: agent_settings_version
+  access: read-write
+  why: снимок определения и настроек, автор, время
+- table: agent_settings
+  access: write
+  why: текущая версия при откате
+- table: ai_agent
+  access: read
+  why: определение для хеша и экспорта
+params:
+- version
+reqs:
+- FR-98
+- FR-99
+- FR-55
+- FR-56
+tasks:
+- '2.3'
+- '4.4'
+on_failure: 'Импорт с неверной схемой или ссылкой на несуществующий объект: 400, импорт отклоняется с указанием
+  ссылки; Откат без права `ai_agents`: 403; БД платформы (S2) недоступна: версии не читаются и не создаются, запуск
+  не стартует'
+why: Воспроизводимость запусков и ревью без Config Repo.
+operations:
+- name: GET /platform/agents/:agentId/settings/versions
+  caller: Администратор
+  via: I20
+- name: '`GET /platform/agents/:agentId/export`, `POST /platform/agents/import` — YAML `agent/v1`'
+  caller: Администратор
+  via: I20
+- name: Новая версия при отличии хеша определения
+  caller: Agent Runner
+  via: I4

@@ -1,0 +1,30 @@
+id: S2
+title: Postgres ICPlan, схема `platform`
+owner: platform-module
+lifecycle: planned
+criticality: medium
+objects:
+- access-policy
+- agent-settings
+- agent-settings-version
+- kill-switch
+- memory-profile
+- project-platform
+- project-resource
+- sandbox-profile
+tables:
+- access_policy
+- agent_settings
+- agent_settings_version
+- kill_switch
+- memory_profile
+- project_platform
+- project_resource
+- sandbox_profile
+writes:
+- platform-module
+reads:
+- platform-module
+deletes: platform-module
+delete_trigger: вместе с S1
+backup: вместе с S1

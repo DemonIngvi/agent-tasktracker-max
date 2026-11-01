@@ -1,0 +1,18 @@
+id: project-resource
+title: Таблица project_resource
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: id
+  type: serial
+- name: project_id
+  type: int
+- name: kind
+  type: text
+- name: ref
+  type: text
+- name: name
+  type: text

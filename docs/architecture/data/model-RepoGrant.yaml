@@ -1,0 +1,18 @@
+id: RepoGrant
+title: доступ к репозиторию на один запуск
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: repo
+  type: string
+- name: access
+  type: 'enum: read · write'
+- name: branchPrefix
+  type: string
+- name: protected
+  type: string[]
+- name: ttlSec
+  type: int

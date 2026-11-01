@@ -1,0 +1,13 @@
+id: Heartbeat
+title: 'ответ на продление аренды (`POST /agent-runs/:runId/heartbeat`) — обратный канал к раннеру; отмены в теле
+  нет: отменённый запуск не `pending`, …'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: approvals
+  type: ApprovalDecision[]
+- name: messages
+  type: UserMessage[]

@@ -1,0 +1,24 @@
+id: observability-razbor-zadachi-trassa-pol-za-agentov
+title: Разбор задачи, трасса, польза агентов
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Вопрос о работе агентов
+actors: []
+inputs: []
+outputs: []
+journeys:
+- UJ-20
+steps:
+- title: Запуски, версии, итоги
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Трасса Runner → Harness → LiteLLM
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Закрыто, возвраты, затраты
+  actor: agent-platform
+  inputs: []
+  outputs: []

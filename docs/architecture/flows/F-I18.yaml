@@ -1,0 +1,12 @@
+id: F-I18
+title: короткоживущие токены репозиториев
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: git-provider
+objects:
+- RepoGrant
+trigger: короткоживущие токены репозиториев
+flow_type: command
+over: I18

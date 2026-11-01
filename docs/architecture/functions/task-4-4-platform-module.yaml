@@ -1,0 +1,16 @@
+id: task-4-4-platform-module
+title: 4.4. Platform module в ICPlan
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-64
+- FR-65
+- FR-96
+- FR-103
+- FR-104
+- FR-106
+- FR-107
+reads: []
+writes: []

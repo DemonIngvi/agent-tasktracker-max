@@ -1,0 +1,19 @@
+id: k3s-node
+title: Узел k3s
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+environment: production
+runs:
+- agent-runner
+- guardrails
+- harness
+- icplan
+- infrastructure
+- llm-gateway
+- mcp-tools
+- memory
+- observability
+- platform-module
+- sandbox
+tech: k3s

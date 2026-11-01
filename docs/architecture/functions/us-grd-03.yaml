@@ -1,0 +1,13 @@
+id: us-grd-03
+title: чтобы траты не выходили за бюджет
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-120
+- FR-121
+reads:
+- agent-settings
+- kill-switch
+writes: []

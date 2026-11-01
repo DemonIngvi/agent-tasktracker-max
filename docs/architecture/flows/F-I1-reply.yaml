@@ -1,0 +1,12 @@
+id: F-I1-reply
+title: 'Ответ: Runner забирает запуск из очереди (`POST /agent-runs/claim`, pull, аренда 300 с); в ответе — `Run`'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: icplan
+to: agent-runner
+objects:
+- Run
+trigger: ответ на запрос
+flow_type: query
+over: I1

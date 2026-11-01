@@ -1,0 +1,12 @@
+id: us-sbx-07
+title: открыть результат исполнителя и вернуть с замечаниями, не изменяя его
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-89
+reads:
+- access-policy
+- project-resource
+writes: []

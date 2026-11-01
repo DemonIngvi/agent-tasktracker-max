@@ -1,0 +1,15 @@
+id: I21
+title: 'вход по HTTPS через Traefik: web, api, mcp'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: icplan-users
+to: icplan
+purpose: 'вход по HTTPS через Traefik: web, api, mcp'
+integration_type: sync-api
+protocol: HTTPS (TLS 1.2+), HTTP/2
+format: HTML / JSON
+auth: сессия ICPlan; ACME-сертификат
+timeout: 60 с (ingress)
+retry: нет
+idempotent: null

@@ -1,0 +1,9 @@
+header:
+- Concern
+- Convention
+rows:
+- concern: Именование
+  convention: 'Имена полей: JSON наших контрактов — camelCase, как в API ICPlan (OpenAPI 1.3.0: `issueId`,
+    `systemPrompt`, `inputTokens`, `lastError`); задача — парой `issueId` (ключ БД) и `issueIdentifier`
+    (`MKT-42`), как в форке; единица измерения — суффиксом (`readyMs`, `memoryMb`, `costUsd`, `ttlSec`,
+    как …'

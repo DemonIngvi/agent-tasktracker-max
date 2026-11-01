@@ -1,0 +1,7 @@
+id: llm-gateway
+title: LiteLLM gateway
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Единственная дверь к моделям: смена модели, лимиты и учёт затрат в одном месте.'

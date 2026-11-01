@@ -1,0 +1,12 @@
+id: F-I13
+title: запросы к моделям
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: llm-gateway
+to: llm-providers
+objects:
+- ChatCompletionRequest
+trigger: запросы к моделям
+flow_type: command
+over: I13

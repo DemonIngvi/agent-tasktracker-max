@@ -1,0 +1,11 @@
+id: us-inf-03
+title: чтобы платформа выдерживала пиковую нагрузку команды
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- NFR-11
+- FR-162
+reads: []
+writes: []

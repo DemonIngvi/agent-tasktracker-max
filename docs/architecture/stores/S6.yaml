@@ -1,0 +1,14 @@
+id: S6
+title: PostgreSQL 17 (тот же кластер), БД `litellm`
+owner: infrastructure
+lifecycle: planned
+criticality: medium
+objects: []
+tables: []
+writes:
+- infrastructure
+reads:
+- infrastructure
+deletes: infrastructure
+delete_trigger: журнал затрат — по политике LiteLLM
+backup: журнал затрат — по политике LiteLLM

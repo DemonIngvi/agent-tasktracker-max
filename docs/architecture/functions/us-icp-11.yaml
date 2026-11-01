@@ -1,0 +1,17 @@
+id: us-icp-11
+title: ответить на вопрос агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-5
+- FR-6
+- FR-23
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery
+- run-checkpoint

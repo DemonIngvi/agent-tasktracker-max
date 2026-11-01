@@ -1,0 +1,6 @@
+id: agent-ispolnitel-sistema
+title: Агент-исполнитель (система)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

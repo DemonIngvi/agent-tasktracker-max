@@ -1,0 +1,35 @@
+id: llm-gateway-spend-log
+title: Spend log
+kind: storage
+does:
+- Записывает расход каждого вызова
+- Учитывает токены и стоимость с привязкой к агенту и `run_id`
+tech: LiteLLM spend logs (Postgres)
+stories:
+- '6.3'
+- '6.5'
+io:
+- dir: in
+  with: Harness
+  what: вызовы модели с `metadata.run_id`
+  via: I8
+- dir: out
+  with: PostgreSQL 17
+  what: запись строки затрат в БД `litellm`
+  via: I14
+data:
+- table: LiteLLM_SpendLogs
+  access: write
+  why: при каждом вызове, чтение для отчёта затрат (владелец — LiteLLM)
+params: 'нет: параметров у журнала затрат в interfaces.md нет, политика хранения — по LiteLLM'
+reqs:
+- FR-135
+- FR-136
+tasks:
+- '1.1'
+- '4.5'
+on_failure: 'Провайдер вернул ошибку: неуспешный вызов учитывается отдельно, без стоимости ответа; БД `litellm`
+  недоступна: проверка бюджетов невозможна, вызовы отклоняются'
+why: Источник затрат по задаче и агенту.
+schema_ref: 'Таблица `LiteLLM_SpendLogs`: ключ запроса, virtual key, модель, токены, стоимость, время и `metadata`
+  (`run_id`, `issue_key`, агент). Стрим учитывается по завершении; неуспешный вызов — отдельно, без стоимости ответа.'

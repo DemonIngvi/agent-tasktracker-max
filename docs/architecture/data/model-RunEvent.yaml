@@ -1,0 +1,17 @@
+id: RunEvent
+title: 'событие запуска: конверт платформы вокруг события AG-UI (AD-21). Runner читает поток у Harness (`GET /run/events`,
+  NDJSON) и пересылает в ICPlan …'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: runId
+  type: int
+- name: seq
+  type: int
+- name: at
+  type: timestamp
+- name: event
+  type: AgUiEvent

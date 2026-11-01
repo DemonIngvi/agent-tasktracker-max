@@ -1,0 +1,10 @@
+id: AD-15
+title: Развёртывание и инфраструктура
+binds:
+- all
+prevents: отход реализации от решения «Развёртывание и инфраструктура»
+rule: 'k3s на одном узле; namespaces `itsaplan-core`, `itsaplan-data`, `itsaplan-agents`, `itsaplan-platform`;
+  Helm-чарты с `existingSecret`; Traefik (в k3s) — ingress и TLS, админки без ingress; Service — балансировка
+  по репликам; PostgreSQL 17 + pgvector под CloudNativePG с пулером PgBouncer (transaction); RustFS (S3)
+  для вложений и копий; бэкап вне узла; NetworkPolicy по списку интерфейсов. Локально — compose (этапы
+  1–2) и k3d. Отклонены: ingress-nginx и MinIO (архивированы). R&D: Kubernetes, ingress, СУБД.'

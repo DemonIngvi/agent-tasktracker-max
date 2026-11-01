@@ -1,0 +1,7 @@
+id: AD-12
+title: Observability
+binds:
+- all
+prevents: отход реализации от решения «Observability»
+rule: 'MVP — таблица событий запуска в БД ICPlan → чат запуска в задаче. Langfuse — после MVP (тяжёлый
+  self-host: Postgres + ClickHouse + Redis + S3). Prometheus / Grafana / Loki — в бэклоге.'

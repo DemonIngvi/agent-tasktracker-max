@@ -1,0 +1,55 @@
+id: memory-pamyat-na-vseh-urovnyah-m0-m6-kto-pishet
+title: 'Память на всех уровнях M0–M6: кто пишет и кто читает'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Старт запуска
+actors:
+- harness-agent
+- icplan-runner
+- lyudi-pol-zovatel-administrator
+inputs: []
+outputs: []
+journeys:
+- UJ-18
+steps:
+- title: 'Собрать агента: инструкция, навыки (M5)'
+  actor: harness-agent
+  inputs: []
+  outputs: []
+- title: Уровень пропущен, предупреждение
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: 'Контекст: M1, M2, M3'
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Работа в M0, сжатие при 80%
+  actor: harness-agent
+  inputs: []
+  outputs: []
+- title: Читать документ (M6)
+  actor: harness-agent
+  inputs: []
+  outputs: []
+- title: Записать состояние (M3)
+  actor: harness-agent
+  inputs: []
+  outputs: []
+- title: Сообщения → M1 автоматически
+  actor: icplan-runner
+  inputs: []
+  outputs: []
+- title: Итог запуска → M2; M0 уничтожен
+  actor: icplan-runner
+  inputs: []
+  outputs: []
+- title: Вердикт пользователя → M2
+  actor: lyudi-pol-zovatel-administrator
+  inputs: []
+  outputs: []
+- title: Очистка по срокам M1–M3
+  actor: agent-platform
+  inputs: []
+  outputs: []

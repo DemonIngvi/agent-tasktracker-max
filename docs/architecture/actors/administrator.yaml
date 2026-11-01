@@ -1,0 +1,6 @@
+id: administrator
+title: Администратор
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

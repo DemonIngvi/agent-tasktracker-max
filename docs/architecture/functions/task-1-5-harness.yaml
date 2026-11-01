@@ -1,0 +1,10 @@
+id: task-1-5-harness
+title: '1.5. Harness: hooks и пауза на approve'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-22
+reads: []
+writes: []

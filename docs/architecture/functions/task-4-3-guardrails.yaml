@@ -1,0 +1,15 @@
+id: task-4-3-guardrails
+title: '4.3. Guardrails: OPA для G1/G2 и включение точек'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-126
+- FR-127
+- FR-128
+- FR-129
+- FR-131
+- FR-133
+reads: []
+writes: []

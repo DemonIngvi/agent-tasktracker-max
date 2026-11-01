@@ -1,0 +1,13 @@
+id: us-grd-06
+title: 'задать правила: какие тулы требуют подтверждения'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-112
+- FR-110
+reads:
+- agent-settings
+- kill-switch
+writes: []

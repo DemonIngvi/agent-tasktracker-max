@@ -1,0 +1,23 @@
+id: svc-infrastructure
+title: Сервис Инфраструктура
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-inf-01
+- us-inf-02
+- us-inf-03
+- us-inf-04
+- us-inf-05
+- us-inf-06
+- us-inf-07
+- task-4-6-infrastructure
+- task-4-7-infrastructure
+objectives:
+- text: Профиль нагрузки и ёмкость
+  quality: Q-11
+- text: Нагрузка и производительность
+  quality: Q-12

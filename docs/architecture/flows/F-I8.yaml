@@ -1,0 +1,12 @@
+id: F-I8
+title: вызов модели
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: llm-gateway
+objects:
+- ChatCompletionRequest
+trigger: вызов модели
+flow_type: command
+over: I8

@@ -1,0 +1,21 @@
+id: svc-sandbox
+title: Сервис Sandbox
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+consumers:
+- pol-zovatel-icplan
+provider: agent-platform
+functions:
+- us-sbx-01
+- us-sbx-02
+- us-sbx-03
+- us-sbx-04
+- us-sbx-05
+- us-sbx-06
+- us-sbx-07
+- task-2-2-sandbox
+- task-4-6-sandbox
+objectives:
+- text: Нагрузка и производительность
+  quality: Q-6

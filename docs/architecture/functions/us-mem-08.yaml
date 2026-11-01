@@ -1,0 +1,11 @@
+id: us-mem-08
+title: чтобы агент опирался на документы проекта (M6), а не просил пересказать
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-36
+- FR-182
+reads: []
+writes: []

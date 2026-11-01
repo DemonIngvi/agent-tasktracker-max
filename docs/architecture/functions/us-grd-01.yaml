@@ -1,0 +1,12 @@
+id: us-grd-01
+title: включать и выключать проверки по точкам
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-115
+reads:
+- agent-settings
+- kill-switch
+writes: []

@@ -1,0 +1,15 @@
+id: I5
+title: допуск запуска G1
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: guardrails
+purpose: допуск запуска G1
+integration_type: sync-api
+protocol: HTTP REST `POST /v1/data/agent/g1`
+format: JSON `PolicyInput` / `PolicyDecision`
+auth: внутренняя сеть (mTLS — позже)
+timeout: 200 мс
+retry: нет → `on_engine_error`
+idempotent: true

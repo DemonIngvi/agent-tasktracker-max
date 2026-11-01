@@ -1,0 +1,8 @@
+id: agent-chat-thread
+title: Таблица agent_chat_thread
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes: []

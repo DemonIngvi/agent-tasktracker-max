@@ -1,0 +1,18 @@
+id: Process
+title: процесс типа задачи (AD-17)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: issueType
+  type: string
+- name: owner
+  type: string
+- name: firstStep
+  type: string
+- name: steps
+  type: ProcessStep[]
+- name: version
+  type: int

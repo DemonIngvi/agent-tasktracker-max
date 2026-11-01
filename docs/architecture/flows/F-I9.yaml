@@ -1,0 +1,12 @@
+id: F-I9
+title: вызов тулов MCP через MCP-прокси Runner (AD-19)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: mcp-tools
+objects:
+- McpToolCall
+trigger: вызов тулов MCP через MCP-прокси Runner (AD-19)
+flow_type: command
+over: I9

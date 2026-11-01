@@ -1,0 +1,33 @@
+id: agent-runner-zapusk-iz-ocheredi
+title: Запуск из очереди
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Запуск в очереди
+actors:
+- sandbox-harness
+inputs: []
+outputs:
+- SandboxClaim
+- RepoGrant
+- RunBundle
+- RunResult
+journeys:
+- UJ-1
+steps:
+- title: Опрос, аренда
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Среда из пула, Harness
+  actor: sandbox-harness
+  inputs: []
+  outputs:
+  - SandboxClaim
+  - RepoGrant
+  - RunBundle
+- title: Итог в ICPlan, destroy
+  actor: agent-platform
+  inputs: []
+  outputs:
+  - RunResult

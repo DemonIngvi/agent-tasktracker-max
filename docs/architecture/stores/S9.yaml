@@ -1,0 +1,14 @@
+id: S9
+title: 'Конфиг деплоя: `values.yaml` (git, без секретов) + Secret / `.env` (вне git)'
+owner: infrastructure
+lifecycle: planned
+criticality: medium
+objects: []
+tables: []
+writes:
+- infrastructure
+reads:
+- infrastructure
+deletes: infrastructure
+delete_trigger: версии в git; секреты — вне git
+backup: версии в git; секреты — вне git

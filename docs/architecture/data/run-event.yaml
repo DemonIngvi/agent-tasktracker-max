@@ -1,0 +1,20 @@
+id: run-event
+title: Таблица run_event
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: run_id
+  type: int
+- name: seq
+  type: int
+- name: ts
+  type: timestamptz
+- name: type
+  type: text
+- name: event
+  type: jsonb
+- name: issue_id
+  type: int

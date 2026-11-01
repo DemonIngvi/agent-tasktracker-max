@@ -1,0 +1,6 @@
+id: testirovschik
+title: Тестировщик
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

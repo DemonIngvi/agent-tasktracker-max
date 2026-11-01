@@ -1,0 +1,20 @@
+id: LiteLLM-BudgetTable
+title: Таблица LiteLLM_BudgetTable
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: budget_id
+  type: String
+- name: max_budget
+  type: Float
+- name: soft_budget
+  type: Float
+- name: budget_duration
+  type: String
+- name: rpm_limit
+  type: BigInt
+- name: tpm_limit
+  type: BigInt

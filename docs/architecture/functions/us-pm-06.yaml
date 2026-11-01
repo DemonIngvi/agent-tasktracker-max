@@ -1,0 +1,15 @@
+id: us-pm-06
+title: задать бюджеты команды и проекта и получить предупреждение при приближении к лимиту
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-120
+- FR-111
+reads: []
+writes:
+- LiteLLM-BudgetTable
+- LiteLLM-VerificationToken
+- agent-settings
+- project-platform

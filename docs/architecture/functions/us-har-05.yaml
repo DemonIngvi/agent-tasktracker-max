@@ -1,0 +1,12 @@
+id: us-har-05
+title: чтобы падение процесса не теряло работу
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-23
+- FR-34
+reads: []
+writes:
+- run-checkpoint

@@ -1,0 +1,15 @@
+id: us-icp-14
+title: остановить процесс по задаче и при необходимости возобновить
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-7
+- FR-201
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

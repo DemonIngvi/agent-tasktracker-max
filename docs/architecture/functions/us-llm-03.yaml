@@ -1,0 +1,13 @@
+id: us-llm-03
+title: видеть стоимость работы агента по задаче
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-136
+- FR-150
+reads:
+- LiteLLM-BudgetTable
+writes:
+- LiteLLM-SpendLogs

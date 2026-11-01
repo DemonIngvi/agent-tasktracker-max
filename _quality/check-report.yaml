@@ -1,0 +1,1825 @@
+ok: false
+blockers: 185
+warnings: 88
+findings:
+- gate: G08
+  level: warning
+  where: '1.2: переключить платформу в последовательный режим'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '1.3: чтобы агенты не перегружали общую модель'
+  problem: 'Мало классов: S1, S4'
+- gate: G08
+  level: warning
+  where: '1.4: чтобы ожидание подтверждения не блокировало платформу'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '1.6: вывести Runner из работы для обновления'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '1.8: 2.2. Harness в Docker-контейнере на запуск'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '2.1: включать и выключать проверки по точкам'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '2.3: чтобы траты не выходили за бюджет'
+  problem: 'Мало классов: S1, S3'
+- gate: G08
+  level: warning
+  where: '2.5: просматривать журнал срабатываний guardrails'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '2.6: задать правила: какие тулы требуют подтверждения'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '2.7: 1.6. Harness: лимиты, завершение, контекст'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '2.10: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '3.1: выполнить задачу по инструкции, используя модель и тулы'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '3.3: получить проверенный результат'
+  problem: 'Мало классов: S1, S4'
+- gate: G08
+  level: warning
+  where: '3.6: получить указание пользователя во время работы и учесть его'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '3.7: задать пользователю вопрос и подождать ответа'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '3.11: 1.6. Harness: лимиты, завершение, контекст'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '3.12: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '4.2: видеть, как агент работает над задачей'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.4: отменить текущую работу агента'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.6: видеть, в сети ли платформа агентов'
+  problem: 'Мало классов: S1, S4'
+- gate: G08
+  level: warning
+  where: '4.7: брать следующую задачу из своей очереди по всем процессам, где я исполнитель
+    шага'
+  problem: 'Мало классов: S1, S4'
+- gate: G08
+  level: warning
+  where: '4.8: сам поручить задачу конкретному агенту, минуя процесс'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.9: задать агенту вопрос или поручение упоминанием в комментарии'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.10: читать чат задачи с агентом и писать в него указания во время работы'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.11: ответить на вопрос агента'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '4.14: остановить процесс по задаче и при необходимости возобновить'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.15: обязать процесс по задаче проверяться со мной перед каждым переходом'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '4.17: передать текущий шаг задачи другому агенту или человеку'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.18: понять, почему агент не берёт задачу'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.20: создать ИИ-агента платформы: имя, модель, инструкция, тулы, навыки,
+    MCP, проекты'
+  problem: 'Мало классов: S1, S3'
+- gate: G08
+  level: warning
+  where: '4.22: выключить агента и включить обратно'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.23: удалить агента'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.24: проверить агента на тестовой задаче до подключения к процессу'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.25: изменить процесс'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.27: настроить Действие «делегировать агенту» по условию'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '4.28: видеть статистику агентов: запуски, успешные, возвращённые пользователем,
+    время, затраты'
+  problem: 'Мало классов: S1, S5'
+- gate: G08
+  level: warning
+  where: '4.29: получить полный контекст задачи: описание, комментарии, вложения,
+    итог прошлого шага, заметки пользователя'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '4.34: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '5.1: развернуть платформу на чистом сервере одной командой'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '5.2: открывать ICPlan по HTTPS'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '5.4: восстановить данные после потери сервера'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '5.5: обновлять компоненты без простоя'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '5.6: поднять локальную среду, как в prod, для тестов'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '5.7: сменить секреты без простоя'
+  problem: 'Мало классов: S1, S5'
+- gate: G08
+  level: warning
+  where: '5.9: 4.7. Postgres (CloudNativePG), PgBouncer, RustFS, бэкап вне узла'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '6.2: разрабатывать и тестировать без ключей провайдера'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '6.5: получать отчёт о затратах по агентам, проектам и моделям за период'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '6.8: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '7.2: вызвать тул и получить понятную ошибку при сбое'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '7.4: дать агенту навык (skill)'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '7.5: видеть, какие тулы может вызвать каждый агент'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '7.8: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '8.1: знать, что сделал предыдущий агент по задаче'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '8.2: видеть итоги прошлых запусков задачи и заметки пользователя о возврате'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '8.3: удалить или исправить ошибочную память'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '8.5: работать в рабочем контексте запуска (M0) и не переполнить окно модели'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '8.6: чтобы агент помнил нашу переписку по задаче и в чате (M1)'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '8.7: получить свою инструкцию и навыки (M5) нужной версии при старте'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '8.10: чтобы переписка, итоги и состояния удалялись по срокам хранения'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '8.13: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '9.1: видеть шаги агента в задаче'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '9.2: разобрать задачу: все запуски, версии агентов, итоги'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '9.3: чтобы в событиях не было секретов'
+  problem: 'Мало классов: S1, S5'
+- gate: G08
+  level: warning
+  where: '9.4: проследить сбойный запуск через все компоненты'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '9.5: видеть, сколько работы сделали агенты и во что она обошлась'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '9.8: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '10.2: менять настройки без влияния на работающих агентов'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '10.3: перенести агента из dev в prod'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '10.5: назначить агенту уровень автономии R0–R5'
+  problem: 'Мало классов: S1, S3'
+- gate: G08
+  level: warning
+  where: '10.6: задать бюджеты команды и проекта и получить предупреждение при приближении
+    к лимиту'
+  problem: 'Мало классов: S1, S3'
+- gate: G08
+  level: warning
+  where: '10.7: видеть, кто и когда менял настройки агентов и политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '10.8: задать руководство проекта — общие правила для всех агентов проекта'
+  problem: 'Мало классов: S1, S3'
+- gate: G08
+  level: warning
+  where: '10.11: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '11.1: получить чистую среду за доли секунды'
+  problem: Нет негативного сценария S3–S6
+- gate: G08
+  level: warning
+  where: '11.5: получить результат предыдущего агента в своём рабочем пространстве'
+  problem: 'Мало классов: S1, S6'
+- gate: G08
+  level: warning
+  where: '11.9: 4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+  problem: 'Мало классов: S1, S3'
+- gate: BLOCK
+  level: blocker
+  where: agent-runner-admission
+  problem: 'Нет в списке технологий: Клиент OPA (G1, D6): POST /v1/data/agent/g1'
+- gate: BLOCK
+  level: blocker
+  where: agent-runner-sandbox-claim
+  problem: 'Нет в списке технологий: Клиент SandboxProvider компонента Sandbox (D1):
+    Docker сейчас, K8s на этапе 4'
+- gate: BLOCK
+  level: warning
+  where: agent-runner-scheduler
+  problem: 'Заполнено 91 %, нет: params'
+- gate: BLOCK
+  level: blocker
+  where: agent-runner-shag-podgotovki
+  problem: 'Нет в списке технологий: Контейнер подготовки в сети sbx-setup (D19),
+    кэш setup_cache в схеме runner'
+- gate: BLOCK
+  level: blocker
+  where: guardrails-konfig-deploya
+  problem: 'Нет в списке технологий: YAML деплоя (values.yaml, S9)'
+- gate: BLOCK
+  level: warning
+  where: guardrails-opa
+  problem: 'Заполнено 91 %, нет: params'
+- gate: BLOCK
+  level: blocker
+  where: guardrails-rego-v-git
+  problem: 'Нет в списке технологий: Rego-политики в репозитории политик (S8), opa
+    test в CI'
+- gate: BLOCK
+  level: warning
+  where: guardrails-rego-v-git
+  problem: 'Заполнено 91 %, нет: params'
+- gate: BLOCK
+  level: blocker
+  where: harness-event-stream
+  problem: 'Нет в списке технологий: Поток RunEvent'
+- gate: BLOCK
+  level: blocker
+  where: harness-hooks
+  problem: 'Нет в списке технологий: Узлы графа before/after llm и tool, on_stop'
+- gate: BLOCK
+  level: blocker
+  where: harness-llm-client
+  problem: 'Нет в списке технологий: OpenAI-совместимый клиент → LiteLLM'
+- gate: BLOCK
+  level: blocker
+  where: icplan-avtopodhvat
+  problem: 'Нет в списке технологий: Доработка форка (D17): тип задачи задаёт процесс;
+    шаг = колонка + агент + переходы по итогу; эффект Действия'
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: 'Нет в списке технологий: It''s a Plan web: Команда → ИИ-агенты, Интеграции,
+    Инструменты, Навыки, MCP'
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: Нет таблицы agent_tool_link
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: Нет таблицы agent_skill_link
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: Нет таблицы integration_credential
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: Нет таблицы team
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: 'Экран ИИ-агенты → агент (боковая панель): у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: 'Экран карточка агента: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: 'Экран Проект → Настройки → Типы задач → процесс: у действия нет операции
+    API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: 'Экран карточка агента → «Платформа»: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: 'Экран Проект → ИИ-команда → «Платформа»: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-control-plane-ui
+  problem: 'Экран God mode → «Платформа»: у действия нет операции API'
+- gate: BLOCK
+  level: warning
+  where: icplan-control-plane-ui
+  problem: 'Заполнено 91 %, нет: data'
+- gate: BLOCK
+  level: blocker
+  where: icplan-registry
+  problem: 'Нет в списке технологий: Таблицы ICPlan: агенты, тулы, навыки, ключи и
+    учётные данные; MCP агента — ресурсы проекта Platform module (D23)'
+- gate: BLOCK
+  level: blocker
+  where: icplan-registry
+  problem: Нет таблицы agent_tool
+- gate: BLOCK
+  level: blocker
+  where: icplan-registry
+  problem: Нет таблицы agent_skill
+- gate: BLOCK
+  level: blocker
+  where: icplan-registry
+  problem: Нет таблицы agent_tool_link
+- gate: BLOCK
+  level: blocker
+  where: icplan-registry
+  problem: Нет таблицы agent_skill_link
+- gate: BLOCK
+  level: blocker
+  where: icplan-registry
+  problem: Нет таблицы integration_credential
+- gate: BLOCK
+  level: blocker
+  where: icplan-run-queue-runner-api
+  problem: 'Нет в списке технологий: Очередь agent_run + протокол @itsaplan/runner
+    (опрос, стрим)'
+- gate: BLOCK
+  level: blocker
+  where: icplan-task-ui
+  problem: 'Экран задача → панель «Агент»: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-task-ui
+  problem: 'Экран чат запуска: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-task-ui
+  problem: 'Экран карточка итога в чате запуска: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-task-ui
+  problem: 'Экран задача: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-task-ui
+  problem: 'Экран история задачи: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: icplan-task-ui
+  problem: 'Экран задача, сводка по агентам: у действия нет операции API'
+- gate: BLOCK
+  level: blocker
+  where: infrastructure-rezervnoe-hranilische-s3-vne-uzla
+  problem: 'Нет в списке технологий: S3-совместимое хранилище вне узла (второй сервер
+    или облако)'
+- gate: BLOCK
+  level: blocker
+  where: llm-gateway-aliasy
+  problem: 'Нет в списке технологий: LiteLLM model_list'
+- gate: BLOCK
+  level: blocker
+  where: llm-gateway-byudzhety-rate-limit
+  problem: 'Нет в списке технологий: LiteLLM budgets, RPM / TPM'
+- gate: BLOCK
+  level: blocker
+  where: llm-gateway-fallback
+  problem: 'Нет в списке технологий: LiteLLM router fallbacks'
+- gate: BLOCK
+  level: blocker
+  where: llm-gateway-g4-huki
+  problem: 'Нет в списке технологий: LiteLLM guardrail hooks pre_call / post_call'
+- gate: BLOCK
+  level: blocker
+  where: llm-gateway-mock-llm
+  problem: 'Нет в списке технологий: OpenAI-совместимый mock со сценариями (задача
+    1.1)'
+- gate: BLOCK
+  level: blocker
+  where: llm-gateway-spend-log
+  problem: 'Нет в списке технологий: LiteLLM spend logs (Postgres)'
+- gate: BLOCK
+  level: blocker
+  where: llm-gateway-virtual-keys
+  problem: 'Нет в списке технологий: LiteLLM virtual keys'
+- gate: BLOCK
+  level: blocker
+  where: mcp-tools-itsaplan-core
+  problem: 'Нет в списке технологий: MCP-сервер ICPlan (POST /mcp в api ICPlan), весь
+    REST API как тулы'
+- gate: BLOCK
+  level: blocker
+  where: mcp-tools-memory
+  problem: 'Нет в списке технологий: Нативный тул Harness (R4), запись M3 через Memory
+    API'
+- gate: BLOCK
+  level: blocker
+  where: mcp-tools-pravila-r1-r7
+  problem: 'Нет в списке технологий: Архитектурное правило (design D2, таблица R1–R7)'
+- gate: BLOCK
+  level: blocker
+  where: memory-m3-zadachnaya
+  problem: 'Нет в списке технологий: Таблица в БД ICPlan + тул записи'
+- gate: BLOCK
+  level: blocker
+  where: memory-memory-api
+  problem: 'Нет в списке технологий: Сервис над БД ICPlan'
+- gate: BLOCK
+  level: blocker
+  where: observability-agregaty-zatrat
+  problem: 'Нет в списке технологий: Агрегаты из spend log LiteLLM (журнал LiteLLM_SpendLogs,
+    БД litellm)'
+- gate: BLOCK
+  level: blocker
+  where: observability-sobytiya-zapuska
+  problem: 'Нет в списке технологий: Таблица run_event в БД ICPlan (схема platform,
+    S3)'
+- gate: BLOCK
+  level: blocker
+  where: platform-module-aliasy-llm
+  problem: 'Нет в списке технологий: Алиасы LiteLLM, синхронизация из модуля'
+- gate: BLOCK
+  level: blocker
+  where: platform-module-api-modulya
+  problem: 'Нет в списке технологий: Модуль форка ICPlan (TypeScript), схема platform
+    в Postgres'
+- gate: BLOCK
+  level: blocker
+  where: platform-module-byudzhety
+  problem: 'Нет в списке технологий: Бюджеты virtual key LiteLLM + проверка G1 в Runner'
+- gate: BLOCK
+  level: blocker
+  where: platform-module-dannye-guardrails
+  problem: 'Нет в списке технологий: Данные для OPA (bundle data)'
+- gate: BLOCK
+  level: blocker
+  where: platform-module-profili-pamyati
+  problem: 'Нет в списке технологий: Профили Memory'
+- gate: BLOCK
+  level: blocker
+  where: platform-module-profili-sandbox
+  problem: 'Нет в списке технологий: Профили Sandbox (образ, ресурсы, сеть, пул)'
+- gate: BLOCK
+  level: blocker
+  where: platform-module-versii-agentov
+  problem: 'Нет в списке технологий: Таблица версий + экспорт / импорт YAML'
+- gate: BLOCK
+  level: blocker
+  where: sandbox-credential-helper
+  problem: 'Нет в списке технологий: git credential helper / подстановка прокси'
+- gate: BLOCK
+  level: warning
+  where: sandbox-credential-helper
+  problem: 'Заполнено 82 %, нет: io, operations'
+- gate: BLOCK
+  level: blocker
+  where: sandbox-profil
+  problem: 'Нет в списке технологий: Ограничения контейнера'
+- gate: BLOCK
+  level: blocker
+  where: sandbox-sandboxprovider
+  problem: 'Нет в списке технологий: Интерфейс create / claim / exec / destroy; Docker
+    сейчас, K8s позже'
+- gate: BLOCK
+  level: blocker
+  where: sandbox-teplyy-pul
+  problem: 'Нет в списке технологий: Docker-контейнеры, заранее запущенные'
+- gate: MODEL
+  level: blocker
+  where: us-grd-01
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-grd-01
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-grd-02
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-grd-02
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-grd-03
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-grd-03
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-grd-06
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-grd-06
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-har-01
+  problem: Объект agent-settings-version не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-har-01
+  problem: Объект ai-agent не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-har-01
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-har-01
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-har-01
+  problem: Объект issue-activity не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-har-06
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-icp-01
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-02
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-03
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-04
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-04
+  problem: Объект run-checkpoint не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-04
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-04
+  problem: Объект scheduler-slot не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-06
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-07
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-08
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-09
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-10
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-10
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-11
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-11
+  problem: Объект run-checkpoint не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-12
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-13
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-14
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-15
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-16
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-17
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-18
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-icp-29
+  problem: Объект run-event не доходит до системы icplan
+- gate: MODEL
+  level: blocker
+  where: us-llm-01
+  problem: Объект LiteLLM-ProxyModelTable не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-llm-02
+  problem: Объект LiteLLM-ProxyModelTable не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-llm-03
+  problem: Объект LiteLLM-BudgetTable не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-llm-03
+  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-llm-04
+  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-llm-05
+  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-01
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-01
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-01
+  problem: Объект issue-activity не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-02
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-02
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-02
+  problem: Объект issue-activity не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-03
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mcp-05
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mem-01
+  problem: Объект issue-activity не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mem-02
+  problem: Объект issue-activity не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mem-03
+  problem: Объект issue-activity не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mem-05
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mem-07
+  problem: Объект agent-settings-version не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mem-07
+  problem: Объект ai-agent не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-mem-10
+  problem: Объект issue-activity не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-obs-01
+  problem: Объект issue не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-obs-02
+  problem: Объект issue не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-obs-03
+  problem: Объект issue не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-obs-05
+  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-obs-05
+  problem: Объект agent-run не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект ai-agent не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект LiteLLM-BudgetTable не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект LiteLLM-VerificationToken не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект agent-settings-version не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект memory-profile не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-01
+  problem: Объект sandbox-profile не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-02
+  problem: Объект ai-agent не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-02
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-02
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-02
+  problem: Объект agent-settings-version не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-02
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-02
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-02
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-03
+  problem: Объект ai-agent не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-03
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-03
+  problem: Объект agent-settings-version не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект ai-agent не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект LiteLLM-VerificationToken не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект agent-settings-version не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-04
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-05
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-05
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-05
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-06
+  problem: Объект LiteLLM-BudgetTable не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-06
+  problem: Объект LiteLLM-VerificationToken не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-06
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-06
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-07
+  problem: Объект ai-agent не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-07
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-07
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-07
+  problem: Объект agent-settings-version не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-07
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-07
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-pm-07
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-run-01
+  problem: Объект agent-run не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-run-01
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-run-01
+  problem: Объект kill-switch не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-run-01
+  problem: Объект sandbox-profile не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-run-01
+  problem: Объект agent-run не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-run-05
+  problem: Объект agent-run не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-01
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-01
+  problem: Объект sandbox-profile не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-02
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-02
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-03
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-03
+  problem: Объект agent-settings не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-03
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-03
+  problem: Объект sandbox-profile не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-04
+  problem: Объект sandbox-profile не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-05
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-05
+  problem: Объект project-platform не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-05
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-07
+  problem: Объект access-policy не доходит до системы agent-platform
+- gate: MODEL
+  level: blocker
+  where: us-sbx-07
+  problem: Объект project-resource не доходит до системы agent-platform
+- gate: MODEL
+  level: warning
+  where: I14
+  problem: 'Параметры канала не решены: timeout или idempotent'
+- gate: MODEL
+  level: warning
+  where: I17
+  problem: 'Параметры канала не решены: timeout или idempotent'
+- gate: MODEL
+  level: warning
+  where: I20
+  problem: 'Параметры канала не решены: timeout или idempotent'
+- gate: MODEL
+  level: warning
+  where: I21
+  problem: 'Параметры канала не решены: timeout или idempotent'
+- gate: MODEL
+  level: warning
+  where: I22
+  problem: 'Параметры канала не решены: timeout или idempotent'
+- gate: G02
+  level: warning
+  where: ошибки
+  problem: Домен ждёт решения человека
+- gate: G02
+  level: warning
+  where: резервное копирование
+  problem: Домен ждёт решения человека
+coverage:
+  scenario_classes:
+    stories: {}
+    epics_guessed:
+      '1.1':
+      - S1
+      - S3
+      - S9
+      '1.2':
+      - S1
+      - S7
+      '1.3':
+      - S1
+      - S4
+      '1.4':
+      - S1
+      '1.5':
+      - S1
+      - S4
+      - S10
+      '1.6':
+      - S1
+      - S6
+      '1.7':
+      - S1
+      - S3
+      - S5
+      - S8
+      - S9
+      '1.8':
+      - S1
+      - S12
+      '2.1':
+      - S1
+      - S9
+      - S10
+      '2.2':
+      - S1
+      - S3
+      - S6
+      '2.3':
+      - S1
+      - S3
+      '2.4':
+      - S1
+      - S3
+      - S10
+      '2.5':
+      - S1
+      - S12
+      '2.6':
+      - S1
+      - S6
+      '2.7':
+      - S1
+      - S4
+      '2.8':
+      - S1
+      - S3
+      - S4
+      - S5
+      - S6
+      - S8
+      - S9
+      - S12
+      '2.9':
+      - S1
+      - S3
+      - S4
+      - S5
+      '2.10':
+      - S1
+      '3.1':
+      - S1
+      - S6
+      '3.2':
+      - S1
+      - S3
+      - S6
+      '3.3':
+      - S1
+      - S4
+      '3.4':
+      - S1
+      - S4
+      - S8
+      '3.5':
+      - S1
+      - S3
+      - S6
+      - S10
+      '3.6':
+      - S1
+      - S3
+      '3.7':
+      - S1
+      - S6
+      '3.8':
+      - S1
+      - S3
+      - S9
+      '3.9':
+      - S1
+      - S3
+      - S5
+      - S6
+      - S8
+      '3.10':
+      - S1
+      - S3
+      - S6
+      '3.11':
+      - S1
+      - S4
+      '3.12':
+      - S1
+      - S6
+      '4.1':
+      - S1
+      - S4
+      - S8
+      '4.2':
+      - S1
+      '4.3':
+      - S1
+      - S5
+      - S6
+      - S9
+      '4.4':
+      - S1
+      - S3
+      - S10
+      '4.5':
+      - S1
+      - S3
+      - S7
+      - S8
+      '4.6':
+      - S1
+      - S4
+      '4.7':
+      - S1
+      - S4
+      - S8
+      '4.8':
+      - S1
+      - S9
+      '4.9':
+      - S1
+      '4.10':
+      - S1
+      - S10
+      '4.11':
+      - S1
+      - S6
+      '4.12':
+      - S1
+      - S5
+      - S6
+      '4.13':
+      - S1
+      - S4
+      - S5
+      - S6
+      '4.14':
+      - S1
+      - S10
+      '4.15':
+      - S1
+      - S6
+      '4.16':
+      - S1
+      - S4
+      - S8
+      '4.17':
+      - S1
+      - S10
+      '4.18':
+      - S1
+      - S9
+      '4.19':
+      - S1
+      - S3
+      - S8
+      - S9
+      - S10
+      - S11
+      '4.20':
+      - S1
+      - S3
+      '4.21':
+      - S1
+      - S6
+      - S9
+      - S10
+      '4.22':
+      - S1
+      - S9
+      - S10
+      - S11
+      '4.23':
+      - S1
+      - S9
+      - S10
+      - S11
+      '4.24':
+      - S1
+      '4.25':
+      - S1
+      - S11
+      '4.26':
+      - S1
+      - S3
+      - S9
+      '4.27':
+      - S1
+      - S9
+      - S11
+      '4.28':
+      - S1
+      - S5
+      '4.29':
+      - S1
+      - S6
+      '4.30':
+      - S1
+      - S3
+      - S5
+      - S8
+      - S9
+      - S10
+      - S12
+      '4.31':
+      - S1
+      - S3
+      - S5
+      - S8
+      - S9
+      - S12
+      '4.32':
+      - S1
+      - S3
+      - S4
+      '4.33':
+      - S1
+      - S3
+      - S9
+      '4.34':
+      - S1
+      '5.1':
+      - S1
+      '5.2':
+      - S1
+      - S6
+      '5.3':
+      - S1
+      - S4
+      - S6
+      - S10
+      '5.4':
+      - S1
+      - S10
+      '5.5':
+      - S1
+      - S10
+      '5.6':
+      - S1
+      '5.7':
+      - S1
+      - S5
+      '5.8':
+      - S1
+      - S3
+      - S8
+      '5.9':
+      - S1
+      - S6
+      '6.1':
+      - S1
+      - S6
+      - S10
+      '6.2':
+      - S1
+      - S5
+      '6.3':
+      - S1
+      - S5
+      - S6
+      '6.4':
+      - S1
+      - S6
+      - S8
+      '6.5':
+      - S1
+      - S11
+      '6.6':
+      - S1
+      - S3
+      - S5
+      - S6
+      - S8
+      - S9
+      - S12
+      '6.7':
+      - S1
+      - S3
+      - S4
+      '6.8':
+      - S1
+      '7.1':
+      - S1
+      - S6
+      - S9
+      '7.2':
+      - S1
+      - S2
+      - S6
+      - S8
+      '7.3':
+      - S1
+      - S6
+      - S9
+      - S12
+      '7.4':
+      - S1
+      - S11
+      '7.5':
+      - S1
+      - S5
+      - S12
+      '7.6':
+      - S1
+      - S3
+      - S5
+      - S6
+      - S8
+      - S9
+      '7.7':
+      - S1
+      - S5
+      - S11
+      '7.8':
+      - S1
+      '8.1':
+      - S1
+      - S7
+      - S8
+      '8.2':
+      - S1
+      - S6
+      - S8
+      '8.3':
+      - S1
+      - S3
+      - S8
+      - S11
+      '8.4':
+      - S1
+      - S5
+      - S6
+      '8.5':
+      - S1
+      '8.6':
+      - S1
+      - S8
+      - S11
+      '8.7':
+      - S1
+      - S11
+      '8.8':
+      - S1
+      - S5
+      - S6
+      '8.9':
+      - S1
+      - S5
+      - S6
+      '8.10':
+      - S1
+      - S8
+      - S11
+      - S12
+      '8.11':
+      - S1
+      - S3
+      - S5
+      - S6
+      - S7
+      - S8
+      - S9
+      '8.12':
+      - S1
+      - S3
+      - S9
+      - S11
+      - S12
+      '8.13':
+      - S1
+      '9.1':
+      - S1
+      '9.2':
+      - S1
+      '9.3':
+      - S1
+      - S5
+      - S12
+      '9.4':
+      - S1
+      - S6
+      '9.5':
+      - S1
+      '9.6':
+      - S1
+      - S3
+      - S5
+      - S8
+      - S9
+      '9.7':
+      - S1
+      - S5
+      - S9
+      '9.8':
+      - S1
+      '10.1':
+      - S1
+      - S3
+      - S6
+      '10.2':
+      - S1
+      - S9
+      - S10
+      '10.3':
+      - S1
+      - S11
+      '10.4':
+      - S1
+      - S5
+      - S6
+      - S8
+      - S9
+      '10.5':
+      - S1
+      - S3
+      '10.6':
+      - S1
+      - S3
+      - S4
+      '10.7':
+      - S1
+      - S5
+      - S9
+      - S12
+      '10.8':
+      - S1
+      - S3
+      - S8
+      '10.9':
+      - S1
+      - S3
+      - S5
+      - S6
+      - S8
+      - S9
+      - S11
+      - S12
+      '10.10':
+      - S1
+      - S3
+      - S8
+      - S9
+      - S10
+      - S12
+      '10.11':
+      - S1
+      '11.1':
+      - S1
+      '11.2':
+      - S1
+      - S3
+      - S5
+      - S6
+      '11.3':
+      - S1
+      - S3
+      - S12
+      '11.4':
+      - S1
+      - S4
+      - S5
+      '11.5':
+      - S1
+      - S6
+      '11.6':
+      - S1
+      - S5
+      - S11
+      '11.7':
+      - S1
+      - S5
+      - S6
+      '11.8':
+      - S1
+      - S3
+      - S4
+      - S5
+      - S6
+      - S8
+      - S9
+      '11.9':
+      - S1
+      - S3
+  blocks:
+    agent-runner-admission:
+      title: Admission
+      filled: 100
+    agent-runner-event-relay:
+      title: Event relay
+      filled: 100
+    agent-runner-finalizer:
+      title: Finalizer
+      filled: 100
+    agent-runner-mcp-proksi:
+      title: MCP-прокси
+      filled: 100
+    agent-runner-poller:
+      title: Poller
+      filled: 100
+    agent-runner-run-supervisor:
+      title: Run supervisor
+      filled: 100
+    agent-runner-sandbox-claim:
+      title: Sandbox claim
+      filled: 100
+    agent-runner-scheduler:
+      title: Scheduler
+      filled: 91
+    agent-runner-shag-podgotovki:
+      title: Шаг подготовки
+      filled: 100
+    agent-runner-tokeny-repozitoriev:
+      title: Токены репозиториев
+      filled: 100
+    guardrails-konfig-deploya:
+      title: Конфиг деплоя
+      filled: 100
+    guardrails-opa:
+      title: OPA
+      filled: 91
+    guardrails-rego-v-git:
+      title: Rego в git
+      filled: 91
+    harness-bootstrap:
+      title: Bootstrap
+      filled: 100
+    harness-context-manager:
+      title: Context Manager
+      filled: 100
+    harness-event-stream:
+      title: Event stream
+      filled: 100
+    harness-hooks:
+      title: Hooks
+      filled: 100
+    harness-llm-client:
+      title: LLM client
+      filled: 100
+    harness-pause-resume:
+      title: Pause / resume
+      filled: 100
+    harness-policy-stop:
+      title: Policy / stop
+      filled: 100
+    harness-tool-executor:
+      title: Tool Executor
+      filled: 100
+    icplan-avtopodhvat:
+      title: Автоподхват
+      filled: 100
+    icplan-control-plane-ui:
+      title: Control Plane UI
+      filled: 91
+    icplan-registry:
+      title: Registry
+      filled: 100
+    icplan-run-queue-runner-api:
+      title: Run Queue + runner API
+      filled: 100
+    icplan-task-ui:
+      title: Task UI
+      filled: 100
+    infrastructure-pgbouncer:
+      title: PgBouncer
+      filled: 100
+    infrastructure-postgresql-17-pgvector:
+      title: PostgreSQL 17 + pgvector
+      filled: 100
+    infrastructure-rezervnoe-hranilische-s3-vne-uzla:
+      title: Резервное хранилище S3 вне узла
+      filled: 100
+    infrastructure-rustfs:
+      title: RustFS
+      filled: 100
+    infrastructure-traefik:
+      title: Traefik
+      filled: 100
+    llm-gateway-aliasy:
+      title: Алиасы
+      filled: 100
+    llm-gateway-byudzhety-rate-limit:
+      title: Бюджеты, rate limit
+      filled: 100
+    llm-gateway-fallback:
+      title: Fallback
+      filled: 100
+    llm-gateway-g4-huki:
+      title: G4 хуки
+      filled: 100
+    llm-gateway-mock-llm:
+      title: mock-LLM
+      filled: 100
+    llm-gateway-spend-log:
+      title: Spend log
+      filled: 100
+    llm-gateway-virtual-keys:
+      title: Virtual keys
+      filled: 100
+    mcp-tools-git-provayder:
+      title: git-провайдер
+      filled: 100
+    mcp-tools-itsaplan-core:
+      title: itsaplan-core
+      filled: 100
+    mcp-tools-memory:
+      title: memory
+      filled: 100
+    mcp-tools-pravila-r1-r7:
+      title: Правила R1–R7
+      filled: 100
+    memory-m3-zadachnaya:
+      title: M3 задачная
+      filled: 100
+    memory-memory-api:
+      title: Memory API
+      filled: 100
+    observability-agregaty-zatrat:
+      title: Агрегаты затрат
+      filled: 100
+    observability-sobytiya-zapuska:
+      title: События запуска
+      filled: 100
+    platform-module-aliasy-llm:
+      title: Алиасы LLM
+      filled: 100
+    platform-module-api-modulya:
+      title: API модуля
+      filled: 100
+    platform-module-byudzhety:
+      title: Бюджеты
+      filled: 100
+    platform-module-dannye-guardrails:
+      title: Данные guardrails
+      filled: 100
+    platform-module-profili-pamyati:
+      title: Профили памяти
+      filled: 100
+    platform-module-profili-sandbox:
+      title: Профили sandbox
+      filled: 100
+    platform-module-versii-agentov:
+      title: Версии агентов
+      filled: 100
+    sandbox-credential-helper:
+      title: Credential helper
+      filled: 82
+    sandbox-egress-proksi:
+      title: Egress-прокси
+      filled: 100
+    sandbox-profil:
+      title: Профиль
+      filled: 100
+    sandbox-sandboxprovider:
+      title: SandboxProvider
+      filled: 100
+    sandbox-teplyy-pul:
+      title: Тёплый пул
+      filled: 100
+  model:
+    actors: 36
+    processes: 24
+    services: 11
+    systems: 7
+    functions: 130
+    components: 11
+    data: 67
+    stores: 11
+    flows: 22
+    integrations: 24
+    nodes: 1
+readiness:
+  score: 49
+  status: черновик
+  parts:
+    Трассировка: 30
+    Сценарии: 0
+    Модель: 0
+    Карточки: 10
+    Обоснование: 15
+    Открытые вопросы: -6

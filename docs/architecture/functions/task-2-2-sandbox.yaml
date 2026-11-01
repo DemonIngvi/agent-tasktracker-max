@@ -1,0 +1,14 @@
+id: task-2-2-sandbox
+title: 2.2. Harness в Docker-контейнере на запуск
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-86
+- FR-90
+- FR-91
+- FR-92
+- FR-93
+reads: []
+writes: []

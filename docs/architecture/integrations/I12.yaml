@@ -1,0 +1,15 @@
+id: I12
+title: checkpoint цикла
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: agent-runner
+purpose: checkpoint цикла
+integration_type: sync-api
+protocol: 'HTTP внутри сети sandbox: `PUT / GET /runs/{id}/checkpoint`; в схему `harness_ckpt` пишет Runner'
+format: LangGraph checkpoint
+auth: одноразовый токен запуска (учётных данных БД в sandbox нет)
+timeout: 5 с
+retry: 3 раза
+idempotent: true

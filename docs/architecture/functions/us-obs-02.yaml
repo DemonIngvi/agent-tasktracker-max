@@ -1,0 +1,12 @@
+id: us-obs-02
+title: 'разобрать задачу: все запуски, версии агентов, итоги'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-146
+- FR-151
+reads:
+- issue
+writes: []

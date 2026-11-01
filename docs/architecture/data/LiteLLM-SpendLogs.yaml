@@ -1,0 +1,30 @@
+id: LiteLLM-SpendLogs
+title: Таблица LiteLLM_SpendLogs
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: request_id
+  type: String
+- name: api_key
+  type: String
+- name: model
+  type: String
+- name: spend
+  type: Float
+- name: prompt_tokens
+  type: Int
+- name: completion_tokens
+  type: Int
+- name: total_tokens
+  type: Int
+- name: startTime
+  type: DateTime
+- name: endTime
+  type: DateTime
+- name: metadata
+  type: Json
+- name: status
+  type: String

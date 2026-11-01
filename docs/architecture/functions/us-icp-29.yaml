@@ -1,0 +1,20 @@
+id: us-icp-29
+title: 'получить полный контекст задачи: описание, комментарии, вложения, итог прошлого шага, заметки пользователя'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-193
+- FR-40
+- FR-182
+reads:
+- agent-settings-version
+- apikey
+- project-resource
+writes:
+- agent-run
+- ai-agent
+- apikey
+- issue-activity
+- run-event

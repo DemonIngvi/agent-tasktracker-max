@@ -1,0 +1,6 @@
+id: harness-agent
+title: Harness (агент)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

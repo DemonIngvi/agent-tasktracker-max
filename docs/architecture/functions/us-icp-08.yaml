@@ -1,0 +1,17 @@
+id: us-icp-08
+title: сам поручить задачу конкретному агенту, минуя процесс
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-191
+- FR-2
+- FR-66
+- FR-204
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

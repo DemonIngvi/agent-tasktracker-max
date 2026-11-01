@@ -1,0 +1,45 @@
+id: icplan-agent-sozdat-proverit-izmenit-vyklyuchit
+title: 'Агент: создать, проверить, изменить, выключить, удалить'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Нужен агент
+actors:
+- administrator
+inputs: []
+outputs: []
+journeys:
+- UJ-9
+steps:
+- title: Создать агента (external)
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Проверка в чате (mock)
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Статус «не в сети»
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Работа, статистика
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Предупреждение; после подтверждения запуски отменены
+  actor: administrator
+  inputs: []
+  outputs: []
+- title: Новая версия
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: 'Выключен: очередь ждёт'
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: 'Удалён: шаги ручные'
+  actor: icplan
+  inputs: []
+  outputs: []

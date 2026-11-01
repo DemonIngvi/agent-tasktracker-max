@@ -1,0 +1,43 @@
+id: icplan-zadacha-idet-po-protsessu
+title: Задача идёт по процессу
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Задача создана или вошла в шаг
+actors:
+- pol-zovatel
+inputs: []
+outputs:
+- RunBundle
+- RunEvent
+- RunResult
+journeys:
+- UJ-7
+steps:
+- title: Человек делает шаг
+  actor: pol-zovatel
+  inputs: []
+  outputs: []
+- title: Делегат + запуск в очередь агента
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Взять из очереди (аренда) и исполнить
+  actor: agent-platform
+  inputs: []
+  outputs:
+  - RunBundle
+  - RunEvent
+- title: Отказ по таймауту, запись в ленте (FR-23)
+  actor: icplan
+  inputs: []
+  outputs: []
+- title: Итог в задачу, переход при успехе
+  actor: icplan
+  inputs: []
+  outputs:
+  - RunResult
+- title: Переход при ошибке, уведомить владельца
+  actor: icplan
+  inputs: []
+  outputs: []

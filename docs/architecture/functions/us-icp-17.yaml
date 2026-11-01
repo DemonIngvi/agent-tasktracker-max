@@ -1,0 +1,14 @@
+id: us-icp-17
+title: передать текущий шаг задачи другому агенту или человеку
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-191
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- run-event
+writes:
+- agent-run-delivery

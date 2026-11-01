@@ -1,0 +1,17 @@
+id: us-pm-02
+title: менять настройки без влияния на работающих агентов
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-97
+reads:
+- ai-agent
+writes:
+- access-policy
+- agent-settings
+- agent-settings-version
+- kill-switch
+- project-platform
+- project-resource

@@ -1,0 +1,14 @@
+id: Criterion
+title: критерий приёмки (AD-20)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: text
+  type: string
+- name: origin
+  type: 'enum: process · user:<username> · agent:<username> · reviewer:<username>'
+- name: status
+  type: 'enum: active · pending_approval'

@@ -1,0 +1,19 @@
+id: us-icp-10
+title: читать чат задачи с агентом и писать в него указания во время работы
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-4
+- FR-5
+- FR-10
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- apikey
+- run-event
+writes:
+- agent-run
+- agent-run-delivery
+- run-event

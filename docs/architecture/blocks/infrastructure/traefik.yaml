@@ -1,0 +1,35 @@
+id: infrastructure-traefik
+title: Traefik
+kind: service
+does:
+- Принимает внешний трафик по HTTPS
+- Маршрутизирует на сервисы ICPlan
+- Не публикует админки
+tech: Traefik v3.7 (в составе k3s), MIT
+stories:
+- '5.2'
+io:
+- dir: in
+  with: Пользователи
+  what: HTTPS-запросы к `web`, `api`, `/mcp`
+  via: I21
+- dir: out
+  with: ICPlan
+  what: маршрутизация на `web`, `api`, `/mcp` через Service ClusterIP
+  via: I21
+data: 'нет: прокси без состояния — маршрутизирует HTTP(S), таблиц модели не хранит'
+params:
+- ingress.host / tls
+reqs:
+- FR-161
+- FR-162
+- FR-173
+tasks:
+- '4.6'
+on_failure: 'Истёк TLS-сертификат: Traefik обновляет по ACME, при сбое предупреждение; Запрос на админку (LiteLLM,
+  OPA, Memory API, базы): маршрута нет, ответ 404; Нет готовых реплик сервиса: клиенты получают ошибку соединения'
+why: Встроен в k3s, ingress-nginx архивирован.
+operations:
+- name: приём HTTPS, перенаправление HTTP на HTTPS, маршруты `web`, `api`, `/mcp` (Gateway API HTTPRoute)
+  caller: Пользователи
+  via: I21

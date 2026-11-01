@@ -1,0 +1,11 @@
+id: us-run-02
+title: переключить платформу в последовательный режим
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-68
+reads: []
+writes:
+- scheduler-slot

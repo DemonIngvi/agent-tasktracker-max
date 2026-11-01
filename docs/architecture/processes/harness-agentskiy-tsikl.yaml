@@ -1,0 +1,32 @@
+id: harness-agentskiy-tsikl
+title: Агентский цикл
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: RunBundle
+actors:
+- litellm-mcp-opa
+- pol-zovatel
+inputs: []
+outputs:
+- ApprovalDecision
+journeys:
+- UJ-5
+steps:
+- title: Собрать контекст
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- title: Вызов модели
+  actor: litellm-mcp-opa
+  inputs: []
+  outputs: []
+- title: Подтверждение
+  actor: pol-zovatel
+  inputs: []
+  outputs:
+  - ApprovalDecision
+- title: Вызов тула
+  actor: litellm-mcp-opa
+  inputs: []
+  outputs: []

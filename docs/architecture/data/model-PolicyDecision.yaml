@@ -1,0 +1,14 @@
+id: PolicyDecision
+title: решение OPA
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: allow
+  type: bool
+- name: approval
+  type: bool
+- name: reason
+  type: string

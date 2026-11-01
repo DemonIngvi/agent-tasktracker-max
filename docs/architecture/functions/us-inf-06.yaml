@@ -1,0 +1,10 @@
+id: us-inf-06
+title: поднять локальную среду, как в prod, для тестов
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-169
+reads: []
+writes: []

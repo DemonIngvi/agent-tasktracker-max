@@ -1,0 +1,20 @@
+id: Verdict
+title: вердикт по результату шага (FR-200)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: contract
+sensitivity: internal
+attributes:
+- name: issueId / stepId
+  type: int / string
+- name: runId
+  type: int | null
+- name: verdict
+  type: 'enum: accepted · rejected'
+- name: note
+  type: string
+- name: by
+  type: string
+- name: criteria
+  type: Criterion[]

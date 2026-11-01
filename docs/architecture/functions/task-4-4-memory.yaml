@@ -1,0 +1,12 @@
+id: task-4-4-memory
+title: 4.4. Platform module в ICPlan
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-45
+- FR-46
+- FR-47
+reads: []
+writes: []

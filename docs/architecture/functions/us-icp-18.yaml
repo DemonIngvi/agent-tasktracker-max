@@ -1,0 +1,25 @@
+id: us-icp-18
+title: понять, почему агент не берёт задачу
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-198
+- FR-194
+- FR-8
+- FR-111
+reads:
+- LiteLLM-SpendLogs
+- agent-run
+- process
+- process-step
+- process-version
+- project-action
+- run-event
+writes:
+- agent-run
+- agent-run-delivery
+- issue
+- issue-activity
+- issue-process-state

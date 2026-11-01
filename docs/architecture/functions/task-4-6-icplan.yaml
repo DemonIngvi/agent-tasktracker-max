@@ -1,0 +1,11 @@
+id: task-4-6-icplan
+title: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-18
+- FR-212
+reads: []
+writes: []

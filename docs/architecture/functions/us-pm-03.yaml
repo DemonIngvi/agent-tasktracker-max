@@ -1,0 +1,14 @@
+id: us-pm-03
+title: перенести агента из dev в prod
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+reqs:
+- FR-99
+- FR-56
+reads:
+- ai-agent
+writes:
+- agent-settings
+- agent-settings-version

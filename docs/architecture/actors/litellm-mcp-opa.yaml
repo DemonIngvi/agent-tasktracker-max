@@ -1,0 +1,6 @@
+id: litellm-mcp-opa
+title: LiteLLM / MCP / OPA
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+kind: role

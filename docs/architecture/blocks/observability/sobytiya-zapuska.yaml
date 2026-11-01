@@ -1,0 +1,70 @@
+id: observability-sobytiya-zapuska
+title: События запуска
+kind: service
+does:
+- Принимает пакеты `RunEvent` от Runner, маскирует секреты и персональные данные до записи и хранит события AG-UI
+  по `(run_id, seq)`
+- Собирает дельты `*_CONTENT` в одно сообщение на `*_END`; дельты уходят только в живой поток
+- Отдаёт чат запуска в задаче (живой поток и история по шагам процесса) и трассу запусков по задаче, агенту и версии
+- Удаляет события старше `retention_days`; агрегаты затрат и срабатываний guardrails остаются
+tech: Таблица run_event в БД ICPlan (схема platform, S3)
+stories:
+- '9.1'
+- '9.2'
+- '9.3'
+io:
+- dir: in
+  with: Event relay
+  what: пакеты `RunEvent` с `seq`
+  via: I2
+- dir: in
+  with: Guardrails (аудит)
+  what: решения G1–G4 как события `CUSTOM` `guardrail_decision`
+- dir: out
+  with: Task UI ICPlan
+  what: 'чат запуска: поток событий и история'
+  via: I20
+data:
+- table: run_event
+  access: read
+  why: запись, чтение, очистка по сроку (владелец — Observability, S3); аудит guardrails G1–G4 — те же строки с
+    `type = CUSTOM`, `event.name = guardrail_decision` (точка, правило, агент, `run_id`; FR-125, …
+- table: issue
+  access: read
+  why: лента событий по задаче (`issue_id`, владелец — ICPlan)
+params:
+- events.level
+- retention_days
+reqs:
+- FR-146
+- FR-147
+- FR-148
+- FR-149
+- FR-151
+- FR-155
+- FR-156
+- FR-157
+- FR-4
+- FR-125
+tasks:
+- '3.3'
+on_failure: 'S3 недоступно: события буферизуются у Runner, запуск продолжается, чат запуска временно неполный; досылка
+  по `seq` без дублей (FMEA «Нет записи событий», «Postgres событий (S3) недоступен», FR-157); Таблица событий переполняется:
+  очистка по сроку, предупреждение эксплуатации; уровень детализации меняет только эксплуатация (`events.level`)
+  (FMEA «Переполнение таблицы событий»); Повтор пакета после сбоя I2: дубля нет, дедупликация по `(run_id, seq)`;
+  Секрет или значение Secret платформы в событии: значение маскируется до записи; Событий нет (срок истёк): разбор
+  запуска показывает агрегаты затрат без шагов'
+why: Самый дешёвый способ дать чат запуска в MVP — таблица в той же БД, без новых сервисов (AD-12).
+operations:
+- name: POST /agent-runs/:runId/events
+  caller: Event relay
+  via: I2
+- name: GET /agent-runs/:runId/stream
+  caller: Task UI ICPlan
+  via: I20
+- name: GET /issues/:issueId/agent-feed
+  caller: Task UI ICPlan
+  via: I20
+- name: очистка событий старше `retention_days` по `ts` (ночная)
+  caller: Observability
+  via: внутри

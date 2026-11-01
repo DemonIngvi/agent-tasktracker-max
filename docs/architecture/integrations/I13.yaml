@@ -1,0 +1,15 @@
+id: I13
+title: запросы к моделям
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: llm-gateway
+to: llm-providers
+purpose: запросы к моделям
+integration_type: sync-api
+protocol: HTTPS API провайдера; HTTP для mock
+format: провайдерский JSON
+auth: ключ провайдера в LiteLLM (Secret)
+timeout: 120 с
+retry: + fallback-модель
+idempotent: true

@@ -1,0 +1,29 @@
+id: llm-gateway-mock-llm
+title: mock-LLM
+kind: service
+does:
+- Отвечает вместо модели при разработке и тестах
+- 'Сценарии YAML: текст, tool_calls, ошибка, задержка'
+tech: OpenAI-совместимый mock со сценариями (задача 1.1)
+stories:
+- '6.2'
+io:
+- dir: in
+  with: LiteLLM
+  what: вызов `/v1/chat/completions` из алиаса team-default
+  via: I13
+data:
+- table: LiteLLM_ProxyModelTable
+  access: read
+  why: алиас team-default указывает на mock (владелец — LiteLLM)
+params: 'нет: mock — алиас team-default в model_list, своих параметров в interfaces.md нет'
+reqs:
+- FR-137
+tasks:
+- '1.1'
+on_failure: 'Сценарий «ошибка»: mock возвращает ошибку провайдера, Harness применяет повтор'
+why: Не нужен ключ провайдера; тесты детерминированные.
+operations:
+- name: 'ответ по сценарию YAML: `/v1/chat/completions`, стрим'
+  caller: LiteLLM
+  via: I13

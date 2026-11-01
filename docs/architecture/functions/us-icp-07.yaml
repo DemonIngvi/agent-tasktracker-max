@@ -1,0 +1,21 @@
+id: us-icp-07
+title: брать следующую задачу из своей очереди по всем процессам, где я исполнитель шага
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: icplan
+reqs:
+- FR-198
+- FR-3
+reads:
+- apikey
+- process
+- process-step
+- process-version
+- project-action
+writes:
+- agent-run
+- issue
+- issue-activity
+- issue-process-state
+- run-event
