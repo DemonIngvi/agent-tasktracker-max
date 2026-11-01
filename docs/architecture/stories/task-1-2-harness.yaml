@@ -1,0 +1,12 @@
+id: task-1-2-harness
+number: '3.8'
+component: harness
+role: Эксплуатация
+want: 1.2. Формат определения агента (YAML)
+so_that: требования без пользовательской истории были реализованы
+accept:
+- '`model.temperature` (температура выборки) не задан в конфигурации → применяется значение по умолчанию: 0.2'
+- '`model.temperature` задан больше 1.0 → значение отклонено, ошибка называет `model.temperature` и границы 0–1.0'
+reqs:
+- FR-31
+source: TASK-1-2-harness

@@ -12,20 +12,72 @@ inputs: []
 outputs: []
 journeys:
 - UJ-12
+component: infrastructure
+stories:
+- US-INF-01
+- US-INF-02
+- US-INF-06
 steps:
-- title: helm install по порядку готовности
+- id: s
+  type: start
+  title: Чистый сервер
+  actor: ekspluatatsiya-qa
+  inputs: []
+  outputs: []
+  next:
+  - to: ck
+- id: ck
+  type: gateway
+  title: Ресурсов хватает?
   actor: k3s-helm
   inputs: []
   outputs: []
-- title: Ingress, TLS (ACME)
+  next:
+  - to: in
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: Ошибка до установки
+  actor: ekspluatatsiya-qa
+  inputs: []
+  outputs: []
+- id: in
+  type: task
+  title: helm install по порядку готовности
   actor: k3s-helm
   inputs: []
   outputs: []
-- title: ICPlan по HTTPS
+  next:
+  - to: tl
+- id: tl
+  type: task
+  title: Ingress, TLS (ACME)
+  actor: k3s-helm
+  inputs: []
+  outputs: []
+  next:
+  - to: us
+- id: us
+  type: task
+  title: ICPlan по HTTPS
   actor: polzovatel
   inputs: []
   outputs: []
-- title: Локальная среда с mock-LLM
+  next:
+  - to: lc
+- id: lc
+  type: task
+  title: Локальная среда с mock-LLM
+  actor: ekspluatatsiya-qa
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Среда готова
   actor: ekspluatatsiya-qa
   inputs: []
   outputs: []

@@ -1,0 +1,14 @@
+id: task-4-6-harness
+number: '3.12'
+component: harness
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- опубликован новый образ Harness (`HARNESS_IMAGE`) → Runner использует его для новых запусков, активные доделываются
+  на прежнем
+- образ Harness не скачивается из реестра → запуск не стартует, статус `failed` с причиной «образ недоступен», событие
+  эксплуатации
+reqs:
+- FR-35
+source: TASK-4-6-harness

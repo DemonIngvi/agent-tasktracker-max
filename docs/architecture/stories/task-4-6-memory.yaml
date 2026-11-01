@@ -1,0 +1,15 @@
+id: task-4-6-memory
+number: '8.13'
+component: memory
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- 'выполняется `helm install`: Memory API — Deployment в `itsaplan-agents`, 1–2 реплики, Service ClusterIP; данные
+  — Postgres через PgBouncer → объекты созданы в своём namespace с заданными requests / limits, проверки готовности
+  зелёные'
+- выходит новая версия образа `memory-api` (1–2 реплики) → `memory-api` заменяется по одной реплике; работа, начатая
+  на старой версии, доделывается
+reqs:
+- FR-52
+source: TASK-4-6-memory

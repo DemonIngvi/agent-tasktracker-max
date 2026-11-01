@@ -1,0 +1,15 @@
+id: task-4-6-llm-gateway
+number: '6.8'
+component: llm-gateway
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- 'выполняется `helm install`: LiteLLM — Deployment `litellm` в `itsaplan-agents`, 2 реплики за Service ClusterIP;
+  БД `litellm` через PgBouncer; админка без ingress → объекты созданы в своём namespace с заданными requests / limits,
+  проверки готовности зелёные'
+- выходит новая версия образа `litellm` (2 реплики) → `litellm` заменяется по одной реплике; работа, начатая на
+  старой версии, доделывается
+reqs:
+- FR-145
+source: TASK-4-6-llm-gateway

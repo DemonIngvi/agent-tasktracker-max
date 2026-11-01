@@ -6,25 +6,87 @@ criticality: medium
 trigger: Новая версия
 actors:
 - dannye
+- ekspluatatsiya
 - k3s-helm
 inputs: []
 outputs: []
 journeys:
 - UJ-11
+component: infrastructure
+stories:
+- US-INF-05
 steps:
-- title: helm upgrade
+- id: s
+  type: start
+  title: Новая версия
+  actor: ekspluatatsiya
+  inputs: []
+  outputs: []
+  next:
+  - to: t1
+- id: t1
+  type: task
+  title: helm upgrade
   actor: k3s-helm
   inputs: []
   outputs: []
-- title: Миграции БД
+  next:
+  - to: g1
+- id: g1
+  type: gateway
+  title: Миграции нужны?
+  actor: k3s-helm
+  inputs: []
+  outputs: []
+  next:
+  - to: t2
+    label: да
+  - to: t3
+    label: нет
+- id: t2
+  type: task
+  title: Миграции БД
   actor: dannye
   inputs: []
   outputs: []
-- title: Реплики по одной
+  next:
+  - to: t3
+- id: t3
+  type: task
+  title: Реплики по одной
   actor: k3s-helm
   inputs: []
   outputs: []
-- title: Откат ревизии
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: Readiness ок?
   actor: k3s-helm
+  inputs: []
+  outputs: []
+  next:
+  - to: e1
+    label: да
+  - to: t4
+    label: нет
+- id: t4
+  type: task
+  title: Откат ревизии
+  actor: k3s-helm
+  inputs: []
+  outputs: []
+  next:
+  - to: x1
+- id: x1
+  type: error
+  title: Разбор инцидента
+  actor: ekspluatatsiya
+  inputs: []
+  outputs: []
+- id: e1
+  type: end
+  title: Версия выпущена
+  actor: ekspluatatsiya
   inputs: []
   outputs: []

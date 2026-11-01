@@ -1,0 +1,12 @@
+id: task-2-2-agent-runner
+number: '1.8'
+component: agent-runner
+role: Эксплуатация
+want: 2.2. Harness в Docker-контейнере на запуск
+so_that: требования без пользовательской истории были реализованы
+accept:
+- запуск завершается со статусом `failed` → sandbox уничтожен, логи и трейсы сохранены в Observability
+- запуск завершился `succeeded` → sandbox уничтожен, пул долит
+reqs:
+- FR-75
+source: TASK-2-2-agent-runner

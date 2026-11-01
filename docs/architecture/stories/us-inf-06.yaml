@@ -1,0 +1,13 @@
+id: us-inf-06
+number: '5.6'
+component: infrastructure
+role: Тестировщик
+want: поднять локальную среду, как в prod, для тестов
+so_that: проверять до выпуска
+accept:
+- Локальная среда (compose / k3d) с mock-LLM
+- Те же чарты и версии
+- Сброс среды к исходному состоянию одной командой
+reqs:
+- FR-169
+source: US-INF-06

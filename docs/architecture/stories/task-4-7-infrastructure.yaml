@@ -1,0 +1,17 @@
+id: task-4-7-infrastructure
+number: '5.9'
+component: infrastructure
+role: Эксплуатация
+want: 4.7. Postgres (CloudNativePG), PgBouncer, RustFS, бэкап вне узла
+so_that: требования без пользовательской истории были реализованы
+accept:
+- модуль сохраняет вложения задач, артефакты агентов, резервные копии → запись попадает в S7 (RustFS (S3 API), бакет
+  `planner-attachments`)
+- S7 (RustFS (S3 API), бакет `planner-attachments`) не отвечает → вложения и артефакты не сохраняются, итоги публикуются
+  без вложений; копии БД вне площадки не затронуты
+- узел недоступен → вся платформа недоступна (один узел)
+- postgres недоступен → сервисы не готовы, запуски не стартуют
+reqs:
+- FR-171
+- FR-173
+source: TASK-4-7-infrastructure

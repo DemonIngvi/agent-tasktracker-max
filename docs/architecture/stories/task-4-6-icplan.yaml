@@ -1,0 +1,20 @@
+id: task-4-6-icplan
+number: '4.34'
+component: icplan
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- 'разворачивается релиз ICPlan (ICPlan: Deployment `web` (1–2), `api` (2), `worker` (1), `bot` (1) в `itsaplan-core`;
+  вход — Traefik Ingress (HTTPS)) с модулем icplan-integration → миграции icplan-integration применены до старта
+  `api`, модуль доступен в ICPlan'
+- выходит новая версия форка ICPlan с изменениями icplan-integration → миграции icplan-integration обратно совместимы,
+  `api` обновляется по одной реплике без простоя
+- разворачивается релиз ICPlan (часть api / worker ICPlan (`itsaplan-core`)) с модулем icplan-agent-autopickup →
+  миграции icplan-agent-autopickup применены до старта `api`, модуль доступен в ICPlan
+- выходит новая версия форка ICPlan с изменениями icplan-agent-autopickup → миграции icplan-agent-autopickup обратно
+  совместимы, `api` обновляется по одной реплике без простоя
+reqs:
+- FR-18
+- FR-212
+source: TASK-4-6-icplan

@@ -1,0 +1,13 @@
+id: task-1-5-harness
+number: '3.10'
+component: harness
+role: Эксплуатация
+want: '1.5. Harness: hooks и пауза на approve'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- hook `before_tool` отклоняет вызов → тул не выполняется, агент получает сообщение об отказе
+- hook `before_tool` нормализует путь в аргументах → тул вызывается с изменёнными аргументами, изменение видно в
+  событии
+reqs:
+- FR-22
+source: TASK-1-5-harness

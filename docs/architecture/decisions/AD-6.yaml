@@ -2,7 +2,7 @@ id: AD-6
 title: Guardrail Policy
 binds:
 - all
-prevents: отход реализации от решения «Guardrail Policy»
+prevents: 'нет в источнике, уточнить: «Guardrail Policy»'
 rule: 'Движок решений G1 и G2 — OPA (Apache 2.0, CNCF): логика (Rego) в git с тестами `opa test`, данные
   (allowlist, лимиты) в БД ICPlan. Каждая точка G1–G4 включается и выключается в конфиге деплоя (`guardrails.gN.enabled`),
   режим отказа движка — `on_engine_error: deny / allow`. Точки применения: G1 — проверяет сам Runner;

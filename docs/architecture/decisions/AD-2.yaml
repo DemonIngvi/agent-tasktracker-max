@@ -2,7 +2,7 @@ id: AD-2
 title: 'Harness: LangGraph (Python) внутри sandbox — подтверждено'
 binds:
 - all
-prevents: 'отход реализации от решения «Harness: LangGraph (Python) внутри sandbox — подтверждено»'
+prevents: 'нет в источнике, уточнить: «Harness: LangGraph (Python) внутри sandbox — подтверждено»'
 rule: 'Агентский цикл — граф LangGraph: `context → llm → tools → context`. Hooks (G2) реализуются как
   узлы/обёртки графа до и после `llm` и `tools`. LLM-клиент настроен на endpoint LiteLLM (OpenAI-совместимый
   API). - Альтернативы (R&D v3.1, 11.10.2026): OpenAI Agents SDK (запасной: пауза через `RunState`, сравнение

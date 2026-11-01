@@ -10,20 +10,95 @@ inputs: []
 outputs: []
 journeys:
 - UJ-10
+component: icplan
+stories:
+- US-ICP-05
+- US-ICP-25
+- US-ICP-26
+- US-ICP-27
 steps:
-- title: Шаги, агенты, переходы
+- id: s
+  type: start
+  title: Нужен процесс
   actor: administrator
   inputs: []
   outputs: []
-- title: Указать шаг для переноса
+  next:
+  - to: ed
+- id: ed
+  type: task
+  title: Шаги, агенты, переходы
   actor: administrator
   inputs: []
   outputs: []
-- title: Новая версия процесса
+  next:
+  - to: vl
+- id: vl
+  type: gateway
+  title: Структура верна?
   actor: icplan
   inputs: []
   outputs: []
-- title: Действие «делегировать агенту» (необязательно)
+  next:
+  - to: tk
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: Ошибка с шагом
+  actor: icplan
+  inputs: []
+  outputs: []
+- id: tk
+  type: gateway
+  title: Есть задачи на удалённых шагах?
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: mv
+    label: да
+  - to: sv
+    label: нет
+- id: mv
+  type: task
+  title: Указать шаг для переноса
   actor: administrator
+  inputs: []
+  outputs: []
+  next:
+  - to: sv
+- id: sv
+  type: task
+  title: Новая версия процесса
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: na
+- id: na
+  type: gateway
+  title: Нужно Действие по условию?
+  actor: administrator
+  inputs: []
+  outputs: []
+  next:
+  - to: ac
+    label: да
+  - to: e
+    label: нет
+- id: ac
+  type: task
+  title: Действие «делегировать агенту» (необязательно)
+  actor: administrator
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Процесс действует
+  actor: icplan
   inputs: []
   outputs: []

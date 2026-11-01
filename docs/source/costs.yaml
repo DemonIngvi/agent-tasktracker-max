@@ -1,0 +1,627 @@
+costs:
+- date: '2026-10-13'
+  process: review-pack
+  methodology: approval-methodology.md#economy
+  units: 64
+  unit: пара документ×роль
+  tokens: 2666890
+  model: Sonnet
+  expected: [2000, 4000]
+  agents: [aeb0a287e36c38e24, a5218661c9e42511c, a58dc32dcb02a4c40, a943f701afe2121be, ab02fabe3b0c09990]
+  calls: 47
+  context: 406811
+  note: 'ICPlan раунд 3: 5 агентов (84,9+68,6+123+74,3+59,2 тыс.)'
+- date: '2026-10-13'
+  process: review-pack
+  methodology: approval-methodology.md#economy
+  units: 6
+  unit: пара документ×роль
+  tokens: 226996
+  model: Sonnet
+  expected: [2000, 4000]
+  agents: [af08a01a4d6fd48d3]
+  calls: 6
+  context: 44196
+  note: ICPlan, перепроверка 6 пар
+- date: '2026-10-13'
+  process: review-pack
+  methodology: approval-methodology.md#economy
+  units: 50
+  unit: пара документ×роль
+  tokens: 1328159
+  model: Sonnet
+  expected: [25000, 40000]
+  agents: [a3bf96a9c3112c10b, a6dae50a3fa71ca05, a3cc6ae9647fe5962, a402038f5b785fd88]
+  calls: 32
+  context: 207129
+  note: 'Agent Runner раунд 1: 4 агента (53,2+48,1+56,2+51,8 тыс.); ожидание пересмотрено 13.10 по замеру из журналов вызовов (запасной режим, факт 26–42 тыс.)'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 1
+  unit: компонент
+  tokens: 16409048
+  model: Opus
+  expected: [150000, 250000]
+  agents: [ad58932fa61ff6111]
+  calls: 103
+  context: 225244
+  note: 'ICPlan раунд 2, партия J: 27 замечаний'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 1
+  unit: компонент
+  tokens: 7286804
+  model: Opus
+  expected: [150000, 250000]
+  agents: [a468754a2f6d23de2]
+  calls: 69
+  context: 154953
+  note: 'ICPlan раунд 2, партия K: 13 замечаний'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 1
+  unit: компонент
+  tokens: 6713950
+  model: Opus
+  expected: [150000, 250000]
+  agents: [aa8041599015544ef]
+  calls: 54
+  context: 186280
+  note: Agent Runner
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 2
+  unit: компонент
+  tokens: 5109643
+  model: Opus
+  expected: [150000, 250000]
+  agents: [a3b75015dd78433cb]
+  calls: 53
+  context: 158327
+  note: Harness + Sandbox
+- date: '2026-10-13'
+  process: lint-conversion
+  methodology: approval-methodology.md#economy
+  units: 128
+  unit: замечание
+  tokens: 7368355
+  model: Opus
+  expected: [30000, 60000]
+  agents: [ad74e0689e9effb50]
+  calls: 60
+  context: 193842
+  note: ожидание 150-200 тыс. на весь прогон ≈ 1,2-1,6 тыс. на замечание (128 замечаний); ожидание пересмотрено 13.10 по замеру из журналов вызовов (факт 58 тыс. агентом по файлам; скрипт-патч должен дать меньше)
+- date: '2026-10-13'
+  process: yaml-migration
+  methodology: data-methodology.md#yaml
+  units: 273
+  unit: файл
+  tokens: 22413109
+  model: Opus
+  minutes: 24
+  expected: [60000, 100000]
+  agents: [ae87f3d2bf97af9f1]
+  calls: 111
+  context: 308014
+  note: ожидание 250-350 тыс. на перенос ≈ 0,9-1,3 тыс. на файл (273 файла); ожидание пересмотрено 13.10 по замеру из журналов вызовов (факт 82 тыс., разовый перенос)
+- date: '2026-10-13'
+  process: rules-transfer
+  methodology: change-process.md#rules-change
+  units: 1
+  unit: документ
+  tokens: 3590349
+  model: Opus
+  agents: [a83dc8cfa0eb8007f]
+  calls: 40
+  context: 120498
+  note: R&D v3.2 в «Справку»
+- date: '2026-10-13'
+  process: rules-transfer
+  methodology: change-process.md#rules-change
+  units: 1
+  unit: документ
+  tokens: 2726176
+  model: Opus
+  agents: [acb39641140159254]
+  calls: 28
+  context: 121555
+  note: R&D v3.2 в methodology
+- date: '2026-10-13'
+  process: rules-transfer
+  methodology: change-process.md#rules-change
+  units: 1
+  unit: документ
+  tokens: 13421774
+  model: Opus
+  agents: [aa7b4af3d24dd6544]
+  calls: 72
+  context: 279912
+  note: перенос doctool в methodology; прерванный запуск не учтён (расход неизвестен)
+- date: '2026-10-13'
+  process: unit-read
+  methodology: data-methodology.md#yaml
+  units: 1
+  unit: блок
+  tokens: 240
+  note: doctool unit, без агента; для сравнения subcomponents.py целиком ~24 600 токенов
+- date: '2026-10-13'
+  process: tooling
+  methodology: token-costs.md#costs
+  units: 1
+  unit: инструмент
+  tokens: 1240606
+  model: sonnet
+  minutes: 3
+  agents: [a26edcbfcc93bbb6e]
+  calls: 18
+  context: 90801
+  note: учёт расхода токенов (cost.py, data/costs.yaml, страница)
+- date: '2026-10-13'
+  process: tooling
+  methodology: approval-methodology.md#economy
+  units: 1
+  unit: инструмент
+  tokens: 2931017
+  model: opus
+  minutes: 5
+  agents: [ac1593ffb42ad0ee7]
+  calls: 35
+  context: 117254
+  note: пакетная проверка review-batch / approve-batch
+- date: '2026-10-13'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 16
+  unit: документ
+  tokens: 136804
+  model: sonnet
+  minutes: 1
+  expected: [1000, 1500]
+  agents: [a4894b7875e9f6ea0]
+  calls: 3
+  context: 53643
+  note: 'пробная пачка Agent Runner: 16 страниц, 47 пар, ✅47; 4 вызова инструментов; карточки ≈9,8 тыс.'
+- date: '2026-10-13'
+  process: tooling
+  methodology: token-costs.md#costs
+  units: 1
+  unit: инструмент
+  tokens: 22818985
+  model: opus
+  minutes: 20
+  agents: [ac910197b578312a5]
+  calls: 91
+  context: 355899
+  note: перенос экономии в methodology (837068b)
+- date: '2026-10-13'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 40
+  unit: документ
+  tokens: 147677
+  model: sonnet
+  minutes: 2
+  expected: [1000, 1500]
+  agents: [a4709451ef6088425]
+  calls: 4
+  context: 54266
+  note: пачка 40 страниц Harness+Sandbox+MCP (114 пар, ✅106 ❌8), агент Explore (накладные 19,4 тыс.); кириллица ≈2 симв./ток.
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 2
+  unit: компонент
+  tokens: 3641857
+  model: sonnet
+  minutes: 4
+  expected: [50000, 80000]
+  agents: [a34059f640be42656]
+  calls: 46
+  context: 119624
+  note: 'lint-fix A: platform-module 28→0, icplan 14→0 по YAML-единицам'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 3
+  unit: компонент
+  tokens: 8262780
+  model: sonnet
+  minutes: 8
+  expected: [50000, 80000]
+  agents: [a1355a6ebcf0e0164]
+  calls: 77
+  context: 183257
+  note: 'lint-fix B: memory 14→0, llm-gateway 14→0, infrastructure 18→4 ложных (данные нет); прерван лимитом'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 6
+  unit: компонент
+  tokens: 11216297
+  model: sonnet
+  minutes: 6
+  expected: [50000, 80000]
+  agents: [a48571a1339242667]
+  calls: 81
+  context: 225649
+  note: 'lint-fix C: agent-runner, observability, guardrails, harness, sandbox, mcp-tools → 0; прерван лимитом'
+- date: '2026-10-13'
+  process: tooling
+  methodology: data-methodology.md#yaml
+  units: 1
+  unit: инструмент
+  tokens: 20078970
+  model: opus
+  minutes: 22
+  expected: [2000000, 20000000]
+  agents: [abfcf11219d0350c2]
+  calls: 104
+  context: 286636
+  note: строгая структура YAML, 232 файла, JSON Schema; ожидание пересмотрено 13.10 по замеру из журналов вызовов (факт 1,2–23 млн; разброс ×10 — процесс не нормирован)
+- date: '2026-10-13'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 104
+  unit: документ
+  tokens: 414262
+  model: sonnet
+  minutes: 1
+  expected: [1000, 1900]
+  agents: [ac0cb32ab04885f95, af964cbdad74fb47a, a958c72648179d818]
+  calls: 14
+  context: 126186
+  note: 'БРАК: 3 пачки, 295 пар, один шаблонный комментарий; решения откачены, добавлена защита approve-batch'
+- date: '2026-10-13'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 104
+  unit: документ
+  tokens: 750899
+  model: sonnet
+  minutes: 6
+  expected: [1000, 1900]
+  agents: [a01421d98e22817fd, a09f255bbeeec0958, a497d81e622c708aa]
+  calls: 19
+  context: 166554
+  note: '3 пачки (40+40+24 страниц), 295 пар: ✅285 ❌10; агент doc-batch-reviewer; уникальные комментарии ~140 симв.'
+- date: '2026-10-13'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 9
+  unit: документ
+  tokens: 194224
+  model: haiku
+  minutes: 1
+  expected: [2500, 4500]
+  agents: [a808408b9a99cafeb]
+  calls: 7
+  context: 37203
+  note: 'перепроверка 9 страниц на Haiku: ✅20 ❌7, из 7 отказов 6 неверны (факт. ошибки, артефакт карточки) — для перепроверки Haiku не годится'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 53
+  unit: файл
+  tokens: 320885
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [ae755ca983667cff5]
+  calls: 7
+  context: 52100
+  note: 'пилот экономной партии: ID из текста в поля строк, 145 правок, скрипт-патч; агент общего назначения (Sonnet), 5 инструментов; ожидание пересмотрено 13.10 по замеру из журналов вызовов (скрипт-патч агентом, единица — файл)'
+- date: '2026-10-13'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 54
+  unit: документ
+  tokens: 276679
+  model: sonnet-5-5
+  expected: [4000, 8000]
+  agents: [a0e198338b6998b34, a077f914ec20ffa2d]
+  calls: 10
+  context: 79408
+  note: 'повторная проверка после пилота: 2 пачки (40+14), 162 пары, ✅158 ❌4; ожидание пересмотрено 13.10 по замеру из журналов вызовов (факт 3,7–7,2 тыс.)'
+- date: '2026-10-13'
+  process: finding-fix
+  methodology: review-methodology.md#findings
+  units: 1
+  unit: замечание
+  tokens: 631119
+  model: sonnet-5-5
+  expected: [250000, 500000]
+  agents: [a452ae74e398915e3]
+  calls: 14
+  context: 53430
+  note: 'Z-SBX-1: тип resources (cpu, memory_mb, disk_gb) в interfaces.md и профиле sandbox; исследование + правка'
+- date: '2026-10-13'
+  process: finding-fix
+  methodology: review-methodology.md#findings
+  units: 2
+  unit: замечание
+  tokens: 647278
+  model: sonnet-5-5
+  expected: [250000, 500000]
+  agents: [a390982efba87e0d4]
+  calls: 13
+  context: 60685
+  note: 'Z-ICP-86 ✅ / Z-ICP-106 📌: версии агента не в MVP (закрепление в 2.3.7, выбор — 4.4); R&D runner-agent-definition Э8/Э10'
+- date: '2026-10-13'
+  process: finding-fix
+  methodology: review-methodology.md#findings
+  units: 2
+  unit: замечание
+  tokens: 548357
+  model: sonnet-5-5
+  expected: [250000, 500000]
+  agents: [affe6063d8fb1166f]
+  calls: 13
+  context: 46237
+  note: 'Observability ❌×2 (R-OBS-05/13): чтение через ICPlan API (I14, I20) — таблица в docs/api/observability.md; перепроверка ролями — шаг 8'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 49
+  unit: файл
+  tokens: 847911
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [a3b6f1b1ebf875266]
+  calls: 16
+  context: 61937
+  note: 'каталог участников data/participants.yaml (64 псевдонима, 8 внешних): 128 строк label → with, отрисовка без изменений; yaml-migrate остаток 194→89'
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 13
+  unit: файл
+  tokens: 632669
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [aa3d30b81c02cfe96]
+  calls: 12
+  context: 60422
+  note: колонка «Тип» в таблицах параметров (8 видов грамматики), 73 параметра получили тип; parse_decl/value_ok в yamlcat; 9 пояснений из value → note (yaml-fmt)
+- date: '2026-10-13'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 41
+  unit: файл
+  tokens: 429013
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [ae331e4867f6e70ac]
+  calls: 8
+  context: 67500
+  note: 'остаток yaml-migrate 89→35: 2 правки via, leftovers() без ложных (_HAS, 52 строки); 35 — решения формата (endpoint списком, синонимы access, ?query)'
+- date: '2026-10-13'
+  process: finding-fix
+  methodology: review-methodology.md#findings
+  units: 1
+  unit: замечание
+  tokens: 2307887
+  model: sonnet-5-5
+  expected: [250000, 500000]
+  agents: [a194f5779536c225b]
+  calls: 33
+  context: 86514
+  note: 'Memory: уровни M0–M6 без подзадач (замечание владельца) — 2.5.10–12, 2.4.5, статусы схемы; проверка покрытия doctool coverage (507 находок)'
+- date: '2026-10-14'
+  process: rnd
+  methodology: rnd-methodology.md#greenfield
+  units: 1
+  unit: документ
+  tokens: 2040598
+  model: sonnet-5-5
+  expected: [800000, 1500000]
+  agents: [a9a06c2c0768c42f4, a3fc0885871b858ef, ac9ba9129cd62cdbf, aec49c244a53f9cfc, a6e1b36ddb264f83f]
+  calls: 39
+  context: 326917
+  note: 'R&D agent-chain v3.2: 4 веб-исследования (топологии, самообучение, отрасль, критерии) + документ; локальный эксперимент не включён (невалиден)'
+- date: '2026-10-14'
+  process: experiment
+  methodology: rnd-methodology.md#greenfield
+  units: 1
+  unit: эксперимент
+  tokens: 5277345
+  model: sonnet-5-5
+  expected: [1000000, 3000000]
+  agents: [a27f0316e9ec28438, a2f9287fb7dcc4812, a6751a7cff816808b, ab336446cde9f2283, a6b47f23285ce1874, a2bd178d697eb2f93, ade5be23988d21562, a53860405955212f3, a43eb80edf1fc9eea, a6f8d47940e2a66f9, aa34024e91f968647, ad4cc5826deab91da, ad392c8c37698da88, a15104fe011d727a7, ae17d854b3f3edc15, ac757059de62cca47, a89eaeb5e1118a096]
+  calls: 103
+  context: 984247
+  note: локальный эксперимент «один агент vs цепочка» — признан невалидным владельцем (не воспроизводит архитектуру, n=1); урок — valid-experiments-only
+- date: '2026-10-14'
+  process: bulk-edit
+  methodology: change-process.md#bulk
+  units: 24
+  unit: файл
+  tokens: 2938062
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [a5f71f5be60546c1a]
+  calls: 36
+  context: 123106
+  note: 'актуализация архитектуры по R&D agent-chain: D27, R-AP-24..26, R-MEM-16, R-GRD-11, R-OBS-13, модели ProcessStep/RunResult/M3Record/Run, подзадачи 3.6/3.7/3.9/4.4/4.5, ROADMAP, BACKLOG'
+- date: '2026-10-14'
+  process: rules-change
+  methodology: change-process.md#rules-change
+  units: 1
+  unit: документ
+  tokens: 999243
+  model: sonnet-5-5
+  expected: [200000, 500000]
+  agents: [ae0bd350ab4170ad8, ae380e917c1de9188, a434d28bd9b27fe46]
+  calls: 21
+  context: 183360
+  note: 'rnd-methodology v3.3: второй слой «техническое решение» (дерево качества, сценарии с response measure, ATAM-lite, fitness, ADR), #no-method, #own-experiment, конструктивный спор; исследование и сверка методологии'
+- date: '2026-10-14'
+  process: rnd
+  methodology: rnd-methodology.md#layer2
+  units: 1
+  unit: документ
+  tokens: 1613109
+  model: sonnet-5-5
+  expected: [800000, 1500000]
+  agents: [a2d0c48a865c1b50a, afbb44e17b2d0d49b, aede7a6c4984502d7]
+  calls: 27
+  context: 227013
+  note: 'agent-chain v3.3: слой 1 — атомарная ценность самообучения, OSS, ограничения, бэкапы; слой 2 — дерево качества, 12 сценариев, варианты 0/A/B/C, ATAM/CBAM-lite, F1–F9, D28; спор ролей конструктивно'
+- date: '2026-10-14'
+  process: arch-change
+  methodology: rnd-methodology.md#layer2
+  units: 11
+  unit: последствие
+  tokens: 3610590
+  model: sonnet-5-5
+  expected: [100000, 300000]
+  agents: [addd73bada319dfc6]
+  calls: 40
+  context: 142292
+  note: 'D28: AgentSettings learning/snapshots/toolsmith/guardrails, R-CP-15/16, R-MEM-17/18, R-REG-13/14, R-GRD-23..25, R-OBS-14, адаптеры, подзадачи 4.4.23–33, 4.3.8–9, 4.5.8, 3.9.9'
+- date: '2026-10-14'
+  process: finding-fix
+  methodology: review-methodology.md#findings
+  units: 1
+  unit: замечание
+  tokens: 53241
+  model: sonnet-5-5
+  expected: [250000, 500000]
+  agents: [abe52348d2d93457a]
+  calls: 5
+  context: 13115
+  note: 'шаг 5: ошибки API и откат Deploy уже внесены ранее; карточка проверки не видела коды (разбор «ошибки:» → «ошибк\w*»), lint memory 2→0'
+- date: '2026-10-14'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 76
+  unit: документ
+  tokens: 607880
+  model: sonnet-5-5
+  expected: [4000, 8000]
+  agents: [ac7aa3da2ddbacb35, aa71415f1845eb8d7, a58122c5a2c775f96, a9b7a73ce4ed9c443, a103f82f642e9e8f1, a4c7d0184f824861f, a66805c9b5811f543, a9fc0ac488b3699b1]
+  calls: 33
+  context: 177255
+  note: 'шаги 6+8: 7 пачек (правила, задачи, API, R&D, техспеки+истории, компоненты, observability) + перепроверка 3 отказов; очередь ⏳ 144 → 0; ❌ остался 1 (Z-ICP-106 — владелец)'
+- date: '2026-10-14'
+  process: rules-transfer
+  methodology: change-process.md#rules-change
+  units: 11
+  unit: документ
+  tokens: 4637609
+  model: sonnet-5-5
+  expected: [100000, 300000]
+  agents: [a29b8d7968e692e11]
+  calls: 43
+  context: 148548
+  note: 'перенос в methodology: rnd v3.3, approvals, sdd, data, tasks, token-costs, doctool (approvals, catalogs, cli, review, rnd, units, migrate), агент doc-tool-editor; 43 теста'
+- date: '2026-10-14'
+  process: coverage-fix
+  methodology: change-process.md#bulk
+  units: 9
+  unit: находка
+  tokens: 38104
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [a26e786a047acf599]
+  calls: 4
+  context: 12167
+  note: 'пилот: control-plane 9 сценариев → строки приёмки 4.4/4.8'
+- date: '2026-10-14'
+  process: coverage-fix
+  methodology: change-process.md#bulk
+  units: 231
+  unit: находка
+  tokens: 141289
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [a7e55ff282553d614]
+  calls: 10
+  context: 19058
+  note: 246 строк приёмки «сценарий → результат (R-код)» в 26 задачах; агент упёрся в maxTurns 10 без отчёта — проверено по факту
+- date: '2026-10-14'
+  process: coverage-fix
+  methodology: change-process.md#bulk
+  units: 20
+  unit: находка
+  tokens: 739200
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [aab7e3a1c6af9693a, a076d34e0a9a5a050]
+  calls: 23
+  context: 76548
+  note: 'перечни: диапазоны G1…G4 в тексте задачи; 16 блоков todo → подзадачи (13 упомянуты, 3 новые в 2.1)'
+- date: '2026-10-14'
+  process: coverage-fix
+  methodology: change-process.md#bulk
+  units: 7
+  unit: находка
+  tokens: 344344
+  model: sonnet-5-5
+  expected: [3000, 10000]
+  agents: [a895ba28bd18cc7b1]
+  calls: 8
+  context: 47904
+  note: перечни R-GRD-08 (R0/R1/R3 → 4.3.10) и R-MCP-04 (G1–G4 — приёмка 2.4); RTM R-GRD-11
+- date: '2026-10-14'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 28
+  unit: документ
+  tokens: 604305
+  model: sonnet-5-5
+  expected: [4000, 8000]
+  agents: [a57ae83adb57f7d9d, a69aa912a399a0c01, a34aa55bea6b776c9]
+  calls: 16
+  context: 141356
+  note: 'проверка задач после покрытия: первый прогон по обрезанным карточкам не применён (TASK_MAX 6000), повтор 81 ✅; правила 2 ✅'
+- date: '2026-10-14'
+  process: finding-fix
+  methodology: review-methodology.md#findings
+  units: 1
+  unit: замечание
+  tokens: 929937
+  model: sonnet-5-5
+  expected: [250000, 500000]
+  agents: [af42bdddb2523ac04]
+  calls: 16
+  context: 77305
+  note: 'Z-ICP-106: версии агента в MVP (решение владельца) — 2.3.8–2.3.10 (+14 ч), Run.settingsVersionId, R-REG-03 → 2.3'
+- date: '2026-10-14'
+  process: finding-fix
+  methodology: review-methodology.md#findings
+  units: 1
+  unit: замечание
+  tokens: 41246
+  model: sonnet-5-5
+  expected: [250000, 500000]
+  agents: [a31fa76374bae3cec]
+  calls: 4
+  context: 13987
+  note: 'параметры по решению владельца: снимки 30 д, потолок обучения 10% project_month, N=3/T=28, лимиты 8/2/95%'
+- date: '2026-10-14'
+  process: review-batch
+  methodology: approval-methodology.md#economy
+  units: 21
+  unit: документ
+  tokens: 470874
+  model: sonnet-5-5
+  expected: [4000, 8000]
+  agents: [a6a8fdc6c9a9a421e, a2b9d6ef9802b3f2c, a52c3394319e1bebc, a88e5b14e26e4e7c6]
+  calls: 20
+  context: 108019
+  note: 'после переноса версий в MVP и параметров владельца: 59 пар; карточка данных показывает чужие таблицы блоков (журнал LiteLLM, agent_run); аудит guardrails — события run_event'
+- date: '2026-10-14'
+  process: rnd
+  methodology: rnd-methodology.md#layer2
+  units: 1
+  unit: документ
+  tokens: 3012312
+  model: sonnet-5-5
+  expected: [800000, 1500000]
+  agents: [a6801f5667d08e051, a253fdf9a3e06752e, a1f3d51f7c16d4089, a518fbf90ab64b151, a15769068fe713b13]
+  calls: 55
+  context: 392142
+  note: 'R&D dev-deploy-monitoring (D29): контроль токенов в три уровня, конвейер D1→D2, среды; SaaS-выборы переведены в вопросы владельцу'

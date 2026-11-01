@@ -1,0 +1,14 @@
+id: us-llm-04
+number: '6.4'
+component: llm-gateway
+role: Эксплуатация
+want: чтобы сбой провайдера не останавливал работу
+so_that: не терять задачи
+accept:
+- Провайдер недоступен → fallback-модель
+- Fallback тоже недоступен → `failed` с причиной
+- Rate limit → повтор с задержкой
+reqs:
+- FR-139
+- FR-140
+source: US-LLM-04

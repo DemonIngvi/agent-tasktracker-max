@@ -6,7 +6,9 @@ binds:
 - FR-56
 - FR-97
 - FR-99
-prevents: отход реализации от решения «Определение агента для запуска — через API Platform module»
+prevents: Вызов — при старте после слотов планировщика (FR-97) / запуск, ждущий слота, стартует с новыми
+  настройками; продолжение с checkpoint — по той же инструкции / / Что видит токен Runner / только запуск
+  в `pending` агента `kind = external`, …
 rule: 'Решено по исследованию (R&D: откуда Agent Runner берёт определение агента), закрывает Z-ICP-3.
   / Вопрос / Решение / Почему / /---/---/---/ / Через какой стык Runner получает определение / I4: `GET
   /platform/runs/:runId/agent` → `{version, definition: AgentDefinition, settings: AgentSettings}`; определение

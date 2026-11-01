@@ -1,0 +1,12 @@
+id: F-api-killswitch-agent-platform
+title: Таблица kill_switch через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-module
+to: agent-platform
+objects:
+- kill-switch
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I4

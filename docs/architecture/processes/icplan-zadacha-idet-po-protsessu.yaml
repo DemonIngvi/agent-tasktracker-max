@@ -10,34 +10,182 @@ inputs: []
 outputs:
 - RunBundle
 - RunEvent
+- ApprovalDecision
 - RunResult
 journeys:
 - UJ-7
+component: icplan
+stories:
+- US-ICP-01
+- US-ICP-08
+- US-ICP-09
+- US-ICP-19
+- US-ICP-07
+- US-ICP-29
+- US-ICP-03
+- US-ICP-02
+- US-ICP-11
 steps:
-- title: Человек делает шаг
+- id: s
+  type: start
+  title: Задача создана или вошла в шаг
   actor: polzovatel
   inputs: []
   outputs: []
-- title: Делегат + запуск в очередь агента
+  next:
+  - to: g1
+- id: g1
+  type: gateway
+  title: У шага есть агент?
   actor: icplan
   inputs: []
   outputs: []
-- title: Взять из очереди (аренда) и исполнить
+  next:
+  - to: t1
+    label: да
+  - to: h1
+    label: нет
+- id: h1
+  type: task
+  title: Человек делает шаг
+  actor: polzovatel
+  inputs: []
+  outputs: []
+  next:
+  - to: e0
+- id: e0
+  type: end
+  title: Человек переводит задачу
+  actor: polzovatel
+  inputs: []
+  outputs: []
+- id: t1
+  type: task
+  title: Делегат + запуск в очередь агента
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: q1
+- id: q1
+  type: gateway
+  title: Постановка удалась?
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: t2
+    label: да
+  - to: xq
+    label: нет, после повторов
+- id: xq
+  type: error
+  title: 'Запуск не поставлен: запись в истории, уведомление (FR-211)'
+  actor: icplan
+  inputs: []
+  outputs: []
+- id: t2
+  type: task
+  title: Взять из очереди (аренда) и исполнить
   actor: agent-platform
   inputs: []
   outputs:
   - RunBundle
   - RunEvent
-- title: Отказ по таймауту, запись в ленте (FR-23)
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: Итог запуска
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: t4
+    label: успех
+  - to: t3
+    label: ждёт ответа
+  - to: x1
+    label: ошибка, gate, лимит
+  - to: rr
+    label: Runner упал, аренда истекла
+  - to: xc
+    label: отменён человеком
+- id: t3
+  type: gateway
+  title: Ответ или решение до `approval_timeout`?
+  actor: polzovatel
+  inputs: []
+  outputs:
+  - ApprovalDecision
+  next:
+  - to: t2
+    label: да, продолжить
+  - to: ta
+    label: нет
+- id: ta
+  type: task
+  title: Отказ по таймауту, запись в ленте (FR-23)
   actor: icplan
   inputs: []
   outputs: []
-- title: Итог в задачу, переход при успехе
+  next:
+  - to: t2
+    label: продолжить без действия
+- id: rr
+  type: gateway
+  title: Выдач меньше `AGENT_RUN_MAX_ATTEMPTS` (3)?
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: t2
+    label: да, выдать снова
+  - to: x1
+    label: 'нет: failed'
+- id: xc
+  type: error
+  title: Запуск canceled, среда уничтожена, запись в истории (FR-7)
+  actor: icplan
+  inputs: []
+  outputs: []
+- id: t4
+  type: task
+  title: Итог в задачу, переход при успехе
   actor: icplan
   inputs: []
   outputs:
   - RunResult
-- title: Переход при ошибке, уведомить владельца
+  next:
+  - to: g3
+- id: x1
+  type: task
+  title: Переход при ошибке, уведомить владельца
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: e2
+- id: g3
+  type: gateway
+  title: Куда переход?
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: g1
+    label: следующий шаг / другой процесс
+  - to: e1
+    label: завершить
+- id: e2
+  type: end
+  title: Владелец процесса разбирает
+  actor: polzovatel
+  inputs: []
+  outputs: []
+- id: e1
+  type: end
+  title: Процесс завершён
   actor: icplan
   inputs: []
   outputs: []

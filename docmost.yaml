@@ -19,14 +19,364 @@ tree:
     view: c3
   - title: Как работает
     view: how
-  - title: Карточки блоков
-    view: cards
   - title: Данные
     view: data
   - title: Реестры
     view: registers
   - title: Матрица покрытия
     view: coverage
+- title: Компоненты
+  children:
+  - title: Agent Runner
+    children:
+    - title: Как работает
+      source: docs/source/how/agent-runner.md
+    - title: User Stories
+      view: stories:agent-runner
+    - title: Карточки блоков
+      view: cards:agent-runner
+    - title: Схема
+      source: docs/source/specs/agent-runner/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/agent-runner/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/agent-runner.md
+    - title: API
+      source: docs/source/api/agent-runner.md
+    - title: Замечания
+      source: docs/source/reviews/findings/agent-runner.md
+  - title: Guardrails
+    children:
+    - title: Как работает
+      source: docs/source/how/guardrails.md
+    - title: User Stories
+      view: stories:guardrails
+    - title: Карточки блоков
+      view: cards:guardrails
+    - title: Схема
+      source: docs/source/specs/guardrails/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/guardrails/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/guardrails.md
+    - title: API
+      source: docs/source/api/guardrails.md
+  - title: Harness
+    children:
+    - title: Как работает
+      source: docs/source/how/harness.md
+    - title: User Stories
+      view: stories:harness
+    - title: Карточки блоков
+      view: cards:harness
+    - title: Схема
+      source: docs/source/specs/agent-harness/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/agent-harness/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/harness.md
+    - title: API
+      source: docs/source/api/harness.md
+  - title: ICPlan
+    children:
+    - title: Как работает
+      source: docs/source/how/icplan.md
+    - title: User Stories
+      view: stories:icplan
+    - title: Карточки блоков
+      view: cards:icplan
+    - title: Схема (icplan-integration)
+      source: docs/source/specs/icplan-integration/architecture.md
+    - title: Интерфейсы и отказы (icplan-integration)
+      source: docs/source/specs/icplan-integration/interfaces.md
+    - title: Схема (icplan-agent-autopickup)
+      source: docs/source/specs/icplan-agent-autopickup/architecture.md
+    - title: Интерфейсы и отказы (icplan-agent-autopickup)
+      source: docs/source/specs/icplan-agent-autopickup/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/icplan.md
+    - title: API
+      source: docs/source/api/icplan.md
+    - title: Замечания
+      source: docs/source/reviews/findings/icplan.md
+  - title: Инфраструктура
+    children:
+    - title: Как работает
+      source: docs/source/how/infrastructure.md
+    - title: User Stories
+      view: stories:infrastructure
+    - title: Карточки блоков
+      view: cards:infrastructure
+    - title: Схема
+      source: docs/source/specs/platform-infrastructure/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/platform-infrastructure/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/infrastructure.md
+    - title: API
+      source: docs/source/api/infrastructure.md
+  - title: LiteLLM gateway
+    children:
+    - title: Как работает
+      source: docs/source/how/llm-gateway.md
+    - title: User Stories
+      view: stories:llm-gateway
+    - title: Карточки блоков
+      view: cards:llm-gateway
+    - title: Схема
+      source: docs/source/specs/llm-gateway/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/llm-gateway/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/llm-gateway.md
+    - title: API
+      source: docs/source/api/llm-gateway.md
+    - title: Замечания
+      source: docs/source/reviews/findings/llm-gateway.md
+  - title: MCP / Tools
+    children:
+    - title: Как работает
+      source: docs/source/how/mcp-tools.md
+    - title: User Stories
+      view: stories:mcp-tools
+    - title: Карточки блоков
+      view: cards:mcp-tools
+    - title: Схема
+      source: docs/source/specs/tool-integration/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/tool-integration/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/mcp-tools.md
+    - title: API
+      source: docs/source/api/mcp-tools.md
+  - title: Memory
+    children:
+    - title: Как работает
+      source: docs/source/how/memory.md
+    - title: User Stories
+      view: stories:memory
+    - title: Карточки блоков
+      view: cards:memory
+    - title: Схема
+      source: docs/source/specs/agent-memory/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/agent-memory/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/memory.md
+    - title: API
+      source: docs/source/api/memory.md
+    - title: Замечания
+      source: docs/source/reviews/findings/memory.md
+  - title: Observability
+    children:
+    - title: Как работает
+      source: docs/source/how/observability.md
+    - title: User Stories
+      view: stories:observability
+    - title: Карточки блоков
+      view: cards:observability
+    - title: Схема
+      source: docs/source/specs/observability/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/observability/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/observability.md
+    - title: API
+      source: docs/source/api/observability.md
+    - title: Замечания
+      source: docs/source/reviews/findings/observability.md
+  - title: Platform module
+    children:
+    - title: Как работает
+      source: docs/source/how/platform-module.md
+    - title: User Stories
+      view: stories:platform-module
+    - title: Карточки блоков
+      view: cards:platform-module
+    - title: Схема (agent-registry)
+      source: docs/source/specs/agent-registry/architecture.md
+    - title: Интерфейсы и отказы (agent-registry)
+      source: docs/source/specs/agent-registry/interfaces.md
+    - title: Схема (control-plane)
+      source: docs/source/specs/control-plane/architecture.md
+    - title: Интерфейсы и отказы (control-plane)
+      source: docs/source/specs/control-plane/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/platform-module.md
+    - title: API
+      source: docs/source/api/platform-module.md
+    - title: Замечания
+      source: docs/source/reviews/findings/platform-module.md
+  - title: Sandbox
+    children:
+    - title: Как работает
+      source: docs/source/how/sandbox.md
+    - title: User Stories
+      view: stories:sandbox
+    - title: Карточки блоков
+      view: cards:sandbox
+    - title: Схема
+      source: docs/source/specs/agent-sandbox/architecture.md
+    - title: Интерфейсы и отказы
+      source: docs/source/specs/agent-sandbox/interfaces.md
+    - title: Техспека
+      source: docs/source/techspec/sandbox.md
+    - title: API
+      source: docs/source/api/sandbox.md
+    - title: Замечания
+      source: docs/source/reviews/findings/sandbox.md
+- title: R&D
+  children:
+  - title: 'R&D: Цепочки агентов: маршрутизация, возвраты, лимиты, самообучение'
+    source: docs/source/rnd/agent-chain.md
+  - title: 'R&D: Рабочее пространство агентов и доступы'
+    source: docs/source/rnd/agent-workspace.md
+  - title: 'R&D: Автоподхват задач агентом'
+    source: docs/source/rnd/autopickup-rules.md
+  - title: 'R&D: Где хранятся определения и настройки агентов'
+    source: docs/source/rnd/config-storage.md
+  - title: 'R&D: Хранилища данных (Postgres и объектное хранилище)'
+    source: docs/source/rnd/data-stores.md
+  - title: 'R&D: Базы, схемы и роли БД сервисов'
+    source: docs/source/rnd/db-roles-schemas.md
+  - title: 'R&D: Разработка, деплой и мониторинг: гарантированный контроль токенов'
+    source: docs/source/rnd/dev-deploy-monitoring.md
+  - title: 'R&D: Автоматизация правил документации — навыки, хуки и инструмент вме'
+    source: docs/source/rnd/doc-automation.md
+  - title: 'R&D: Срок хранения запусков, переписки и истории задачи в таблицах фор'
+    source: docs/source/rnd/fork-run-retention.md
+  - title: 'R&D: Движок правил guardrails'
+    source: docs/source/rnd/guardrails-engine.md
+  - title: 'R&D: Фреймворк агентского цикла'
+    source: docs/source/rnd/harness-framework.md
+  - title: 'R&D: Вход и балансировка'
+    source: docs/source/rnd/ingress-and-balancing.md
+  - title: 'R&D: Kubernetes и упаковка платформы'
+    source: docs/source/rnd/kubernetes-runtime.md
+  - title: 'R&D: Шлюз к моделям (LLM Gateway)'
+    source: docs/source/rnd/llm-gateway.md
+  - title: 'R&D: Профиль нагрузки и ёмкость'
+    source: docs/source/rnd/load-profile.md
+  - title: 'R&D: Тулы агента — MCP, прямые вызовы, нативные тулы'
+    source: docs/source/rnd/mcp-vs-direct.md
+  - title: 'R&D: Модель памяти агентов'
+    source: docs/source/rnd/memory-model.md
+  - title: 'R&D: Наблюдаемость агентов'
+    source: docs/source/rnd/observability.md
+  - title: 'R&D: Где администратор задаёт настройки Platform module'
+    source: docs/source/rnd/platform-module-screens.md
+  - title: 'R&D: Поиск по знаниям (RAG)'
+    source: docs/source/rnd/rag.md
+  - title: 'R&D: обоснование решений'
+    source: docs/source/rnd/README.md
+  - title: 'R&D: Как проводить и подавать исследования'
+    source: docs/source/rnd/rnd-methodology-choice.md
+  - title: 'R&D: Как пользователь видит работу агента в задаче'
+    source: docs/source/rnd/run-view.md
+  - title: 'R&D: Защита от разгона агента'
+    source: docs/source/rnd/runaway-protection.md
+  - title: 'R&D: Откуда Agent Runner берёт определение агента'
+    source: docs/source/rnd/runner-agent-definition.md
+  - title: 'R&D: Runner и очередь запусков'
+    source: docs/source/rnd/runner-and-scheduling.md
+  - title: 'R&D: Изоляция запусков (Sandbox)'
+    source: docs/source/rnd/sandbox-isolation.md
+  - title: 'R&D: Контракт шага — данные, память и критерии приёмки между шагами'
+    source: docs/source/rnd/step-contract.md
+  - title: 'R&D: Выбор таск-трекера'
+    source: docs/source/rnd/tracker-choice.md
+  - title: 'R&D: Потоки аналогов «трекер + ИИ-агенты»'
+    source: docs/source/rnd/us-analogs-agent-tracker.md
+  - title: Последствия исследований
+    source: docs/source/rnd-consequences.md
+- title: Планы и задачи
+  children:
+  - title: ROADMAP
+    source: docs/source/ROADMAP.md
+  - title: Сводка задач
+    source: docs/source/TASKS.md
+  - title: Бэклог
+    source: docs/source/BACKLOG.md
+  - title: Задачи
+    children:
+    - title: 1.1. Mock-LLM и LiteLLM
+      source: docs/source/tasks/1.1-mock-llm-litellm.md
+    - title: 1.2. Формат определения агента (YAML)
+      source: docs/source/tasks/1.2-agent-definition-yaml.md
+    - title: '1.3. Harness: ядро на LangGraph'
+      source: docs/source/tasks/1.3-harness-core.md
+    - title: '1.4. Harness: MCP и тулы'
+      source: docs/source/tasks/1.4-harness-mcp-tools.md
+    - title: '1.5. Harness: hooks и пауза на approve'
+      source: docs/source/tasks/1.5-harness-hooks-approve.md
+    - title: '1.6. Harness: лимиты, завершение, контекст'
+      source: docs/source/tasks/1.6-harness-limits-context.md
+    - title: 1.7. ~~UI для прокликивания агента~~ — закрыта
+      source: docs/source/tasks/1.7-dev-ui.md
+    - title: 2.1. Agent Runner как внешний раннер ICPlan
+      source: docs/source/tasks/2.1-runner-external.md
+    - title: 2.2. Harness в Docker-контейнере на запуск
+      source: docs/source/tasks/2.2-sandbox-docker-oneshot.md
+    - title: 2.3. Конфиг агента из ICPlan + YAML
+      source: docs/source/tasks/2.3-config-from-icplan.md
+    - title: 2.4. MCP `itsaplan-core` для агента
+      source: docs/source/tasks/2.4-mcp-itsaplan-core.md
+    - title: '2.5. Память M1–M3: контекст, управление'
+      source: docs/source/tasks/2.5-memory-m2-m3.md
+    - title: '2.6. E2E: от задачи до итога'
+      source: docs/source/tasks/2.6-e2e-icplan.md
+    - title: 2.7. Планировщик запусков (слоты, режимы)
+      source: docs/source/tasks/2.7-runner-scheduler.md
+    - title: 2.8. Общий резолвер конфигурации L0–L3
+      source: docs/source/tasks/2.8-config-storage-interfaces-fmea.md
+    - title: '3.1. ICPlan: процесс типа задачи и агент шага'
+      source: docs/source/tasks/3.1-icplan-process-step-agent.md
+    - title: '3.2. ICPlan: передача между агентами'
+      source: docs/source/tasks/3.2-icplan-handoff.md
+    - title: 3.3. События запуска и чат запуска в задаче
+      source: docs/source/tasks/3.3-run-events-timeline.md
+    - title: '3.4. ICPlan: approve в задаче'
+      source: docs/source/tasks/3.4-icplan-approve-ui.md
+    - title: '3.5. ICPlan: эффект Действия, затраты'
+      source: docs/source/tasks/3.5-icplan-type-actions-cost.md
+    - title: '3.6. ICPlan: переходы по итогу запуска и очередь агента'
+      source: docs/source/tasks/3.6-icplan-process-engine.md
+    - title: '3.7. ICPlan: управление ходом задачи'
+      source: docs/source/tasks/3.7-icplan-task-control.md
+    - title: 3.8. Чат с агентом, указания во время работы, выключение агента
+      source: docs/source/tasks/3.8-agent-chat-control.md
+    - title: 3.9. Сводка задач с агентами и статистика агентов
+      source: docs/source/tasks/3.9-agent-summary-stats.md
+    - title: 4.1. Тёплый пул sandbox
+      source: docs/source/tasks/4.1-sandbox-warm-pool.md
+    - title: 4.2. Egress-прокси и доступ к репозиториям
+      source: docs/source/tasks/4.2-egress-repo-access.md
+    - title: '4.3. Guardrails: OPA для G1/G2 и включение точек'
+      source: docs/source/tasks/4.3-guardrails-opa.md
+    - title: 4.4. Platform module в ICPlan
+      source: docs/source/tasks/4.4-platform-module.md
+    - title: '4.5. LiteLLM: бюджеты, fallback, G4'
+      source: docs/source/tasks/4.5-litellm-budgets-fallback-g4.md
+    - title: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+      source: docs/source/tasks/4.6-k8s-helm-ingress.md
+    - title: 4.7. Postgres (CloudNativePG), PgBouncer, RustFS, бэкап вне узла
+      source: docs/source/tasks/4.7-postgres-storage-backup.md
+    - title: 4.8. Нагрузочный тест и подтверждение профиля
+      source: docs/source/tasks/4.8-load-test.md
+- title: Справка
+  children:
+  - title: Технологии
+    source: docs/source/TECHNOLOGIES.md
+  - title: Типы данных
+    source: docs/source/data-types.md
+  - title: Персоны
+    source: docs/source/stories/personas.md
+  - title: Покрытие историй
+    source: docs/source/stories/coverage.md
+  - title: Подтверждения ролей
+    source: docs/source/approvals.md
+  - title: Расходы
+    source: docs/source/costs.yaml
 - title: Документы
   children:
   - title: PRD
@@ -37,3 +387,19 @@ tree:
     source: _bmad-output/planning-artifacts/epics.md
   - title: Отчёт о переносе
     source: docs/migration.md
+  - title: Решения и замысел
+    children:
+    - title: Proposal
+      source: docs/source/design/add-icplan-integration/proposal.md
+    - title: Tasks
+      source: docs/source/design/add-icplan-integration/tasks.md
+    - title: Design
+      source: docs/source/design/define-agent-platform/design.md
+    - title: Proposal
+      source: docs/source/design/define-agent-platform/proposal.md
+    - title: Tasks
+      source: docs/source/design/define-agent-platform/tasks.md
+    - title: Proposal
+      source: docs/source/design/icplan-agent-autopickup/proposal.md
+    - title: Tasks
+      source: docs/source/design/icplan-agent-autopickup/tasks.md

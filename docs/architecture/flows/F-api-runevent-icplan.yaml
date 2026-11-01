@@ -1,0 +1,12 @@
+id: F-api-runevent-icplan
+title: Таблица run_event через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: infrastructure
+to: icplan
+objects:
+- run-event
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I1

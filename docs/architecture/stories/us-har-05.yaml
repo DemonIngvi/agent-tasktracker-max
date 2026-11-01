@@ -1,0 +1,14 @@
+id: us-har-05
+number: '3.5'
+component: harness
+role: Эксплуатация
+want: чтобы падение процесса не теряло работу
+so_that: не перезапускать с нуля
+accept:
+- Checkpoint после каждого шага
+- Перезапуск → продолжение с последнего checkpoint
+- Checkpoint недоступен → опасные действия отклоняются, событие
+reqs:
+- FR-23
+- FR-34
+source: US-HAR-05

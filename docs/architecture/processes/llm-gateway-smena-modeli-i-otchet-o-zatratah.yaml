@@ -5,17 +5,72 @@ lifecycle: planned
 criticality: medium
 trigger: Нужна другая модель или отчёт
 actors:
+- administrator-vladelets-produkta
 - litellm
 inputs: []
 outputs: []
 journeys:
 - UJ-15
+component: llm-gateway
+stories:
+- US-LLM-01
+- US-LLM-05
 steps:
-- title: Алиас → новая модель
+- id: s
+  type: start
+  title: Нужна другая модель или отчёт
+  actor: administrator-vladelets-produkta
+  inputs: []
+  outputs: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Что?
+  actor: administrator-vladelets-produkta
+  inputs: []
+  outputs: []
+  next:
+  - to: al
+    label: модель
+  - to: rp
+    label: отчёт
+- id: al
+  type: gateway
+  title: Алиас существует?
   actor: litellm
   inputs: []
   outputs: []
-- title: Отчёт за период, CSV
+  next:
+  - to: ok
+    label: да
+  - to: xe
+    label: нет
+- id: xe
+  type: error
+  title: Ошибка алиаса, модель не меняется
+  actor: litellm
+  inputs: []
+  outputs: []
+- id: ok
+  type: task
+  title: Алиас → новая модель
+  actor: litellm
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: rp
+  type: task
+  title: Отчёт за период, CSV
+  actor: litellm
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Готово
   actor: litellm
   inputs: []
   outputs: []

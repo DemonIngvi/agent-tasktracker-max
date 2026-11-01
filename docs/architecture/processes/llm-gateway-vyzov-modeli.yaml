@@ -11,16 +11,75 @@ inputs: []
 outputs: []
 journeys:
 - UJ-14
+component: llm-gateway
+stories:
+- US-LLM-02
+- US-LLM-03
+- US-LLM-04
 steps:
-- title: Основная модель
-  actor: provayder-mock
+- id: s
+  type: start
+  title: Вызов модели
+  actor: agent-platform
   inputs: []
   outputs: []
-- title: Fallback-модель
-  actor: provayder-mock
-  inputs: []
-  outputs: []
-- title: Учёт затрат
+  next:
+  - to: g1
+- id: g1
+  type: gateway
+  title: Ключ, бюджет, лимит?
   actor: litellm
+  inputs: []
+  outputs: []
+  next:
+  - to: t1
+    label: ок
+  - to: x1
+    label: превышен
+- id: x1
+  type: error
+  title: Отказ до траты
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- id: t1
+  type: task
+  title: Основная модель
+  actor: provayder-mock
+  inputs: []
+  outputs: []
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: Успех?
+  actor: litellm
+  inputs: []
+  outputs: []
+  next:
+  - to: t3
+    label: да
+  - to: t2
+    label: сбой
+- id: t2
+  type: task
+  title: Fallback-модель
+  actor: provayder-mock
+  inputs: []
+  outputs: []
+  next:
+  - to: t3
+- id: t3
+  type: task
+  title: Учёт затрат
+  actor: litellm
+  inputs: []
+  outputs: []
+  next:
+  - to: e1
+- id: e1
+  type: end
+  title: Ответ
+  actor: agent-platform
   inputs: []
   outputs: []

@@ -1,0 +1,12 @@
+id: F-api-issueactivity-agent-platform
+title: Таблица issue_activity через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: icplan
+to: agent-platform
+objects:
+- issue-activity
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I1

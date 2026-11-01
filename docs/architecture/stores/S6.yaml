@@ -3,8 +3,16 @@ title: PostgreSQL 17 (тот же кластер), БД `litellm`
 owner: infrastructure
 lifecycle: planned
 criticality: medium
-objects: []
-tables: []
+objects:
+- LiteLLM-BudgetTable
+- LiteLLM-ProxyModelTable
+- LiteLLM-SpendLogs
+- LiteLLM-VerificationToken
+tables:
+- LiteLLM_BudgetTable
+- LiteLLM_ProxyModelTable
+- LiteLLM_SpendLogs
+- LiteLLM_VerificationToken
 writes:
 - infrastructure
 reads:

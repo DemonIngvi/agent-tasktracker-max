@@ -2,6 +2,6 @@ id: AD-5
 title: LLM Gateway — LiteLLM Proxy
 binds:
 - all
-prevents: отход реализации от решения «LLM Gateway — LiteLLM Proxy»
+prevents: 'нет в источнике, уточнить: «LLM Gateway — LiteLLM Proxy»'
 rule: Алиасы моделей, virtual keys на агента (лимиты, бюджеты), fallback; callbacks в Langfuse — после
   MVP. G4 — guardrail-хуки LiteLLM (PII-маскирование, модерация, детект injection).

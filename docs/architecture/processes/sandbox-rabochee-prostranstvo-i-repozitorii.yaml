@@ -11,24 +11,82 @@ inputs: []
 outputs: []
 journeys:
 - UJ-24
+component: sandbox
+stories:
+- US-SBX-02
+- US-SBX-04
+- US-SBX-05
+- US-SBX-06
+- US-SBX-07
 steps:
-- title: Агент × ресурс × право
+- id: s
+  type: start
+  title: Политика доступа
   actor: administrator
   inputs: []
   outputs: []
-- title: Манифест workspace запуска
+  next:
+  - to: pl
+- id: pl
+  type: task
+  title: Агент × ресурс × право
+  actor: administrator
+  inputs: []
+  outputs: []
+  next:
+  - to: mf
+- id: mf
+  type: task
+  title: Манифест workspace запуска
   actor: agent-platform
   inputs: []
   outputs: []
-- title: Клон, чтение прошлых шагов
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Право есть?
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: cl
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: Отказ с причиной
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- id: cl
+  type: task
+  title: Клон, чтение прошлых шагов
   actor: agent
   inputs: []
   outputs: []
-- title: Запись в свою подпапку / ветку
+  next:
+  - to: wr
+- id: wr
+  type: task
+  title: Запись в свою подпапку / ветку
   actor: agent
   inputs: []
   outputs: []
-- title: Вложения и PR в задаче
+  next:
+  - to: pb
+- id: pb
+  type: task
+  title: Вложения и PR в задаче
+  actor: icplan
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Результат доступен
   actor: icplan
   inputs: []
   outputs: []

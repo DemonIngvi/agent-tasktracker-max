@@ -1,0 +1,13 @@
+id: task-2-4-mcp-tools
+number: '7.7'
+component: mcp-tools
+role: Эксплуатация
+want: 2.4. MCP `itsaplan-core` для агента
+so_that: требования без пользовательской истории были реализованы
+accept:
+- Agent Runner получает запуск из очереди ICPlan → используется прямой API, а не MCP
+- доступ к git-провайдеру нужен нескольким агентам → он подключается как MCP-сервер, секрет хранится на стороне
+  сервера
+reqs:
+- FR-179
+source: TASK-2-4-mcp-tools

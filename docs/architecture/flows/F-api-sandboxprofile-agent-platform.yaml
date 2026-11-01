@@ -1,0 +1,12 @@
+id: F-api-sandboxprofile-agent-platform
+title: Таблица sandbox_profile через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-module
+to: agent-platform
+objects:
+- sandbox-profile
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I4

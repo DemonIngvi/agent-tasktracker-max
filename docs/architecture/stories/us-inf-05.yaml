@@ -1,0 +1,14 @@
+id: us-inf-05
+number: '5.5'
+component: infrastructure
+role: Эксплуатация
+want: обновлять компоненты без простоя
+so_that: не прерывать работу команды
+accept:
+- Rolling update по проверкам готовности
+- Неудачное обновление → откат
+- Миграции БД до запуска новой версии
+reqs:
+- FR-160
+- FR-168
+source: US-INF-05

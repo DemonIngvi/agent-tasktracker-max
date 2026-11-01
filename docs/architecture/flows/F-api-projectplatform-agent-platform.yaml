@@ -1,0 +1,12 @@
+id: F-api-projectplatform-agent-platform
+title: Таблица project_platform через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: platform-module
+to: agent-platform
+objects:
+- project-platform
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I4

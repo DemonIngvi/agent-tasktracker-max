@@ -12,44 +12,138 @@ inputs: []
 outputs: []
 journeys:
 - UJ-18
+component: memory
+stories:
+- US-MEM-01
+- US-MEM-02
+- US-MEM-03
+- US-MEM-04
+- US-MEM-05
+- US-MEM-06
+- US-MEM-07
+- US-MEM-08
+- US-MEM-09
+- US-MEM-10
 steps:
-- title: 'Собрать агента: инструкция, навыки (M5)'
+- id: s
+  type: start
+  title: Старт запуска
   actor: harness-agent
   inputs: []
   outputs: []
-- title: Уровень пропущен, предупреждение
+  next:
+  - to: m5
+- id: m5
+  type: task
+  title: 'Собрать агента: инструкция, навыки (M5)'
+  actor: harness-agent
+  inputs: []
+  outputs: []
+  next:
+  - to: pr
+- id: pr
+  type: gateway
+  title: 'Профиль: уровни доступны?'
   actor: agent-platform
   inputs: []
   outputs: []
-- title: 'Контекст: M1, M2, M3'
+  next:
+  - to: rd
+    label: да
+  - to: x1
+    label: нет
+- id: x1
+  type: task
+  title: Уровень пропущен, предупреждение
   actor: agent-platform
   inputs: []
   outputs: []
-- title: Работа в M0, сжатие при 80%
+  next:
+  - to: m0
+- id: rd
+  type: task
+  title: 'Контекст: M1, M2, M3'
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: m0
+- id: m0
+  type: task
+  title: Работа в M0, сжатие при 80%
   actor: harness-agent
   inputs: []
   outputs: []
-- title: Читать документ (M6)
+  next:
+  - to: m6
+- id: m6
+  type: task
+  title: Читать документ (M6)
   actor: harness-agent
   inputs: []
   outputs: []
-- title: Записать состояние (M3)
+  next:
+  - to: m3
+- id: m3
+  type: task
+  title: Записать состояние (M3)
   actor: harness-agent
   inputs: []
   outputs: []
-- title: Сообщения → M1 автоматически
+  next:
+  - to: wc
+- id: wc
+  type: gateway
+  title: Запись прошла проверки?
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: m1
+    label: да
+  - to: xe
+    label: нет
+- id: xe
+  type: error
+  title: Запись отклонена, причина инициатору и в события запуска
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- id: m1
+  type: task
+  title: Сообщения → M1 автоматически
   actor: icplan-runner
   inputs: []
   outputs: []
-- title: Итог запуска → M2; M0 уничтожен
+  next:
+  - to: en
+- id: en
+  type: task
+  title: Итог запуска → M2; M0 уничтожен
   actor: icplan-runner
   inputs: []
   outputs: []
-- title: Вердикт пользователя → M2
+  next:
+  - to: vd
+- id: vd
+  type: task
+  title: Вердикт пользователя → M2
   actor: lyudi-polzovatel-administrator
   inputs: []
   outputs: []
-- title: Очистка по срокам M1–M3
+  next:
+  - to: rt
+- id: rt
+  type: task
+  title: Очистка по срокам M1–M3
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Память обновлена
   actor: agent-platform
   inputs: []
   outputs: []

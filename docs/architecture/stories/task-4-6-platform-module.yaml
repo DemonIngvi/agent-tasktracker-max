@@ -1,0 +1,19 @@
+id: task-4-6-platform-module
+number: '10.11'
+component: platform-module
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- разворачивается релиз ICPlan (часть ICPlan api (Deployment `api` в `itsaplan-core`)) с модулем agent-registry
+  → миграции agent-registry применены до старта `api`, модуль доступен в ICPlan
+- выходит новая версия форка ICPlan с изменениями agent-registry → миграции agent-registry обратно совместимы, `api`
+  обновляется по одной реплике без простоя
+- разворачивается релиз ICPlan (модуль ICPlan api (`itsaplan-core`); OPA забирает bundle по HTTP раз в 30 с) с модулем
+  control-plane → миграции control-plane применены до старта `api`, модуль доступен в ICPlan
+- выходит новая версия форка ICPlan с изменениями control-plane → миграции control-plane обратно совместимы, `api`
+  обновляется по одной реплике без простоя
+reqs:
+- FR-63
+- FR-109
+source: TASK-4-6-platform-module

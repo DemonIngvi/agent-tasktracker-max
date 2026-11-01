@@ -1,0 +1,12 @@
+id: F-api-issue-agent-platform
+title: Таблица issue через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: icplan
+to: agent-platform
+objects:
+- issue
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I1

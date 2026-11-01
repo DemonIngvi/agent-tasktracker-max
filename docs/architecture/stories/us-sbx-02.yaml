@@ -1,0 +1,14 @@
+id: us-sbx-02
+number: '11.2'
+component: sandbox
+role: Администратор платформы
+want: дать агенту доступ только к нужным репозиториям
+so_that: агент не трогал чужой код
+accept:
+- Репозиторий в allowlist → клон в `/workspace`
+- Не в allowlist → отказ, событие
+- Push в защищённую ветку → отклонён, работа через PR
+reqs:
+- FR-85
+- FR-88
+source: US-SBX-02

@@ -1,0 +1,14 @@
+id: task-4-6-mcp-tools
+number: '7.8'
+component: mcp-tools
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- обновляется api ICPlan с `itsaplan-core` → MCP обновляется вместе с api по одной реплике, тулы доступны без перерыва
+  больше времени переподключения
+- подключается новый внешний MCP-сервер → образ сервера закреплён по digest и скопирован в реестр платформы, доступ
+  — через egress-прокси
+reqs:
+- FR-187
+source: TASK-4-6-mcp-tools

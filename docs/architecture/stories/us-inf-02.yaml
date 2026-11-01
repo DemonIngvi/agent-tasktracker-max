@@ -1,0 +1,13 @@
+id: us-inf-02
+number: '5.2'
+component: infrastructure
+role: Пользователь ICPlan
+want: открывать ICPlan по HTTPS
+so_that: безопасно работать из браузера
+accept:
+- HTTPS с действующим сертификатом
+- HTTP → перенаправление на HTTPS
+- Админки сервисов снаружи недоступны
+reqs:
+- FR-161
+source: US-INF-02

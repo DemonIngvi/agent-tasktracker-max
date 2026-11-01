@@ -2,7 +2,7 @@ id: AD-15
 title: Развёртывание и инфраструктура
 binds:
 - all
-prevents: отход реализации от решения «Развёртывание и инфраструктура»
+prevents: 'нет в источнике, уточнить: «Развёртывание и инфраструктура»'
 rule: 'k3s на одном узле; namespaces `itsaplan-core`, `itsaplan-data`, `itsaplan-agents`, `itsaplan-platform`;
   Helm-чарты с `existingSecret`; Traefik (в k3s) — ingress и TLS, админки без ingress; Service — балансировка
   по репликам; PostgreSQL 17 + pgvector под CloudNativePG с пулером PgBouncer (transaction); RustFS (S3)

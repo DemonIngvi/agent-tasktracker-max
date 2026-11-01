@@ -1,0 +1,14 @@
+id: task-4-6-guardrails
+number: '2.10'
+component: guardrails
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- 'выполняется `helm install`: OPA — Deployment `opa` в `itsaplan-agents`, 2 реплики, Service ClusterIP; Rego —
+  bundle; без ingress → объекты созданы в своём namespace с заданными requests / limits, проверки готовности зелёные'
+- выходит новая версия образа `opa` (2 реплики) → `opa` заменяется по одной реплике; работа, начатая на старой версии,
+  доделывается
+reqs:
+- FR-130
+source: TASK-4-6-guardrails

@@ -1,0 +1,14 @@
+id: task-4-6-observability
+number: '9.8'
+component: observability
+role: Эксплуатация
+want: '4.6. Kubernetes: k3s, Helm, namespaces, Traefik, сетевые политики'
+so_that: требования без пользовательской истории были реализованы
+accept:
+- разворачивается релиз ICPlan (таблица событий в Postgres; чтение — через api ICPlan; Langfuse / Prometheus — бэклог)
+  с модулем observability → миграции observability применены до старта `api`, модуль доступен в ICPlan
+- выходит новая версия форка ICPlan с изменениями observability → миграции observability обратно совместимы, `api`
+  обновляется по одной реплике без простоя
+reqs:
+- FR-158
+source: TASK-4-6-observability

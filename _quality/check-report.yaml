@@ -1,5 +1,5 @@
 ok: false
-blockers: 185
+blockers: 46
 warnings: 88
 findings:
 - gate: G08
@@ -316,11 +316,6 @@ findings:
   where: agent-runner-admission
   problem: 'Нет в списке технологий: Клиент OPA (G1, D6): POST /v1/data/agent/g1'
 - gate: BLOCK
-  level: blocker
-  where: agent-runner-sandbox-claim
-  problem: 'Нет в списке технологий: Клиент SandboxProvider компонента Sandbox (D1):
-    Docker сейчас, K8s на этапе 4'
-- gate: BLOCK
   level: warning
   where: agent-runner-scheduler
   problem: 'Заполнено 91 %, нет: params'
@@ -356,18 +351,9 @@ findings:
   problem: 'Нет в списке технологий: Узлы графа before/after llm и tool, on_stop'
 - gate: BLOCK
   level: blocker
-  where: harness-llm-client
-  problem: 'Нет в списке технологий: OpenAI-совместимый клиент → LiteLLM'
-- gate: BLOCK
-  level: blocker
   where: icplan-avtopodhvat
   problem: 'Нет в списке технологий: Доработка форка (D17): тип задачи задаёт процесс;
     шаг = колонка + агент + переходы по итогу; эффект Действия'
-- gate: BLOCK
-  level: blocker
-  where: icplan-control-plane-ui
-  problem: 'Нет в списке технологий: It''s a Plan web: Команда → ИИ-агенты, Интеграции,
-    Инструменты, Навыки, MCP'
 - gate: BLOCK
   level: blocker
   where: icplan-control-plane-ui
@@ -413,11 +399,6 @@ findings:
   level: warning
   where: icplan-control-plane-ui
   problem: 'Заполнено 91 %, нет: data'
-- gate: BLOCK
-  level: blocker
-  where: icplan-registry
-  problem: 'Нет в списке технологий: Таблицы ICPlan: агенты, тулы, навыки, ключи и
-    учётные данные; MCP агента — ресурсы проекта Platform module (D23)'
 - gate: BLOCK
   level: blocker
   where: icplan-registry
@@ -474,38 +455,9 @@ findings:
     или облако)'
 - gate: BLOCK
   level: blocker
-  where: llm-gateway-aliasy
-  problem: 'Нет в списке технологий: LiteLLM model_list'
-- gate: BLOCK
-  level: blocker
-  where: llm-gateway-byudzhety-rate-limit
-  problem: 'Нет в списке технологий: LiteLLM budgets, RPM / TPM'
-- gate: BLOCK
-  level: blocker
-  where: llm-gateway-fallback
-  problem: 'Нет в списке технологий: LiteLLM router fallbacks'
-- gate: BLOCK
-  level: blocker
-  where: llm-gateway-g4-huki
-  problem: 'Нет в списке технологий: LiteLLM guardrail hooks pre_call / post_call'
-- gate: BLOCK
-  level: blocker
   where: llm-gateway-mock-llm
   problem: 'Нет в списке технологий: OpenAI-совместимый mock со сценариями (задача
     1.1)'
-- gate: BLOCK
-  level: blocker
-  where: llm-gateway-spend-log
-  problem: 'Нет в списке технологий: LiteLLM spend logs (Postgres)'
-- gate: BLOCK
-  level: blocker
-  where: llm-gateway-virtual-keys
-  problem: 'Нет в списке технологий: LiteLLM virtual keys'
-- gate: BLOCK
-  level: blocker
-  where: mcp-tools-itsaplan-core
-  problem: 'Нет в списке технологий: MCP-сервер ICPlan (POST /mcp в api ICPlan), весь
-    REST API как тулы'
 - gate: BLOCK
   level: blocker
   where: mcp-tools-memory
@@ -525,27 +477,14 @@ findings:
   problem: 'Нет в списке технологий: Сервис над БД ICPlan'
 - gate: BLOCK
   level: blocker
-  where: observability-agregaty-zatrat
-  problem: 'Нет в списке технологий: Агрегаты из spend log LiteLLM (журнал LiteLLM_SpendLogs,
-    БД litellm)'
-- gate: BLOCK
-  level: blocker
   where: observability-sobytiya-zapuska
   problem: 'Нет в списке технологий: Таблица run_event в БД ICPlan (схема platform,
     S3)'
 - gate: BLOCK
   level: blocker
-  where: platform-module-aliasy-llm
-  problem: 'Нет в списке технологий: Алиасы LiteLLM, синхронизация из модуля'
-- gate: BLOCK
-  level: blocker
   where: platform-module-api-modulya
   problem: 'Нет в списке технологий: Модуль форка ICPlan (TypeScript), схема platform
     в Postgres'
-- gate: BLOCK
-  level: blocker
-  where: platform-module-byudzhety
-  problem: 'Нет в списке технологий: Бюджеты virtual key LiteLLM + проверка G1 в Runner'
 - gate: BLOCK
   level: blocker
   where: platform-module-dannye-guardrails
@@ -574,519 +513,18 @@ findings:
   level: blocker
   where: sandbox-profil
   problem: 'Нет в списке технологий: Ограничения контейнера'
-- gate: BLOCK
-  level: blocker
-  where: sandbox-sandboxprovider
-  problem: 'Нет в списке технологий: Интерфейс create / claim / exec / destroy; Docker
-    сейчас, K8s позже'
-- gate: BLOCK
-  level: blocker
-  where: sandbox-teplyy-pul
-  problem: 'Нет в списке технологий: Docker-контейнеры, заранее запущенные'
-- gate: MODEL
-  level: blocker
-  where: us-grd-01
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-grd-01
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-grd-02
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-grd-02
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-grd-03
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-grd-03
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-grd-06
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-grd-06
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-har-01
-  problem: Объект agent-settings-version не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-har-01
-  problem: Объект ai-agent не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-har-01
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-har-01
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-har-01
-  problem: Объект issue-activity не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-har-06
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-icp-01
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-02
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-03
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-04
-  problem: Объект run-event не доходит до системы icplan
 - gate: MODEL
   level: blocker
   where: us-icp-04
   problem: Объект run-checkpoint не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-04
-  problem: Объект run-event не доходит до системы icplan
 - gate: MODEL
   level: blocker
   where: us-icp-04
   problem: Объект scheduler-slot не доходит до системы icplan
 - gate: MODEL
   level: blocker
-  where: us-icp-06
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-07
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-08
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-09
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-10
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-10
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-11
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
   where: us-icp-11
   problem: Объект run-checkpoint не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-12
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-13
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-14
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-15
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-16
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-17
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-18
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-icp-29
-  problem: Объект run-event не доходит до системы icplan
-- gate: MODEL
-  level: blocker
-  where: us-llm-01
-  problem: Объект LiteLLM-ProxyModelTable не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-llm-02
-  problem: Объект LiteLLM-ProxyModelTable не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-llm-03
-  problem: Объект LiteLLM-BudgetTable не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-llm-03
-  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-llm-04
-  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-llm-05
-  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-01
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-01
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-01
-  problem: Объект issue-activity не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-02
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-02
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-02
-  problem: Объект issue-activity не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-03
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mcp-05
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mem-01
-  problem: Объект issue-activity не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mem-02
-  problem: Объект issue-activity не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mem-03
-  problem: Объект issue-activity не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mem-05
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mem-07
-  problem: Объект agent-settings-version не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mem-07
-  problem: Объект ai-agent не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-mem-10
-  problem: Объект issue-activity не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-obs-01
-  problem: Объект issue не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-obs-02
-  problem: Объект issue не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-obs-03
-  problem: Объект issue не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-obs-05
-  problem: Объект LiteLLM-SpendLogs не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-obs-05
-  problem: Объект agent-run не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект ai-agent не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект LiteLLM-BudgetTable не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект LiteLLM-VerificationToken не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект agent-settings-version не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект memory-profile не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-01
-  problem: Объект sandbox-profile не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-02
-  problem: Объект ai-agent не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-02
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-02
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-02
-  problem: Объект agent-settings-version не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-02
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-02
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-02
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-03
-  problem: Объект ai-agent не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-03
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-03
-  problem: Объект agent-settings-version не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект ai-agent не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект LiteLLM-VerificationToken не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект agent-settings-version не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-04
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-05
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-05
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-05
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-06
-  problem: Объект LiteLLM-BudgetTable не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-06
-  problem: Объект LiteLLM-VerificationToken не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-06
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-06
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-07
-  problem: Объект ai-agent не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-07
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-07
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-07
-  problem: Объект agent-settings-version не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-07
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-07
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-pm-07
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-run-01
-  problem: Объект agent-run не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-run-01
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-run-01
-  problem: Объект kill-switch не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-run-01
-  problem: Объект sandbox-profile не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-run-01
-  problem: Объект agent-run не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-run-05
-  problem: Объект agent-run не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-01
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-01
-  problem: Объект sandbox-profile не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-02
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-02
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-03
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-03
-  problem: Объект agent-settings не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-03
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-03
-  problem: Объект sandbox-profile не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-04
-  problem: Объект sandbox-profile не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-05
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-05
-  problem: Объект project-platform не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-05
-  problem: Объект project-resource не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-07
-  problem: Объект access-policy не доходит до системы agent-platform
-- gate: MODEL
-  level: blocker
-  where: us-sbx-07
-  problem: Объект project-resource не доходит до системы agent-platform
 - gate: MODEL
   level: warning
   where: I14
@@ -1810,7 +1248,7 @@ coverage:
     components: 11
     data: 67
     stores: 11
-    flows: 22
+    flows: 36
     integrations: 24
     nodes: 1
 readiness:

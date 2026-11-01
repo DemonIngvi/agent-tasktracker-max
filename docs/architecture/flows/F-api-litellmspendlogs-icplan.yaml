@@ -1,0 +1,12 @@
+id: F-api-litellmspendlogs-icplan
+title: Таблица LiteLLM_SpendLogs через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: infrastructure
+to: icplan
+objects:
+- LiteLLM-SpendLogs
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I1

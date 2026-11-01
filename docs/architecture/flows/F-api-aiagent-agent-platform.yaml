@@ -1,0 +1,12 @@
+id: F-api-aiagent-agent-platform
+title: Таблица ai_agent через API владельца
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: icplan
+to: agent-platform
+objects:
+- ai-agent
+trigger: 'выведено при переносе: нужно подтвердить'
+flow_type: query
+over: I1

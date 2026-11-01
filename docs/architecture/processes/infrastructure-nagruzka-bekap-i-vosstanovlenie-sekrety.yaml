@@ -6,21 +6,83 @@ criticality: medium
 trigger: Плановая работа или инцидент
 actors:
 - dannye
+- ekspluatatsiya-bezopasnost
 - klaster
 inputs: []
 outputs: []
 journeys:
 - UJ-13
+component: infrastructure
+stories:
+- US-INF-03
+- US-INF-04
+- US-INF-07
 steps:
-- title: Нагрузочный тест, очередь при пике
+- id: s
+  type: start
+  title: Плановая работа или инцидент
+  actor: ekspluatatsiya-bezopasnost
+  inputs: []
+  outputs: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Что?
+  actor: ekspluatatsiya-bezopasnost
+  inputs: []
+  outputs: []
+  next:
+  - to: ld
+    label: нагрузка
+  - to: bk
+    label: бэкап
+  - to: sc
+    label: секрет
+- id: ld
+  type: task
+  title: Нагрузочный тест, очередь при пике
   actor: klaster
   inputs: []
   outputs: []
-- title: Бэкап вне узла / восстановление
+  next:
+  - to: e
+- id: bk
+  type: task
+  title: Бэкап вне узла / восстановление
   actor: dannye
   inputs: []
   outputs: []
-- title: Смена секрета без простоя
+  next:
+  - to: vr
+- id: vr
+  type: gateway
+  title: Восстановление прошло?
+  actor: dannye
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+    label: да
+  - to: xe
+    label: нет
+- id: xe
+  type: error
+  title: Проверка восстановления не прошла, пересмотр оператора
+  actor: dannye
+  inputs: []
+  outputs: []
+- id: sc
+  type: task
+  title: Смена секрета без простоя
   actor: klaster
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Платформа устойчива
+  actor: ekspluatatsiya-bezopasnost
   inputs: []
   outputs: []

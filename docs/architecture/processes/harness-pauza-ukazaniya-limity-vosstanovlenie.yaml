@@ -11,16 +11,69 @@ inputs: []
 outputs: []
 journeys:
 - UJ-6
+component: harness
+stories:
+- US-HAR-04
+- US-HAR-05
+- US-HAR-06
+- US-HAR-07
 steps:
-- title: Вопрос → ответ пользователя
+- id: s
+  type: start
+  title: Шаг цикла
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Что случилось?
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: q
+    label: нужен ответ
+  - to: m
+    label: указание
+  - to: l
+    label: лимит / цикл
+  - to: c
+    label: падение
+- id: q
+  type: task
+  title: Вопрос → ответ пользователя
   actor: polzovatel
   inputs: []
   outputs: []
-- title: Указание в контекст
+  next:
+  - to: e
+- id: m
+  type: task
+  title: Указание в контекст
   actor: polzovatel
   inputs: []
   outputs: []
-- title: Продолжить с checkpoint
+  next:
+  - to: e
+- id: l
+  type: error
+  title: 'Стоп: limit / цикл'
   actor: guardrails-checkpoint
+  inputs: []
+  outputs: []
+- id: c
+  type: task
+  title: Продолжить с checkpoint
+  actor: guardrails-checkpoint
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Цикл продолжается
+  actor: agent-platform
   inputs: []
   outputs: []

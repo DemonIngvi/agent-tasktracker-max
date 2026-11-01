@@ -4,21 +4,83 @@ owner: владелец платформы
 lifecycle: planned
 criticality: medium
 trigger: Вопрос о работе агентов
-actors: []
+actors:
+- administrator-ekspluatatsiya-vladelets-produkta
 inputs: []
 outputs: []
 journeys:
 - UJ-20
+component: observability
+stories:
+- US-OBS-02
+- US-OBS-04
+- US-OBS-05
 steps:
-- title: Запуски, версии, итоги
+- id: s
+  type: start
+  title: Вопрос о работе агентов
+  actor: administrator-ekspluatatsiya-vladelets-produkta
+  inputs: []
+  outputs: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Что нужно?
+  actor: administrator-ekspluatatsiya-vladelets-produkta
+  inputs: []
+  outputs: []
+  next:
+  - to: rn
+    label: разбор задачи
+  - to: tr
+    label: сбой
+  - to: pv
+    label: польза
+- id: rn
+  type: task
+  title: Запуски, версии, итоги
   actor: agent-platform
   inputs: []
   outputs: []
-- title: Трасса Runner → Harness → LiteLLM
+  next:
+  - to: g2
+- id: tr
+  type: task
+  title: Трасса Runner → Harness → LiteLLM
   actor: agent-platform
   inputs: []
   outputs: []
-- title: Закрыто, возвраты, затраты
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: События ещё хранятся?
   actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: 'Срок `retention_days` истёк: события удалены, остались агрегаты затрат'
+  actor: agent-platform
+  inputs: []
+  outputs: []
+- id: pv
+  type: task
+  title: Закрыто, возвраты, затраты
+  actor: agent-platform
+  inputs: []
+  outputs: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Ответ получен
+  actor: administrator-ekspluatatsiya-vladelets-produkta
   inputs: []
   outputs: []
