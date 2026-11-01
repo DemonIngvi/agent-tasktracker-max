@@ -1,0 +1,32 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> MCP-серверы по протоколу MCP (streamable HTTP)</div>
+- <div><span class="about-label">Аутентификация</span> ключ агента / секрет сервера</div>
+- </div>
+rows:
+- section: Протокол MCP
+  method: POST
+  path: tools/list
+  status: ✅ есть
+  does: тулы сервера (фильтр по allowlist агента)
+  caller: Harness · ключ
+  stories:
+  - US-MCP-02
+  reqs:
+  - FR-177
+  via:
+  - I9
+- section: Протокол MCP
+  method: POST
+  path: tools/call
+  status: ✅ есть
+  does: вызов тула
+  caller: Harness · ключ
+  stories:
+  - US-MCP-02
+  - US-HAR-01
+  reqs:
+  - FR-178
+  - FR-182
+  via:
+  - I9

@@ -1,0 +1,44 @@
+id: agent-settings
+title: Таблица agent_settings
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: agent_id
+  type: int
+  pk: true
+  fk: ai_agent
+- name: version
+  type: int
+- name: autonomy_level
+  type: text
+- name: budget_run_usd
+  type: numeric
+- name: budget_day_usd
+  type: numeric
+- name: sandbox_profile_id
+  type: int
+  fk: sandbox_profile
+- name: memory_profile_id
+  type: int
+  fk: memory_profile
+- name: tools_allow
+  type: jsonb
+- name: approval_tools
+  type: jsonb
+- name: scheduling
+  type: jsonb
+- name: learning
+  type: jsonb
+- name: snapshots
+  type: jsonb
+- name: toolsmith
+  type: bool
+- name: guardrails
+  type: jsonb
+- name: updated_by
+  type: text
+- name: updated_at
+  type: timestamptz

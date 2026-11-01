@@ -1,0 +1,8 @@
+id: seq-observability-1
+title: С1. Шаг агента и затраты в задаче
+component: observability
+diagram: "sequenceDiagram\n  autonumber\n  actor U as Пользователь\n  participant H as Harness\n  participant R\
+  \ as Agent Runner\n  participant IC as ICPlan (run_event, сводка)\n  participant L as LLM Gateway\n  participant\
+  \ D as БД litellm\n  H-->>R: RunEvent (I7)\n  R->>IC: POST /agent-runs/:runId/events (I2)\n  IC-->>U: SSE: шаг\
+  \ в чате запуска (I20)\n  L->>D: журнал затрат: токены, $, run_id (I14)\n  U->>IC: открыть задачу (I20)\n  IC->>D:\
+  \ чтение журнала затрат по run_id (I14)\n  IC-->>U: CostAggregate по задаче ↩"

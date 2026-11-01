@@ -8,6 +8,7 @@ sensitivity: internal
 attributes:
 - name: budget_id
   type: String
+  pk: true
 - name: max_budget
   type: Float
 - name: soft_budget

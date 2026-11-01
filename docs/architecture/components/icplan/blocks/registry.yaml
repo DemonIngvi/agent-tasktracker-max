@@ -1,0 +1,88 @@
+id: icplan-registry
+title: Registry
+kind: service
+does:
+- Хранит определения агентов и их ресурсы
+- Отдаёт определение агента Runner и Harness
+- 'Версии определения агента (доработка, FR-55): запуск закрепляет версию на старте — последнюю или указанную задачей
+  (`settingsVersionId`); несуществующая версия — отказ (задача 2.3, MVP; решение владельца 2026-10-14)'
+- Экспорт и импорт определения в YAML `agent/v1` (доработка, FR-56)
+- Не даёт удалить ресурс, на который ссылаются (FR-57)
+tech: 'Таблицы ICPlan: агенты, тулы, навыки, ключи и учётные данные; MCP агента — ресурсы проекта Platform module
+  (D23)'
+stories:
+- '4.20'
+- '4.21'
+- '4.23'
+- '4.29'
+io:
+- dir: in
+  with: Control Plane UI
+  what: определения агентов, тулы, навыки, MCP-серверы
+- dir: out
+  with: Harness через Agent Runner
+  what: инструкция и навыки версии запуска, M5 (через Platform module — I4, AD-23; I7)
+  via: I4
+data:
+- table: ai_agent
+  access: read-write
+  why: определение
+- table: agent_tool
+  access: read-write
+  why: каталог тулов
+- table: agent_skill
+  access: read-write
+  why: каталог навыков
+- table: agent_tool_link
+  access: read-write
+- table: agent_skill_link
+  access: read-write
+- table: apikey
+  access: read-write
+  why: ключ агента для I1–I3 и MCP (`reference_id` → `user.id`), показывается один раз
+- table: integration_credential
+  access: read-write
+  why: учётные данные тулов и ключи провайдеров внутренних агентов — шифротекст AES-256-GCM (`APP_ENCRYPTION_KEY`),
+    клиенту не отдаётся
+- table: agent_settings_version
+  access: read
+  why: версии — снимок определения и наших настроек ведёт Platform module (AD-9); правка `PATCH /teams/:teamId/ai-agents/:agentId`
+    форка версию сама не создаёт — Platform module при вызове I4 сравнивает хеш …
+- table: agent_run
+  access: write
+  why: '`agent_version` запуска — Platform module закрепляет версию при первом вызове I4: указанную `Run.settingsVersionId`
+    или последнюю; несуществующая — отказ (AD-23, FR-55, задача 2.3)'
+params:
+- agent.version
+reqs:
+- FR-53
+- FR-54
+- FR-55
+- FR-56
+- FR-57
+- FR-58
+tasks:
+- '1.2'
+- '2.3'
+- '4.4'
+on_failure: 'БД ICPlan недоступна: определения не читаются, запуски не стартуют; Удаляется ресурс, на который ссылаются,:
+  удаление отклоняется; Импорт с неверной схемой: импорт отклоняется'
+why: Источник правды — БД ICPlan; git только для ревью через экспорт.
+rnd: config-storage.md
+operations:
+- name: '`GET`, `POST /teams/:teamId/ai-agents`; `PATCH`, `DELETE /teams/:teamId/ai-agents/:agentId` — агенты'
+  caller: Control Plane UI
+  via: I20
+- name: PUT /teams/:teamId/ai-agents/:agentId/projects
+  caller: Control Plane UI
+  via: I20
+- name: POST /teams/:teamId/ai-agents/:agentId/regenerate-key
+  caller: Control Plane UI
+  via: I20
+- name: версии и экспорт / импорт YAML — `GET /platform/agents/:agentId/export`, `POST /platform/agents/import`
+    (Platform module)
+  caller: Администратор
+  via: I20
+- name: GET /platform/runs/:runId/agent
+  caller: Agent Runner
+  via: I4

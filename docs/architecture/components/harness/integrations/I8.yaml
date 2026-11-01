@@ -1,0 +1,18 @@
+id: I8
+title: вызов модели
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: llm-gateway
+purpose: вызов модели
+integration_type: sync-api
+protocol: HTTP, OpenAI Chat Completions, SSE-стрим
+format: JSON + `metadata.run_id`
+auth: Bearer virtual key (подставляет egress-прокси)
+timeout: 120 с
+retry: 2 раза с backoff
+idempotent: true
+mode: синхронно / стрим
+also:
+- guardrails

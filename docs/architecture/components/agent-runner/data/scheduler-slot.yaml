@@ -1,0 +1,20 @@
+id: scheduler-slot
+title: Таблица scheduler_slot
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: slot_key
+  type: text
+  pk: true
+- name: run_id
+  type: int
+  fk: agent_run
+- name: runner_id
+  type: text
+- name: lease_until
+  type: timestamptz
+- name: acquired_at
+  type: timestamptz

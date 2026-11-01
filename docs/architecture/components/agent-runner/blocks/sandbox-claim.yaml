@@ -1,0 +1,57 @@
+id: agent-runner-sandbox-claim
+title: Sandbox claim
+kind: service
+does:
+- Берёт готовый контейнер профиля агента из тёплого пула через `SandboxProvider`; пул пуст — контейнер создаётся,
+  запуск ждёт его старта (FR-83)
+- 'Пулом не владеет: пул — часть компонента Sandbox (блоки «Тёплый пул», «SandboxProvider», задача 4.1); на этапах
+  1–3 контейнеры пула живут в rootless Docker узла, на этапе 4 — `SandboxWarmPool` agent-sandbox в K8s'
+- 'Вызывается только после слотов Scheduler и допуска G1: пул слотов не занимает, слот занимает запуск; `pool.size`
+  не больше `scheduling.global_max`'
+tech: 'Клиент SandboxProvider компонента Sandbox (D1): Docker сейчас, K8s на этапе 4'
+stories:
+- '11.1'
+- '1.1'
+io:
+- dir: in
+  with: Admission
+  what: допущенный запуск
+- dir: out
+  with: Sandbox (SandboxProvider)
+  what: '`SandboxClaim`, `RepoGrant` (I6; этап 4 — I23)'
+  via: I6
+- dir: out
+  with: Шаг подготовки
+  what: контейнер запуска
+- dir: out
+  with: Run supervisor
+  what: адрес среды
+data:
+- table: sandbox_profile
+  access: read
+  why: профиль агента (владелец Platform module)
+params:
+- pool.size
+- provider
+reqs:
+- FR-82
+- FR-83
+- FR-93
+- FR-80
+- FR-79
+tasks:
+- '2.2'
+- '4.1'
+on_failure: 'Docker или пул недоступен: запуск остаётся в `queued`, повтор, событие оператору (FMEA «Docker / пул
+  недоступен», FR-80); Пул пуст: контейнер создаётся на лету, старт дольше (FR-83 «Пул пуст»); Образ профиля недоступен:
+  профиль помечен недоступным, запуски отклоняются; Сбой сети при `create`: автоматического повтора нет: create
+  неидемпотентен, решает Run supervisor (FR-79 «Неидемпотентный вызов I6»)'
+why: Старт < 1 с без потери изоляции; пул за `SandboxProvider` меняется на K8s без переделки Runner (AD-1).
+rnd: sandbox-isolation.md
+operations:
+- name: '`SandboxProvider.claim` — готовый контейнер профиля агента из тёплого пула; пул пуст — `create`'
+  caller: Admission после допуска
+  via: внутри
+- name: передать контейнеру манифест рабочего пространства и правила git-прокси (`SandboxClaim`, `RepoGrant`)
+  caller: Sandbox claim
+  via: I6

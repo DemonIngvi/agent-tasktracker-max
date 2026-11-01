@@ -1,0 +1,19 @@
+id: kill-switch
+title: Таблица kill_switch
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: scope
+  type: text
+  pk: true
+- name: enabled
+  type: bool
+- name: reason
+  type: text
+- name: by
+  type: text
+- name: at
+  type: timestamptz

@@ -1,0 +1,71 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> `http://litellm:4000`</div>
+- <div><span class="about-label">Аутентификация</span> virtual key агента; админ — master key</div>
+- </div>
+rows:
+- section: Модели
+  method: POST
+  path: /v1/chat/completions
+  status: ✅ есть
+  does: вызов модели (поля — сборка запроса)
+  caller: Harness · virtual key
+  stories:
+  - US-HAR-01
+  - US-LLM-01
+  reqs:
+  - FR-21
+  - FR-30
+  - FR-134
+  via:
+  - I8
+- section: Модели
+  method: POST
+  path: /key/generate · /key/update
+  status: ✅ есть
+  does: virtual key агента с бюджетом и лимитами
+  caller: Platform module · master key
+  stories:
+  - US-PM-04
+  reqs:
+  - FR-100
+  - FR-138
+  via:
+  - I15
+- section: Модели
+  method: GET
+  path: /model/info
+  status: ✅ есть
+  does: 'алиасы `model_list` и их параметры: проверка модели при сохранении агента'
+  caller: Platform module · master key
+  stories:
+  - US-ICP-21
+  reqs:
+  - FR-58
+  via:
+  - I15
+- section: Модели
+  method: GET
+  path: /spend/logs
+  status: ✅ есть
+  does: затраты по `metadata.run_id`
+  caller: Observability · master key
+  stories:
+  - US-LLM-03
+  - US-LLM-05
+  reqs:
+  - FR-136
+  via:
+  - I14
+- section: mock-LLM
+  method: POST
+  path: /v1/chat/completions
+  status: 🆕 новое
+  does: скриптовые ответы и вызовы тулов
+  caller: LiteLLM (алиас `mock`) · —
+  stories:
+  - US-LLM-02
+  reqs:
+  - FR-137
+  via:
+  - I13

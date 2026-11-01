@@ -13,3 +13,11 @@ auth: логин / пароль из Secret, роль на схему
 timeout: 5 с на запрос
 retry: 1 раз (только чтение)
 idempotent: null
+mode: синхронно
+also:
+- icplan
+- platform-module
+- agent-runner
+- memory
+- observability
+- llm-gateway

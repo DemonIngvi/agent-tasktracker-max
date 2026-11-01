@@ -1,0 +1,10 @@
+id: seq-sandbox-1
+title: С1. Жизнь контейнера запуска
+component: sandbox
+diagram: "sequenceDiagram\n  autonumber\n  participant R as Agent Runner\n  participant P as Sandbox (тёплый пул)\n\
+  \  participant C as Контейнер запуска\n  participant E as Egress-прокси\n  participant X as git и внешние хосты\n\
+  \  P->>P: держит N готовых контейнеров на профиль\n  R->>P: SandboxClaim (I6)\n  P-->>R: sandboxId ↩\n  C->>X:\
+  \ клон разрешённых репозиториев через git-прокси — RepoGrant (I6)\n  loop работа агента\n    C->>E: исходящий\
+  \ запрос (I17)\n    alt хост в allowlist\n      E->>X: запрос с подставленным секретом\n      X-->>C: ответ ↩\n\
+  \    else хоста нет в allowlist\n      E-->>C: отказ ↩\n    end\n  end\n  C->>X: ветка agent/<KEY>, PR (I6)\n\
+  \  R->>P: уничтожить контейнер (I6)\n  P->>P: долить пул"

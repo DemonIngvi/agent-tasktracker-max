@@ -1,8 +1,0 @@
-id: sandbox
-title: Sandbox
-owner: владелец платформы
-lifecycle: planned
-criticality: medium
-system: agent-platform
-responsibility: 'Изоляция: каждый запуск агента идёт в своём одноразовом контейнере и не видит другие запуски и
-  хост.'

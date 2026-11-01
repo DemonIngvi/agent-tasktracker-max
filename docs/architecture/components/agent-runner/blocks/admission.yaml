@@ -1,0 +1,52 @@
+id: agent-runner-admission
+title: Admission
+kind: service
+does:
+- Проверяет допуск агента к задаче, бюджет и kill switch до создания sandbox (FR-111)
+- Отказ — статус `limit_exceeded` или отказ с причиной, sandbox не создаётся, слоты освобождаются
+- Недоступна OPA — решение по `on_engine_error` (по умолчанию deny)
+tech: 'Клиент OPA (G1, D6): POST /v1/data/agent/g1'
+stories:
+- '2.3'
+- '1.1'
+io:
+- dir: in
+  with: Scheduler
+  what: запуск со слотами
+- dir: out
+  with: Guardrails (OPA)
+  what: '`PolicyInput` → `PolicyDecision`'
+  via: I5
+- dir: out
+  with: Sandbox claim
+  what: допущенный запуск
+- dir: out
+  with: Event relay
+  what: решение G1 с причиной — в события запуска
+data:
+- table: kill_switch
+  access: read
+  why: через данные OPA (владелец Platform module), напрямую не читает
+- table: agent_settings
+  access: read
+  why: 'через данные OPA: бюджеты и допуск (владелец Platform module)'
+params:
+- guardrails.g1.enabled
+- on_engine_error
+- kill_switch
+- budget.run / agent_day / project_month
+reqs:
+- FR-111
+- FR-115
+- FR-116
+- FR-124
+tasks:
+- '4.3'
+on_failure: 'Бюджет исчерпан: запуск `limit_exceeded`, sandbox не создаётся; Kill switch агента или платформы: запуск
+  отклонён до создания sandbox; OPA не ответила за 200 мс: решение по `on_engine_error`: deny — запуск не стартует'
+why: Дешевле всего остановить трату до запуска.
+rnd: guardrails-engine.md
+operations:
+- name: POST /v1/data/agent/g1
+  caller: Scheduler после занятия слотов, до создания sandbox
+  via: I5

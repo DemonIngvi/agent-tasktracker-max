@@ -1,0 +1,36 @@
+id: llm-gateway-fallback
+title: Fallback
+kind: service
+does:
+- При сбое основной модели отвечает резервная
+tech: LiteLLM router fallbacks
+stories:
+- '6.4'
+io:
+- dir: in
+  with: Harness
+  what: вызов модели
+  via: I8
+- dir: out
+  with: «провайдер / mock»
+  what: основная, затем резервная модель
+  via: I13
+data:
+- table: LiteLLM_SpendLogs
+  access: write
+  why: факт использования резервной модели (владелец — LiteLLM)
+params:
+- fallbacks
+reqs:
+- FR-139
+- FR-144
+tasks:
+- '4.5'
+on_failure: 'Основная модель недоступна: запрос выполняет резервная, факт фиксируется в трейсе; Резерв не задан:
+  вызов завершается ошибкой, Harness применяет повтор; Основная и резервная недоступны: ошибка `all_providers_failed`'
+why: Агент работает при недоступности провайдера.
+rnd: llm-gateway.md
+operations:
+- name: повтор вызова резервной моделью при ошибке недоступности основной
+  caller: LiteLLM
+  via: I13

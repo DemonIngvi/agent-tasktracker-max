@@ -1,0 +1,17 @@
+id: llm-gateway
+title: LiteLLM gateway
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Единственный выход к моделям: алиасы, virtual key на агента, лимиты, fallback. Развёрнут, не подключён.'
+purpose: 'Единственная дверь к моделям: смена модели, лимиты и учёт затрат в одном месте.'
+does:
+- 'Алиасы моделей: смена модели без изменения агентов'
+- Virtual key на агента, бюджеты и rate limit
+- Резервная модель при сбое
+- Проверки G4 во входе и ответе
+- Журнал токенов и стоимости
+chain:
+- harness
+- llm-gateway

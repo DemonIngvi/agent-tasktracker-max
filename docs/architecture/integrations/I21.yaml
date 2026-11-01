@@ -13,3 +13,5 @@ auth: сессия ICPlan; ACME-сертификат
 timeout: 60 с (ingress)
 retry: нет
 idempotent: null
+mode: синхронно
+via: infrastructure

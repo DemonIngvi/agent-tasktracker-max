@@ -1,0 +1,24 @@
+id: process
+title: Таблица process
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: id
+  type: serial
+  pk: true
+- name: project_id
+  type: int
+  fk: project
+- name: issue_type_id
+  type: int
+  fk: issue_type
+- name: owner_user_id
+  type: text
+- name: first_step_id
+  type: int
+  fk: process_step
+- name: version
+  type: int

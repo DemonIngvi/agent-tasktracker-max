@@ -1,8 +1,0 @@
-id: harness
-title: Harness
-owner: владелец платформы
-lifecycle: planned
-criticality: medium
-system: agent-platform
-responsibility: 'Агентский цикл: делает из модели агента и заставляет его работать по правилам платформы.'
-host: sandbox

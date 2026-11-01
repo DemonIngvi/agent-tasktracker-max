@@ -24,7 +24,7 @@ flowchart LR
   P -->|"I17, I18: исходящий трафик, git"| X
 ```
 
-Интеграция с ICPlan: Agent Runner — внешний раннер ICPlan (забирает запуски, шлёт события и итог, получает решения пользователя в ответе heartbeat). Стыки каждого компонента — вкладка «Интеграции», типы данных и матрица интерфейсов — Справка.
+Интеграция с ICPlan: Agent Runner — внешний раннер ICPlan (забирает запуски, шлёт события и итог, получает решения пользователя в ответе heartbeat). Стыки каждого компонента — вкладка «Интеграции», типы данных и матрица интерфейсов — [Справка](data-types.md).
 
 ## Взаимодействие компонентов {#interaction}
 
@@ -110,7 +110,7 @@ flowchart LR
   PG -->|"копии"| S3[("S3 вне узла")]:::ext
 ```
 
-Ресурсы узла и профиль нагрузки — R&D: профиль нагрузки, разделы «Нагрузка и производительность» спек. Подробно: спека platform-infrastructure и схема. Технологии — сводная таблица. Обоснование: Kubernetes · ingress · СУБД и хранилища · design AD-15, AD-16.
+Ресурсы узла и профиль нагрузки — [R&D: профиль нагрузки](..\research\load-profile.md), разделы «Нагрузка и производительность» спек. Подробно: спека platform-infrastructure и [схема](..\architecture\components\infrastructure\docs\platform-infrastructure-architecture.md). Технологии — [сводная таблица](TECHNOLOGIES.md). Обоснование: [Kubernetes](..\research\kubernetes-runtime.md) · [ingress](..\research\ingress-and-balancing.md) · [СУБД и хранилища](..\research\data-stores.md) · [design AD-15, AD-16](design\define-agent-platform\design.md).
 
 ## Сквозные решения
 

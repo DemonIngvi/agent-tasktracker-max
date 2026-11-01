@@ -1,0 +1,18 @@
+id: I6
+title: Runner создаёт и уничтожает среду (Docker API) по `SandboxClaim`; `RepoGrant` задаёт правила git-прокси этой
+  среды …
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: sandbox
+purpose: Runner создаёт и уничтожает среду (Docker API) по `SandboxClaim`; `RepoGrant` задаёт правила git-прокси
+  этой среды (какие репозитории и ветки), сам токен в среду не попадает
+integration_type: sync-api
+protocol: HTTP поверх unix-сокета (позже K8s API)
+format: JSON Docker API
+auth: доступ к сокету
+timeout: 30 с
+retry: 1 раз
+idempotent: true
+mode: синхронно

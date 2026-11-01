@@ -1,0 +1,43 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> `http://opa:8181`</div>
+- <div><span class="about-label">Аутентификация</span> внутренняя сеть (mTLS — этап 4)</div>
+- </div>
+rows:
+- section: Решения
+  method: POST
+  path: /v1/data/agent/g1
+  status: ✅ есть
+  does: допуск запуска (`PolicyInput` → `PolicyDecision`)
+  caller: Agent Runner · сеть
+  stories:
+  - US-GRD-03
+  reqs:
+  - FR-111
+  via:
+  - I5
+- section: Решения
+  method: POST
+  path: /v1/data/agent/g2
+  status: ✅ есть
+  does: проверка действия агента
+  caller: Harness · сеть
+  stories:
+  - US-GRD-06
+  - US-HAR-02
+  reqs:
+  - FR-112
+  via:
+  - I10
+- section: Решения
+  method: GET
+  path: /health?bundles
+  status: ✅ есть
+  does: готовность и версия бандла
+  caller: Kubernetes · —
+  stories:
+  - US-GRD-01
+  reqs:
+  - FR-116
+  via:
+  - I16

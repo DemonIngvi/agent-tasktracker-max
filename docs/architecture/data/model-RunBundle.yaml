@@ -8,19 +8,47 @@ sensitivity: internal
 attributes:
 - name: runId
   type: int
+  required: true
+  note: = `Run.id`
 - name: agent
   type: '{agentId, model, version, instructions, skills[]}'
+  required: true
+  note: 'определение агента версии запуска: `agent_run.agent_version`, закреплённой при первом вызове I4 `GET /platform/runs/:runId/agent`
+    (AD-23); повторная выдача получает ту же версию (`instructions` — как …'
 - name: prompt / systemPrompt
   type: string
+  required: true
+  note: задание и системные правила из `Run` без изменений
 - name: guidance
   type: string
+  required: false
+  note: руководство проекта для агентов (`project_platform.guidance`, Platform module)
 - name: params
   type: map<string, any>
+  required: true
+  note: итоговые параметры после слияния уровней L0 (развёртывание) → L1 (проект) → L2 (агент) → L3 (запуск); ключи
+    — имена параметров конфигурации (`model.temperature`, `limits.max_steps`)
 - name: workspace
   type: WorkspaceSource[]
+  required: false
+  note: манифест рабочего пространства
 - name: memory
   type: '{m3: M3Record, m2: RunSummary[]}'
+  required: false
+  note: 'память на старте: M3 этой задачи; M2 — итоги последних запусков (параметр `m2_last_runs`, по умолчанию
+    3); во время работы Harness пишет M3 в Memory API'
 - name: task
   type: '{issueId, issueIdentifier, stepId, criteria: Criterion[], returnNote}'
+  required: false
+  note: 'задача и шаг процесса; `criteria` — только `active`: готовность шага, критерии человека, принятые критерии
+    предыдущего шага и ревьюера (AD-20); `returnNote` — `Verdict.note` последнего возврата'
 - name: mcp
   type: '{server, url, tools[]}[]'
+  required: false
+  note: MCP через прокси Runner
+source:
+  kind: ours
+  ref: ''
+  why: 'Всё, что нужно Harness на один запуск, одним документом: Harness не ходит в ICPlan сам (нет учётных данных
+    в sandbox). Группы `agent`, `task`, `memory`, `workspace`, `mcp` — по источнику данных, чтобы было видно, кто
+    за что отвечает.'

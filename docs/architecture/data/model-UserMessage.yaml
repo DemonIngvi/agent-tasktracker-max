@@ -8,9 +8,21 @@ sensitivity: internal
 attributes:
 - name: id
   type: string
+  required: true
+  note: идентификатор сообщения ICPlan, ключ от повторной доставки
 - name: text
   type: string
+  required: true
+  note: текст указания
 - name: by
   type: string
+  required: true
+  note: '`username` автора'
 - name: at
   type: timestamp
+  required: true
+  note: когда написано
+source:
+  kind: ours
+  ref: ''
+  why: Указание пользователя во время запуска; доставляется в ответе heartbeat и попадает в ленту задачи.

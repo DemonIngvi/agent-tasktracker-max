@@ -1,0 +1,44 @@
+notes:
+- <div class="api-head">
+- '<div><span class="about-label">Базовый адрес</span> своего API нет: среду создаёт Runner</div>'
+- <div><span class="about-label">Аутентификация</span> —</div>
+- </div>
+rows:
+- section: Вызовы Runner к среде исполнения
+  method: POST
+  path: Docker API /containers/create · /start
+  status: ✅ есть
+  does: создать и запустить контейнер по профилю
+  caller: Agent Runner · сокет rootless Docker
+  stories:
+  - US-SBX-01
+  reqs:
+  - FR-82
+  - FR-86
+  - FR-89
+  via:
+  - I6
+- section: Вызовы Runner к среде исполнения
+  method: DELETE
+  path: Docker API /containers/:id
+  status: ✅ есть
+  does: уничтожить среду после запуска
+  caller: Agent Runner · сокет
+  stories:
+  - US-SBX-01
+  reqs:
+  - FR-75
+  via:
+  - I6
+- section: Вызовы Runner к среде исполнения
+  method: POST
+  path: Kubernetes /api/v1/namespaces/itsaplan-agents/pods (этап 4)
+  status: ✅ есть
+  does: под запуска
+  caller: Agent Runner · ServiceAccount
+  stories:
+  - US-SBX-01
+  reqs:
+  - FR-82
+  via:
+  - I23

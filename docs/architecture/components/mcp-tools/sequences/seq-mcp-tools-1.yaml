@@ -1,0 +1,10 @@
+id: seq-mcp-tools-1
+title: С1. Вызов тула itsaplan-core
+component: mcp-tools
+diagram: "sequenceDiagram\n  autonumber\n  participant H as Harness\n  participant R as MCP-прокси Agent Runner\n\
+  \  participant G as Guardrails (OPA)\n  participant IC as MCP itsaplan-core (api ICPlan)\n  H->>R: tools/list\
+  \ (I9)\n  R->>IC: POST /mcp — tools/list (I24)\n  IC-->>R: тулы ↩\n  R-->>H: тулы, отфильтрованные allowlist запуска\
+  \ ↩\n  H->>R: tools/call update_issue (I9)\n  R->>G: PolicyInput G2 (I10)\n  G-->>R: PolicyDecision ↩\n  alt allow\n\
+  \    Note over R,IC: Authorization: Bearer ключ агента из Secret\n    R->>IC: POST /mcp — tools/call (I24)\n \
+  \   IC-->>R: результат ↩\n    R-->>H: результат, обрезка max_result_kb ↩\n  else deny\n    R-->>H: отказ ↩\n \
+  \ end\n  Note over IC: колонку задачи в процессе агент не меняет — переход делает ICPlan (D17)"

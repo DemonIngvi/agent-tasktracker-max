@@ -8,13 +8,29 @@ sensitivity: internal
 attributes:
 - name: key_alias
   type: string
+  required: true
+  note: '`agent:<agentId>`'
 - name: models
   type: string[]
+  required: true
+  note: разрешённые алиасы
 - name: max_budget
   type: float
+  required: true
+  note: бюджет $ за период = `AgentSettings.budget.dayUsd`
 - name: budget_duration
   type: string
+  required: true
+  note: 'всегда `1d`: бюджет ключа = дневной лимит агента; лимит на запуск проверяет G1'
 - name: rpm_limit / tpm_limit
   type: int
+  required: false
 - name: metadata
   type: object
+  required: false
+  note: 'наши ключи в стиле LiteLLM: `agent_id`'
+source:
+  kind: ext
+  ref: https://docs.litellm.ai/docs/proxy/virtual_keys
+  why: 'Ключ LiteLLM на агента: бюджет и модели ограничиваются шлюзом, а не кодом агента. Ключ хранится в Secret
+    и подставляется egress-прокси, в среду запуска не попадает (Т5). Имена — API LiteLLM, включая наши ключи `metadata`.'

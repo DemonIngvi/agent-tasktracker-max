@@ -8,11 +8,27 @@ sensitivity: internal
 attributes:
 - name: issueId
   type: int
+  required: true
+  note: 'задача: `run_id` из журнала LiteLLM → `agent_run.issue_id`'
 - name: agentId
   type: int
+  required: true
+  note: 'агент: `agent_run.agent_id`'
 - name: runs
   type: int
+  required: true
+  note: число запусков за всё время задачи; запуски без задачи — в сводке агента (задача 3.9)
 - name: inputTokens / outputTokens
   type: int | null
+  required: true
+  note: токены из журнала LiteLLM; `null` — журнал недоступен, «неизвестно»
 - name: costUsd
   type: float | null
+  required: true
+  note: затраты; `null` — цена модели не задана или журнал недоступен, стоимость неизвестна
+source:
+  kind: ours
+  ref: ''
+  why: 'Сводка для экрана затрат: Observability читает журнал LiteLLM (I14) и группирует по `metadata.run_id` →
+    `agent_run`; токены названы как в ICPlan (`inputTokens`, `outputTokens`). `RunResult.usage` — расход одного
+    запуска, сводка — сумма по журналу.'

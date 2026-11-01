@@ -1,0 +1,142 @@
+notes:
+- <div class="api-head">
+- '<div><span class="about-label">Базовый адрес</span> Harness: `http://<sandbox>:8090`; Runner: `http://agent-runner:8080`</div>'
+- <div><span class="about-label">Аутентификация</span> одноразовый токен запуска `RUN_TOKEN`</div>
+- </div>
+rows:
+- section: Harness (вызывает Runner)
+  method: POST
+  path: /run
+  status: 🆕 новое
+  does: передать `RunBundle` и начать цикл
+  caller: Agent Runner · токен запуска
+  stories:
+  - US-RUN-01
+  reqs:
+  - FR-19
+  - FR-29
+  - FR-66
+  via:
+  - I7
+- section: Harness (вызывает Runner)
+  method: GET
+  path: /run/events
+  status: 🆕 новое
+  does: поток `RunEvent` (NDJSON), переподключение с `seq`
+  caller: Agent Runner · токен запуска
+  stories:
+  - US-ICP-02
+  reqs:
+  - FR-24
+  via:
+  - I7
+- section: Harness (вызывает Runner)
+  method: POST
+  path: /run/approval
+  status: 🆕 новое
+  does: решение пользователя (`ApprovalDecision`)
+  caller: Agent Runner · токен запуска
+  stories:
+  - US-HAR-02
+  reqs:
+  - FR-23
+  via:
+  - I7
+- section: Harness (вызывает Runner)
+  method: POST
+  path: /run/message
+  status: 🆕 новое
+  does: указание пользователя во время работы
+  caller: Agent Runner · токен запуска
+  stories:
+  - US-HAR-06
+  reqs:
+  - FR-28
+  via:
+  - I7
+- section: Harness (вызывает Runner)
+  method: POST
+  path: /run/cancel
+  status: 🆕 новое
+  does: отмена
+  caller: Agent Runner · токен запуска
+  stories:
+  - US-ICP-04
+  reqs:
+  - FR-74
+  via:
+  - I7
+- section: Harness (вызывает Runner)
+  method: GET
+  path: /ready
+  status: 🆕 новое
+  does: готовность среды
+  caller: Agent Runner · —
+  stories:
+  - US-SBX-01
+  reqs:
+  - FR-83
+  via:
+  - I7
+- section: Runner (вызывает Harness)
+  method: PUT
+  path: /runs/:runId/checkpoint
+  status: 🆕 новое
+  does: сохранить состояние цикла
+  caller: Harness · токен запуска
+  stories:
+  - US-HAR-05
+  reqs:
+  - FR-23
+  via:
+  - I12
+- section: Runner (вызывает Harness)
+  method: GET
+  path: /runs/:runId/checkpoint
+  status: 🆕 новое
+  does: восстановить состояние
+  caller: Harness · токен запуска
+  stories:
+  - US-HAR-05
+  reqs:
+  - FR-23
+  via:
+  - I12
+- section: Runner (вызывает Harness)
+  method: POST
+  path: /runs/:runId/mcp/:server
+  status: 🆕 новое
+  does: 'MCP-прокси запуска: `tools/list` с фильтром, `tools/call` с allowlist и G2, учётные данные сервера (AD-19)'
+  caller: Harness · токен запуска
+  stories:
+  - US-MCP-05
+  - US-SBX-03
+  reqs:
+  - FR-177
+  - FR-79
+  via:
+  - I9
+- section: Runner (вызывает Harness)
+  method: POST
+  path: /runs/:runId/deps
+  status: 🆕 новое
+  does: 'тул `install_dependencies`: повторить шаг подготовки (AD-19)'
+  caller: Harness · токен запуска
+  stories:
+  - US-SBX-05
+  reqs:
+  - FR-29
+  - FR-89
+  via:
+  - I7
+- section: Runner (вызывает Harness)
+  method: GET
+  path: /healthz · /readyz
+  status: 🆕 новое
+  does: здоровье Runner
+  caller: Kubernetes · —
+  stories:
+  - US-RUN-05
+  reqs:
+  - FR-81
+  via: []

@@ -1,0 +1,9 @@
+id: seq-llm-gateway-1
+title: С1. Вызов модели
+component: llm-gateway
+diagram: "sequenceDiagram\n  autonumber\n  participant H as Harness\n  participant L as LLM Gateway (LiteLLM)\n\
+  \  participant P as Провайдер / mock\n  participant D as БД litellm\n  H->>L: POST /v1/chat/completions — ChatCompletionRequest,\
+  \ virtual key (I8)\n  L->>L: бюджет и rate limit ключа\n  opt G4 включён\n    L->>L: хуки: PII, injection, модерация\n\
+  \  end\n  L->>P: запрос к модели по алиасу (I13)\n  alt сбой провайдера\n    P-->>L: ошибка ↩\n    L->>P: резервная\
+  \ модель (I13)\n  end\n  P-->>L: ответ ↩\n  L->>D: журнал затрат: токены, $, run_id (I14)\n  L-->>H: ответ модели\
+  \ ↩"

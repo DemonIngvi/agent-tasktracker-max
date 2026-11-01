@@ -1,6 +1,6 @@
 # Tasks
 
-← proposal · spec.md · схема
+← [proposal](proposal.md) · spec.md · [схема](..\..\..\architecture\components\icplan\docs\icplan-agent-autopickup-architecture.md)
 
 Только ICPlan (форк `itsaplan`). Формат INVEST: каждая задача независима, ценна сама по себе, проверяема. Сроки — при планировании.
 

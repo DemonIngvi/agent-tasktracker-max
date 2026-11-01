@@ -1,0 +1,109 @@
+id: infrastructure-nagruzka-bekap-i-vosstanovlenie-sekrety
+title: Нагрузка, бэкап и восстановление, секреты
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Плановая работа или инцидент
+actors:
+- dannye
+- ekspluatatsiya-bezopasnost
+- klaster
+inputs: []
+outputs: []
+journeys:
+- UJ-13
+component: infrastructure
+stories:
+- US-INF-03
+- US-INF-04
+- US-INF-07
+steps:
+- id: s
+  type: start
+  title: Плановая работа или инцидент
+  actor: ekspluatatsiya-bezopasnost
+  lane: Эксплуатация / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Что?
+  actor: ekspluatatsiya-bezopasnost
+  lane: Эксплуатация / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: ld
+    label: нагрузка
+  - to: bk
+    label: бэкап
+  - to: sc
+    label: секрет
+- id: ld
+  type: task
+  title: Нагрузочный тест, очередь при пике
+  actor: klaster
+  lane: Кластер
+  inputs: []
+  outputs: []
+  artifacts:
+  - отчёт нагрузочного теста
+  next:
+  - to: e
+- id: bk
+  type: task
+  title: Бэкап вне узла / восстановление
+  actor: dannye
+  lane: Данные
+  inputs: []
+  outputs: []
+  artifacts:
+  - копия БД
+  - восстановленная БД
+  next:
+  - to: vr
+- id: vr
+  type: gateway
+  title: Восстановление прошло?
+  actor: dannye
+  lane: Данные
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: e
+    label: да
+  - to: xe
+    label: нет
+- id: xe
+  type: error
+  title: Проверка восстановления не прошла, пересмотр оператора
+  actor: dannye
+  lane: Данные
+  inputs: []
+  outputs: []
+  artifacts:
+  - запись о провале проверки восстановления
+- id: sc
+  type: task
+  title: Смена секрета без простоя
+  actor: klaster
+  lane: Кластер
+  inputs: []
+  outputs: []
+  artifacts:
+  - новый Secret
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Платформа устойчива
+  actor: ekspluatatsiya-bezopasnost
+  lane: Эксплуатация / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []

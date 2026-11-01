@@ -8,11 +8,28 @@ sensitivity: internal
 attributes:
 - name: point
   type: 'enum: g1 · g2'
+  required: true
+  note: G1 — допуск запуска, G2 — проверка действия агента
 - name: agentId
   type: int
+  required: true
+  note: агент; по нему правило находит `data.agents[<agentId>]`
 - name: run
   type: '{id, issueId, stepId}'
+  required: true
+  note: запуск, задача (или `null`), шаг процесса (или `null`, если запуск не по процессу)
 - name: tool / argsHash
   type: string
+  required: false
+  note: 'для G2: тул и SHA-256 его аргументов'
 - name: spent
   type: '{dayUsd, monthUsd}'
+  required: false
+  note: 'для G1: потрачено агентом за день и проектом за месяц (считает Runner по журналу LiteLLM); лимиты, автономию
+    и тулы правило берёт из данных бандла'
+source:
+  kind: ours
+  ref: ''
+  why: 'Содержимое наше: точка G1 или G2, агент, запуск, тул и потраченный бюджет; конверт `{input: …}` задаёт REST
+    API OPA. Вместо аргументов тула — их хеш, чтобы в аудите не было данных. Лимиты сюда не передаются: правило
+    берёт их из данных бандла по `agentId`.'

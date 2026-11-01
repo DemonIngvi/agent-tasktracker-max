@@ -8,15 +8,35 @@ sensitivity: internal
 attributes:
 - name: id
   type: int
+  required: true
+  note: '`agent_run.id`, как в API аналитики ICPlan'
 - name: agentId
   type: int
+  required: true
+  note: агент
 - name: status
   type: 'enum: pending · success · failed · canceled'
+  required: true
+  note: '`agent_run.status`'
 - name: output
   type: string | null
+  required: false
+  note: итог; в контекст попадает в пределах окна модели (управление контекстом, FR-25)
 - name: lastError
   type: string | null
+  required: false
+  note: причина неудачи (`agent_run.last_error`)
 - name: inputTokens / outputTokens
   type: int | null
+  required: false
+  note: токены запуска
 - name: finishedAt
   type: timestamp | null
+  required: false
+  note: время завершения
+source:
+  kind: ours
+  ref: ''
+  why: 'M2 (эпизодическая память: итоги прошлых запусков) не хранится отдельно: это строки `agent_run` форка: ICPlan
+    пишет их сам при выдаче и завершении запуска (`POST …/result`). Модель наша, данные и имена — форка (`GET /projects/:projectKey/analytics/agent-runs`:
+    `id`, `agentId`, `lastError`).'

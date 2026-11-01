@@ -8,6 +8,7 @@ sensitivity: internal
 attributes:
 - name: process_step_id
   type: int
+  fk: process_step
 - name: agent_version
   type: int
 - name: reason

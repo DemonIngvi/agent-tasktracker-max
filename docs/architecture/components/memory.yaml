@@ -1,8 +1,0 @@
-id: memory
-title: Memory
-owner: владелец платформы
-lifecycle: planned
-criticality: medium
-system: agent-platform
-responsibility: 'Память агента: чтобы следующий этап продолжал работу, а не начинал заново, и агент учился на прошлых
-  запусках.'

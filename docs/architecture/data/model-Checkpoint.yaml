@@ -8,9 +8,22 @@ sensitivity: internal
 attributes:
 - name: runId
   type: int
+  required: true
+  note: запуск
 - name: iteration
   type: int
+  required: true
+  note: номер итерации цикла Harness; ключ идемпотентности — `runId` + `iteration`
 - name: parentIteration
   type: int
+  required: false
+  note: предыдущая итерация
 - name: state
   type: string (base64)
+  required: true
+  note: сериализованное состояние графа LangGraph
+source:
+  kind: ours
+  ref: ''
+  why: Состояние графа LangGraph между шагами; Harness пишет его через Runner, потому что в sandbox нет учётных
+    данных БД.

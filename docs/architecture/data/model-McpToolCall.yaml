@@ -8,13 +8,28 @@ sensitivity: internal
 attributes:
 - name: jsonrpc / id
   type: string / int
+  required: true
+  note: конверт JSON-RPC 2.0
 - name: method
   type: 'enum: tools/list · tools/call'
+  required: true
 - name: params.name
   type: string
+  required: false
+  note: 'в запросе: имя тула'
 - name: params.arguments
   type: object
+  required: false
+  note: 'в запросе: аргументы'
 - name: result.content
   type: '{type, text}[]'
+  required: false
+  note: 'в ответе: результат; MCP-прокси Runner обрезает до `max_result_kb`'
 - name: error
   type: '{code, message}'
+  required: false
+  note: в ответе при ошибке (JSON-RPC 2.0)
+source:
+  kind: ext
+  ref: https://modelcontextprotocol.io/specification
+  why: Вызов тула по протоколу MCP поверх JSON-RPC 2.0; имена — по спецификации.

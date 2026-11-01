@@ -1,0 +1,129 @@
+id: agent-runner-ekspluatatsiya-rezhim-ozhidanie-padenie
+title: 'Эксплуатация: режим, ожидание, падение, вывод из работы'
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Runner работает
+actors:
+- ekspluatatsiya
+inputs: []
+outputs: []
+journeys:
+- UJ-2
+component: agent-runner
+stories:
+- US-RUN-02
+- US-RUN-04
+- US-RUN-05
+- US-RUN-06
+steps:
+- id: s
+  type: start
+  title: Runner работает
+  actor: agent-platform
+  lane: Agent Runner
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Событие
+  actor: agent-platform
+  lane: Agent Runner
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: md
+    label: смена режима
+  - to: ap
+    label: ждёт approve
+  - to: cr
+    label: падение
+  - to: dr
+    label: обновление
+  - to: sx
+    label: слоты недоступны
+- id: md
+  type: task
+  title: sequential / parallel
+  actor: ekspluatatsiya
+  lane: Эксплуатация
+  inputs: []
+  outputs: []
+  artifacts:
+  - конфиг деплоя
+  next:
+  - to: e
+- id: ap
+  type: task
+  title: Освободить глобальный и модельный слоты
+  actor: agent-platform
+  lane: Agent Runner
+  inputs: []
+  outputs: []
+  artifacts:
+  - освобождённые слоты
+  next:
+  - to: e
+- id: cr
+  type: task
+  title: Аренда истекла → запуск снова в очереди
+  actor: icplan
+  lane: ICPlan
+  inputs: []
+  outputs: []
+  artifacts:
+  - запуск pending
+  next:
+  - to: e
+- id: dr
+  type: task
+  title: Не брать новые, доделать активные
+  actor: ekspluatatsiya
+  lane: Эксплуатация
+  inputs: []
+  outputs: []
+  artifacts:
+  - Runner готов к остановке
+  next:
+  - to: dg
+- id: dg
+  type: gateway
+  title: Активные завершились до таймаута вывода?
+  actor: ekspluatatsiya
+  lane: Эксплуатация
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: e
+    label: да
+  - to: dx
+    label: нет
+- id: dx
+  type: error
+  title: 'Таймаут вывода: оставшиеся запуски возвращаются в очередь'
+  actor: ekspluatatsiya
+  lane: Эксплуатация
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: sx
+  type: error
+  title: 'Хранилище слотов недоступно: новые не стартуют, активные идут'
+  actor: icplan
+  lane: ICPlan
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: e
+  type: end
+  title: Очередь разбирается
+  actor: agent-platform
+  lane: Agent Runner
+  inputs: []
+  outputs: []
+  artifacts: []

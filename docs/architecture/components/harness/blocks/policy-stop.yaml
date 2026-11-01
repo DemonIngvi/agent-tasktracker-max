@@ -1,0 +1,48 @@
+id: harness-policy-stop
+title: Policy / stop
+kind: service
+does:
+- Соблюдает лимиты шагов и токенов; время — `timeout_s` Runner (I7)
+- Завершает с done / limit / gate_failed / error и частичным итогом (статусы — FR-72)
+- Проверяет итог по критериям приёмки; агент не может ослабить критерий своего шага
+tech: Python
+stories:
+- '3.3'
+- '3.4'
+io:
+- dir: in
+  with: Context Manager
+  what: 'ход цикла: шаги, токены'
+- dir: in
+  with: Agent Runner
+  what: отмена
+  via: I7
+- dir: out
+  with: Agent Runner
+  what: '`RunResult` с частичным итогом'
+  via: I7
+data:
+- table: agent_run
+  access: indirect
+  why: статус и итог `RunResult` пишет Runner в ICPlan (владелец — ICPlan)
+params:
+- limits.max_steps
+- limits.max_tokens
+reqs:
+- FR-26
+- FR-27
+- FR-72
+tasks:
+- '1.6'
+on_failure: 'Лимит шагов или токенов: остановка с причиной `limit` и частичным итогом; Gate не пройден и повторы
+  исчерпаны: `gate_failed` с перечнем непрошедших критериев; Ошибка модели после всех повторов: `error` с причиной
+  и частичным итогом'
+why: Предсказуемые затраты и время.
+rnd: runaway-protection.md
+operations:
+- name: проверка лимитов после каждого шага; quality gate итога по критериям задачи
+  caller: граф LangGraph
+  via: внутри
+- name: POST /run/cancel
+  caller: Agent Runner
+  via: I7

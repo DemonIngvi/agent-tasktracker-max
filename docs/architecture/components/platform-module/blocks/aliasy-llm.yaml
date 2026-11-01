@@ -1,0 +1,47 @@
+id: platform-module-aliasy-llm
+title: Алиасы LLM
+kind: service
+does:
+- Связывает агента с моделью через алиас; сам алиас — поле определения агента в Registry (`ai_agent.model`, FR-54,
+  AD-23), модуль его не хранит
+- Смена модели — без изменения агента
+tech: Алиасы LiteLLM, синхронизация из модуля
+stories:
+- '10.1'
+- '10.4'
+io:
+- dir: in
+  with: Registry
+  what: алиас модели из `ai_agent.model`
+- dir: out
+  with: LiteLLM
+  what: алиас и резервная модель ключа
+  via: I15
+data:
+- table: ai_agent
+  access: read
+  why: '`model` — алиас агента'
+- table: LiteLLM_VerificationToken
+  access: write
+  why: 'через admin API: алиас ключа агента (I15)'
+params:
+- model_alias
+- fallback
+reqs:
+- FR-100
+- FR-108
+- FR-54
+- FR-58
+tasks:
+- '4.4'
+on_failure: 'LiteLLM admin API недоступен: изменение помечено «не применено», автоповтор; Алиаса нет в `model_list`:
+  сохранение агента отклоняется с указанием модели (FR-58 «Модель без доступа»)'
+why: Модель меняется в одном месте.
+rnd: llm-gateway.md
+operations:
+- name: Передать алиас агента ключу LiteLLM при сохранении агента
+  caller: Platform module
+  via: I15
+- name: Сверка алиасов модуля и LiteLLM
+  caller: Platform module
+  via: I15

@@ -1,8 +1,0 @@
-id: platform-module
-title: Platform module
-owner: владелец платформы
-lifecycle: planned
-criticality: medium
-system: agent-platform
-responsibility: Хранит внутри ICPlan наши настройки, которых в ICPlan нет, и отдаёт их исполнителям.
-host: icplan

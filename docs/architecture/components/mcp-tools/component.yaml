@@ -1,0 +1,18 @@
+id: mcp-tools
+title: MCP / Tools
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Тулы и MCP-серверы агента; правила R1–R7: MCP или прямой вызов.'
+purpose: 'Руки агента: действия во внешних системах — задачи, документы, git.'
+does:
+- 'MCP ICPlan: читать задачу, писать комментарий, менять статус'
+- 'MCP git-провайдера: ветки и PR'
+- Тул памяти для записи M3
+- Allowlist в MCP-прокси Runner вне sandbox (AD-19), таймауты
+- 'Правила R1–R7: когда MCP, когда прямой вызов'
+chain:
+- harness
+- mcp-tools
+- icplan

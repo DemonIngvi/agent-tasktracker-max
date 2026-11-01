@@ -1,0 +1,102 @@
+id: infrastructure-ustanovka-dostup-lokalnaya-sreda
+title: Установка, доступ, локальная среда
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Чистый сервер
+actors:
+- ekspluatatsiya-qa
+- k3s-helm
+- polzovatel
+inputs: []
+outputs: []
+journeys:
+- UJ-12
+component: infrastructure
+stories:
+- US-INF-01
+- US-INF-02
+- US-INF-06
+steps:
+- id: s
+  type: start
+  title: Чистый сервер
+  actor: ekspluatatsiya-qa
+  lane: Эксплуатация / QA
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: ck
+- id: ck
+  type: gateway
+  title: Ресурсов хватает?
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: in
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: Ошибка до установки
+  actor: ekspluatatsiya-qa
+  lane: Эксплуатация / QA
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: in
+  type: task
+  title: helm install по порядку готовности
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts:
+  - релизы Helm
+  next:
+  - to: tl
+- id: tl
+  type: task
+  title: Ingress, TLS (ACME)
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts:
+  - сертификат
+  next:
+  - to: us
+- id: us
+  type: task
+  title: ICPlan по HTTPS
+  actor: polzovatel
+  lane: Пользователь
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: lc
+- id: lc
+  type: task
+  title: Локальная среда с mock-LLM
+  actor: ekspluatatsiya-qa
+  lane: Эксплуатация / QA
+  inputs: []
+  outputs: []
+  artifacts:
+  - compose / k3d
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Среда готова
+  actor: ekspluatatsiya-qa
+  lane: Эксплуатация / QA
+  inputs: []
+  outputs: []
+  artifacts: []

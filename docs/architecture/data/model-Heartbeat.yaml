@@ -9,5 +9,17 @@ sensitivity: internal
 attributes:
 - name: approvals
   type: ApprovalDecision[]
+  required: false
+  note: решения, ещё не доставленные; ICPlan повторяет их в каждом ответе, пока в событиях запуска не придёт `CUSTOM`
+    `decision_applied` с этим `seq`; Runner отбрасывает повтор по `runId` + `seq`
 - name: messages
   type: UserMessage[]
+  required: false
+  note: указания, ещё не доставленные; повторяются, пока не придёт `CUSTOM` `message_received` с этим `id` (в ленте
+    — «получено агентом»); повтор отбрасывается по `id`
+source:
+  kind: ours
+  ref: ''
+  why: 'Сейчас heartbeat в форке отвечает 204 без тела, а на отменённый или завершённый запуск — 404. Ответ с телом
+    — доработка: так раннер узнаёт об ответах и указаниях без отдельного канала (раннер ходит наружу сам, входящих
+    соединений нет). Отмена остаётся одним способом — 404, как в форке: поля `canceled` в ответе нет.'

@@ -1,0 +1,114 @@
+id: infrastructure-obnovlenie-bez-prostoya
+title: Обновление без простоя
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Новая версия
+actors:
+- dannye
+- ekspluatatsiya
+- k3s-helm
+inputs: []
+outputs: []
+journeys:
+- UJ-11
+component: infrastructure
+stories:
+- US-INF-05
+steps:
+- id: s
+  type: start
+  title: Новая версия
+  actor: ekspluatatsiya
+  lane: Эксплуатация
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t1
+- id: t1
+  type: task
+  title: helm upgrade
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts:
+  - ревизия Helm-релиза
+  next:
+  - to: g1
+- id: g1
+  type: gateway
+  title: Миграции нужны?
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t2
+    label: да
+  - to: t3
+    label: нет
+- id: t2
+  type: task
+  title: Миграции БД
+  actor: dannye
+  lane: Данные
+  inputs: []
+  outputs: []
+  artifacts:
+  - миграция схемы
+  next:
+  - to: t3
+- id: t3
+  type: task
+  title: Реплики по одной
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: Readiness ок?
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: e1
+    label: да
+  - to: t4
+    label: нет
+- id: t4
+  type: task
+  title: Откат ревизии
+  actor: k3s-helm
+  lane: k3s / Helm
+  inputs: []
+  outputs: []
+  artifacts:
+  - откат ревизии
+  next:
+  - to: x1
+- id: x1
+  type: error
+  title: Разбор инцидента
+  actor: ekspluatatsiya
+  lane: Эксплуатация
+  inputs: []
+  outputs: []
+  artifacts:
+  - отчёт об инциденте
+- id: e1
+  type: end
+  title: Версия выпущена
+  actor: ekspluatatsiya
+  lane: Эксплуатация
+  inputs: []
+  outputs: []
+  artifacts: []

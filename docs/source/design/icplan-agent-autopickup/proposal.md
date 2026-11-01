@@ -1,6 +1,6 @@
 # Proposal
 
-← README · схема: architecture.md · задачи: tasks.md
+← README · схема: [architecture.md](..\..\..\architecture\components\icplan\docs\icplan-agent-autopickup-architecture.md) · задачи: [tasks.md](tasks.md)
 
 ## Why
 

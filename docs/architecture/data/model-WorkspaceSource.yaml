@@ -8,11 +8,27 @@ sensitivity: internal
 attributes:
 - name: name
   type: string
+  required: true
+  note: имя в `/workspace/<имя>`
 - name: type
   type: 'enum: git · folder'
+  required: true
+  note: вид
 - name: url / prefix
   type: string
+  required: true
+  note: при `type = git` — `url` репозитория; при `folder` — `prefix` папки в объектном хранилище RustFS (S3)
 - name: branch
   type: string
+  required: false
+  note: ветка агента `agent/<задача>`
 - name: right
   type: 'enum: read · write'
+  required: true
+  note: 'право по политике (AD-18): `read` — вся папка и ветка задачи; `write` — только своя подпапка шага и ветка
+    агента'
+source:
+  kind: ours
+  ref: ''
+  why: Рабочее пространство собирается из источников проекта; `right` — право агента на источник по политике, его
+    проверяет Runner при монтировании.

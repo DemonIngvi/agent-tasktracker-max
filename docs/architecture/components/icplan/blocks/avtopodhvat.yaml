@@ -1,0 +1,102 @@
+id: icplan-avtopodhvat
+title: Автоподхват
+kind: service
+does:
+- Задача вошла в шаг → агент шага становится делегатом, запуск в его очереди
+- По итогу запуска ICPlan переводит задачу по правилам шага
+- Пишет в историю, по какому правилу агент взял задачу
+- Не создаёт второй активный запуск на агента и задачу — главная защита (FR-192); слот `per_issue` Runner — страховка
+  (AD-14)
+tech: 'Доработка форка (D17): тип задачи задаёт процесс; шаг = колонка + агент + переходы по итогу; эффект Действия'
+stories:
+- '4.1'
+- '4.5'
+- '4.25'
+- '4.26'
+- '4.27'
+- '4.7'
+- '4.16'
+- '4.18'
+io:
+- dir: in
+  with: Task UI, Действия проекта
+  what: задача вошла в колонку шага
+- dir: out
+  with: Run Queue
+  what: '`Run` (pending) — запуск в очередь агента шага'
+- dir: in
+  with: Run Queue
+  what: итог запуска → переход по `step.on_success / on_failure`
+data:
+- table: process
+  access: read
+- table: process_step
+  access: read
+- table: process_version
+  access: read
+  why: шаги версии, с которой задача вошла
+- table: issue_process_state
+  access: write
+  why: шаг, версия процесса входа (`process_version`, FR-203), число запусков, состояние
+- table: agent_run
+  access: write
+  why: запуск в очередь, шаг `process_step_id`
+- table: issue
+  access: write
+  why: делегат, колонка
+- table: project_action
+  access: read
+- table: issue_activity
+  access: write
+  why: «агент взял задачу», переходы
+params:
+- step.column
+- step.agent
+- step.on_success / on_failure
+- step.max_runs
+- step.require_review
+- project.actions
+reqs:
+- FR-188
+- FR-189
+- FR-190
+- FR-191
+- FR-192
+- FR-194
+- FR-209
+- FR-211
+- FR-17
+- FR-196
+- FR-197
+- FR-198
+- FR-202
+- FR-203
+tasks:
+- '3.1'
+- '3.5'
+- '3.6'
+on_failure: 'Агент шага не участник проекта: запуск не создаётся, предупреждение в истории; Постановка в очередь
+  не удалась: делегат установлен, повтор с backoff до 60 с, до 5 попыток; затем запись в истории и уведомление владельцу
+  процесса; Цикл переходов: второй активный запуск не создаётся (FR-192); вход в шаг сверх `step.max_runs` — запуск
+  не создаётся, задача идёт по `on_failure` шага, запись в истории; БД ICPlan недоступна: итог остаётся у Runner,
+  он повторяет отправку; переход — когда итог принят'
+why: Процесс идёт сам, а переход делает трекер, а не агент — правило однозначно. Что передаётся между шагами и как
+  подтверждаются критерии приёмки — контракт шага AD-20.
+rnd: autopickup-rules.md
+operations:
+- name: 'Вход задачи в шаг: делегат = агент шага, запуск в очередь'
+  caller: ICPlan при смене колонки или переходе
+  via: внутри
+- name: Переход по итогу запуска (`step.on_success / on_failure`)
+  caller: приём итога `POST /agent-runs/:runId/result`
+  via: I2
+- name: '`GET /projects/:projectKey/processes`, `PUT /projects/:projectKey/processes/:issueTypeId` — процесс типа
+    задачи'
+  caller: Администратор (интерфейс ICPlan)
+  via: I20
+- name: POST /projects/:projectKey/actions
+  caller: Администратор
+  via: I20
+- name: POST /issues/:issueId/process/retry
+  caller: Пользователь
+  via: I20

@@ -1,0 +1,18 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> см. Agent Runner ↔ Harness</div>
+- <div><span class="about-label">Аутентификация</span> токен запуска</div>
+- </div>
+rows:
+- section: Где описано
+  method: —
+  path: '[Agent Runner ↔ Harness](agent-runner.md)'
+  status: 🆕 новое
+  does: API Harness вызывается только Runner
+  caller: Agent Runner · токен запуска
+  stories:
+  - US-RUN-01
+  reqs:
+  - FR-19
+  via:
+  - I7

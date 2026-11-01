@@ -1,0 +1,9 @@
+id: seq-memory-1
+title: 'С1. Запуск по задаче: память на входе и выходе'
+component: memory
+diagram: "sequenceDiagram\n  autonumber\n  participant R as Agent Runner\n  participant H as Harness\n  participant\
+  \ M as Memory API\n  participant D as БД ICPlan (схема platform)\n  participant IC as ICPlan\n  R->>H: RunBundle\
+  \ (I7)\n  H->>M: контекст задачи (I11)\n  M->>D: M3 задачи и итоги m2_last_runs запусков (I22)\n  M-->>H: M3Record,\
+  \ итоги запусков ↩\n  loop шаг сделан, блокировка или перед завершением\n    H->>M: запись M3 — M3Record (I11)\n\
+  \    M->>D: проверка и запись (I22)\n  end\n  H-->>R: RunResult (I7)\n  R->>IC: POST /agent-runs/:runId/result\
+  \ — итог и токены, M2 (I2)"

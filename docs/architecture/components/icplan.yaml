@@ -1,7 +1,0 @@
-id: icplan
-title: ICPlan
-owner: владелец платформы
-lifecycle: planned
-criticality: medium
-system: icplan
-responsibility: 'Рабочее место людей: задачи, доска и процесс. Отсюда агенты получают работу и сюда возвращают результат.'

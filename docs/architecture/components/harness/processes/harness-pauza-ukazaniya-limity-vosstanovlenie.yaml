@@ -1,0 +1,96 @@
+id: harness-pauza-ukazaniya-limity-vosstanovlenie
+title: Пауза, указания, лимиты, восстановление
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Шаг цикла
+actors:
+- guardrails-checkpoint
+- polzovatel
+inputs: []
+outputs: []
+journeys:
+- UJ-6
+component: harness
+stories:
+- US-HAR-04
+- US-HAR-05
+- US-HAR-06
+- US-HAR-07
+steps:
+- id: s
+  type: start
+  title: Шаг цикла
+  actor: agent-platform
+  lane: Harness
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Что случилось?
+  actor: agent-platform
+  lane: Harness
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: q
+    label: нужен ответ
+  - to: m
+    label: указание
+  - to: l
+    label: лимит / цикл
+  - to: c
+    label: падение
+- id: q
+  type: task
+  title: Вопрос → ответ пользователя
+  actor: polzovatel
+  lane: Пользователь
+  inputs: []
+  outputs: []
+  artifacts:
+  - вопрос и ответ в M1
+  next:
+  - to: e
+- id: m
+  type: task
+  title: Указание в контекст
+  actor: polzovatel
+  lane: Пользователь
+  inputs: []
+  outputs: []
+  artifacts:
+  - сообщение в контексте
+  next:
+  - to: e
+- id: l
+  type: error
+  title: 'Стоп: limit / цикл'
+  actor: guardrails-checkpoint
+  lane: Guardrails / checkpoint
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: c
+  type: task
+  title: Продолжить с checkpoint
+  actor: guardrails-checkpoint
+  lane: Guardrails / checkpoint
+  inputs: []
+  outputs: []
+  artifacts:
+  - checkpoint
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Цикл продолжается
+  actor: agent-platform
+  lane: Harness
+  inputs: []
+  outputs: []
+  artifacts: []

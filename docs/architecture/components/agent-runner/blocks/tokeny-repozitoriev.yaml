@@ -1,0 +1,50 @@
+id: agent-runner-tokeny-repozitoriev
+title: Токены репозиториев
+kind: service
+does:
+- Выдаёт короткоживущий токен только на репозитории из манифеста запуска; токен живёт один запуск (4.2.3)
+- Токен подставляет git-прокси, не env (FR-85)
+- Запись — только в ветку с префиксом агента, push в защищённую ветку отклоняется
+tech: GitHub App / Gitea API (I18), ключ приложения в Secret
+stories:
+- '11.2'
+io:
+- dir: in
+  with: Run supervisor
+  what: манифест рабочего пространства (`WorkspaceSource`, I4)
+  via: I4
+- dir: out
+  with: «git-провайдер»
+  what: запрос токена
+  via: I18
+- dir: out
+  with: Sandbox
+  what: '?'
+  via: I6
+data:
+- table: access_policy
+  access: read
+  why: '(`GET /platform/runs/:runId/manifest`): права агента (владелец Platform module)'
+- table: project_resource
+  access: read
+  why: репозитории проекта (владелец Platform module)
+params:
+- workspace.sources
+reqs:
+- FR-85
+- FR-88
+- FR-76
+tasks:
+- '4.2'
+on_failure: 'Git-провайдер не выдал токен: повтор 2 раза (I18); затем запуск не стартует с причиной; Репозиторий
+  вне манифеста: токен на него не выдаётся, клон отклонён; Политика доступа недоступна (Platform module не ответил):
+  запуск не стартует, причина «нет политики доступа»'
+why: Минимальные права и короткий срок жизни секрета.
+rnd: sandbox-isolation.md
+operations:
+- name: выдать короткоживущий токен на репозитории манифеста с правом read / write
+  caller: Sandbox claim перед стартом среды
+  via: I18
+- name: '`RepoGrant` — правила git-прокси среды: репозитории и ветки агента; токен в среду не передаётся'
+  caller: Sandbox claim
+  via: I6

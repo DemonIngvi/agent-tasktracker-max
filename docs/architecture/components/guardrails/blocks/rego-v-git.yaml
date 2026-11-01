@@ -1,0 +1,42 @@
+id: guardrails-rego-v-git
+title: Rego в git
+kind: storage
+does:
+- 'Хранит логику проверок: что разрешено, что требует подтверждения; базовые правила AD-6 — allowlist и approval'
+- Каждое правило указывает точку G1–G4; правило без точки не принимается
+- Изменение правил — через PR с ревью безопасности и обязательным `opa test`
+tech: Rego-политики в репозитории политик (S8), opa test в CI
+stories:
+- '2.1'
+- '2.6'
+io:
+- dir: in
+  with: Ревьюер безопасности
+  what: PR с изменением Rego
+- dir: out
+  with: CI
+  what: 'сборка бандла: `opa test` → `opa build`'
+- dir: out
+  with: OPA
+  what: bundle `opa-bundle`
+  via: I16
+data:
+- table: agent_settings
+  access: indirect
+  why: данные правил агента (`tools_allow`, `approval_tools`) приходят в бандл из Platform module, в git их нет
+params:
+- bundles.<name>.resource
+- engine
+reqs:
+- FR-110
+- FR-116
+tasks:
+- '4.3'
+on_failure: 'Тесты `opa test` не прошли: бандл не собирается и не публикуется (задача 4.3.5); Битый Rego попал в
+  бандл: OPA остаётся на прежнем бандле, исправление в git (FMEA «Битый Rego»); Правило без точки G1–G4: сохранение
+  отклоняется (FR-110 «Правило без точки»)'
+why: Безопасник ревьюит политику, а не код сервисов.
+rnd: guardrails-engine.md
+schema_ref: 'Репозиторий политик Rego (S8, владелец — git-провайдер): `*.rego` по точкам G1 и G2 и тесты `*_test.rego`.
+  Данные агентов в репозитории не хранятся — их добавляет Platform module в бандл (S2). Бандл собирает CI, версия
+  бандла = sha коммита правил.'

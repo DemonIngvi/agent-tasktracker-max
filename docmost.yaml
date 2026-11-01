@@ -5,288 +5,783 @@ space:
   slug: agent-tasktracker-max
   description: Агентная платформа в новой структуре документации
 tree:
-- title: Как читать проект
-  source: docs/index.md
-- title: Обзор системы
-  children:
-  - title: Панель готовности
-    view: readiness
-  - title: 'C1: система и окружение'
-    view: c1
-  - title: 'C2: контейнеры'
-    view: c2
-  - title: 'C3: блоки'
-    view: c3
-  - title: Как работает
-    view: how
-  - title: Данные
-    view: data
-  - title: Реестры
-    view: registers
-  - title: Матрица покрытия
-    view: coverage
+- title: Карта платформы
+  key: home
+  view: home
 - title: Компоненты
   children:
   - title: Agent Runner
+    key: comp:agent-runner
+    component: agent-runner
+    view: component:agent-runner
     children:
-    - title: Как работает
-      source: docs/source/how/agent-runner.md
     - title: User Stories
+      key: stories:agent-runner
+      component: agent-runner
       view: stories:agent-runner
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:agent-runner
+      component: agent-runner
+      view: integrations:agent-runner
+    - title: Спека
+      key: reqs:agent-runner
+      component: agent-runner
+      view: spec:agent-runner
+    - title: Трассировка
+      key: trace:agent-runner
+      component: agent-runner
+      view: trace:agent-runner
+    - title: Блоки
+      key: blocks:agent-runner
+      component: agent-runner
       view: cards:agent-runner
-    - title: Схема
-      source: docs/source/specs/agent-runner/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/agent-runner/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/agent-runner.md
-    - title: API
-      source: docs/source/api/agent-runner.md
+    - title: Данные и потоки
+      key: datamodel:agent-runner
+      component: agent-runner
+      view: datamodel:agent-runner
+    - title: Сценарии
+      key: sequences:agent-runner
+      component: agent-runner
+      view: sequences:agent-runner
+    - title: Как работает
+      key: how:agent-runner
+      component: agent-runner
+      source: docs/architecture/components/agent-runner/docs/how.md
+    - title: Deploy
+      key: tech:agent-runner
+      component: agent-runner
+      source: docs/architecture/components/agent-runner/docs/techspec.md
     - title: Замечания
-      source: docs/source/reviews/findings/agent-runner.md
+      key: find:agent-runner
+      component: agent-runner
+      source: docs/architecture/components/agent-runner/docs/findings.md
+    - title: Схема agent-runner
+      source: docs/architecture/components/agent-runner/docs/agent-runner-architecture.md
+      component: agent-runner
+    - title: Конфигурация agent-runner
+      source: docs/architecture/components/agent-runner/docs/agent-runner-interfaces.md
+      component: agent-runner
   - title: Guardrails
+    key: comp:guardrails
+    component: guardrails
+    view: component:guardrails
     children:
-    - title: Как работает
-      source: docs/source/how/guardrails.md
     - title: User Stories
+      key: stories:guardrails
+      component: guardrails
       view: stories:guardrails
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:guardrails
+      component: guardrails
+      view: integrations:guardrails
+    - title: Спека
+      key: reqs:guardrails
+      component: guardrails
+      view: spec:guardrails
+    - title: Трассировка
+      key: trace:guardrails
+      component: guardrails
+      view: trace:guardrails
+    - title: Блоки
+      key: blocks:guardrails
+      component: guardrails
       view: cards:guardrails
-    - title: Схема
-      source: docs/source/specs/guardrails/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/guardrails/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/guardrails.md
-    - title: API
-      source: docs/source/api/guardrails.md
+    - title: Данные и потоки
+      key: datamodel:guardrails
+      component: guardrails
+      view: datamodel:guardrails
+    - title: Сценарии
+      key: sequences:guardrails
+      component: guardrails
+      view: sequences:guardrails
+    - title: Как работает
+      key: how:guardrails
+      component: guardrails
+      source: docs/architecture/components/guardrails/docs/how.md
+    - title: Deploy
+      key: tech:guardrails
+      component: guardrails
+      source: docs/architecture/components/guardrails/docs/techspec.md
+    - title: Схема guardrails
+      source: docs/architecture/components/guardrails/docs/guardrails-architecture.md
+      component: guardrails
+    - title: Конфигурация guardrails
+      source: docs/architecture/components/guardrails/docs/guardrails-interfaces.md
+      component: guardrails
   - title: Harness
+    key: comp:harness
+    component: harness
+    view: component:harness
     children:
-    - title: Как работает
-      source: docs/source/how/harness.md
     - title: User Stories
+      key: stories:harness
+      component: harness
       view: stories:harness
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:harness
+      component: harness
+      view: integrations:harness
+    - title: Спека
+      key: reqs:harness
+      component: harness
+      view: spec:harness
+    - title: Трассировка
+      key: trace:harness
+      component: harness
+      view: trace:harness
+    - title: Блоки
+      key: blocks:harness
+      component: harness
       view: cards:harness
-    - title: Схема
-      source: docs/source/specs/agent-harness/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/agent-harness/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/harness.md
-    - title: API
-      source: docs/source/api/harness.md
+    - title: Данные и потоки
+      key: datamodel:harness
+      component: harness
+      view: datamodel:harness
+    - title: Сценарии
+      key: sequences:harness
+      component: harness
+      view: sequences:harness
+    - title: Как работает
+      key: how:harness
+      component: harness
+      source: docs/architecture/components/harness/docs/how.md
+    - title: Deploy
+      key: tech:harness
+      component: harness
+      source: docs/architecture/components/harness/docs/techspec.md
+    - title: Схема agent-harness
+      source: docs/architecture/components/harness/docs/agent-harness-architecture.md
+      component: harness
+    - title: Конфигурация agent-harness
+      source: docs/architecture/components/harness/docs/agent-harness-interfaces.md
+      component: harness
   - title: ICPlan
+    key: comp:icplan
+    component: icplan
+    view: component:icplan
     children:
-    - title: Как работает
-      source: docs/source/how/icplan.md
     - title: User Stories
+      key: stories:icplan
+      component: icplan
       view: stories:icplan
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:icplan
+      component: icplan
+      view: integrations:icplan
+    - title: Спека
+      key: reqs:icplan
+      component: icplan
+      view: spec:icplan
+    - title: Трассировка
+      key: trace:icplan
+      component: icplan
+      view: trace:icplan
+    - title: Блоки
+      key: blocks:icplan
+      component: icplan
       view: cards:icplan
-    - title: Схема (icplan-integration)
-      source: docs/source/specs/icplan-integration/architecture.md
-    - title: Интерфейсы и отказы (icplan-integration)
-      source: docs/source/specs/icplan-integration/interfaces.md
-    - title: Схема (icplan-agent-autopickup)
-      source: docs/source/specs/icplan-agent-autopickup/architecture.md
-    - title: Интерфейсы и отказы (icplan-agent-autopickup)
-      source: docs/source/specs/icplan-agent-autopickup/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/icplan.md
-    - title: API
-      source: docs/source/api/icplan.md
+    - title: Данные и потоки
+      key: datamodel:icplan
+      component: icplan
+      view: datamodel:icplan
+    - title: Сценарии
+      key: sequences:icplan
+      component: icplan
+      view: sequences:icplan
+    - title: Как работает
+      key: how:icplan
+      component: icplan
+      source: docs/architecture/components/icplan/docs/how.md
+    - title: Deploy
+      key: tech:icplan
+      component: icplan
+      source: docs/architecture/components/icplan/docs/techspec.md
     - title: Замечания
-      source: docs/source/reviews/findings/icplan.md
+      key: find:icplan
+      component: icplan
+      source: docs/architecture/components/icplan/docs/findings.md
+    - title: Схема icplan-agent-autopickup
+      source: docs/architecture/components/icplan/docs/icplan-agent-autopickup-architecture.md
+      component: icplan
+    - title: Конфигурация icplan-agent-autopickup
+      source: docs/architecture/components/icplan/docs/icplan-agent-autopickup-interfaces.md
+      component: icplan
+    - title: Схема icplan-integration
+      source: docs/architecture/components/icplan/docs/icplan-integration-architecture.md
+      component: icplan
+    - title: Конфигурация icplan-integration
+      source: docs/architecture/components/icplan/docs/icplan-integration-interfaces.md
+      component: icplan
   - title: Инфраструктура
+    key: comp:infrastructure
+    component: infrastructure
+    view: component:infrastructure
     children:
-    - title: Как работает
-      source: docs/source/how/infrastructure.md
     - title: User Stories
+      key: stories:infrastructure
+      component: infrastructure
       view: stories:infrastructure
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:infrastructure
+      component: infrastructure
+      view: integrations:infrastructure
+    - title: Спека
+      key: reqs:infrastructure
+      component: infrastructure
+      view: spec:infrastructure
+    - title: Трассировка
+      key: trace:infrastructure
+      component: infrastructure
+      view: trace:infrastructure
+    - title: Блоки
+      key: blocks:infrastructure
+      component: infrastructure
       view: cards:infrastructure
-    - title: Схема
-      source: docs/source/specs/platform-infrastructure/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/platform-infrastructure/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/infrastructure.md
-    - title: API
-      source: docs/source/api/infrastructure.md
+    - title: Данные и потоки
+      key: datamodel:infrastructure
+      component: infrastructure
+      view: datamodel:infrastructure
+    - title: Сценарии
+      key: sequences:infrastructure
+      component: infrastructure
+      view: sequences:infrastructure
+    - title: Как работает
+      key: how:infrastructure
+      component: infrastructure
+      source: docs/architecture/components/infrastructure/docs/how.md
+    - title: Deploy
+      key: tech:infrastructure
+      component: infrastructure
+      source: docs/architecture/components/infrastructure/docs/techspec.md
+    - title: Схема platform-infrastructure
+      source: docs/architecture/components/infrastructure/docs/platform-infrastructure-architecture.md
+      component: infrastructure
+    - title: Конфигурация platform-infrastructure
+      source: docs/architecture/components/infrastructure/docs/platform-infrastructure-interfaces.md
+      component: infrastructure
   - title: LiteLLM gateway
+    key: comp:llm-gateway
+    component: llm-gateway
+    view: component:llm-gateway
     children:
-    - title: Как работает
-      source: docs/source/how/llm-gateway.md
     - title: User Stories
+      key: stories:llm-gateway
+      component: llm-gateway
       view: stories:llm-gateway
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:llm-gateway
+      component: llm-gateway
+      view: integrations:llm-gateway
+    - title: Спека
+      key: reqs:llm-gateway
+      component: llm-gateway
+      view: spec:llm-gateway
+    - title: Трассировка
+      key: trace:llm-gateway
+      component: llm-gateway
+      view: trace:llm-gateway
+    - title: Блоки
+      key: blocks:llm-gateway
+      component: llm-gateway
       view: cards:llm-gateway
-    - title: Схема
-      source: docs/source/specs/llm-gateway/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/llm-gateway/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/llm-gateway.md
-    - title: API
-      source: docs/source/api/llm-gateway.md
+    - title: Данные и потоки
+      key: datamodel:llm-gateway
+      component: llm-gateway
+      view: datamodel:llm-gateway
+    - title: Сценарии
+      key: sequences:llm-gateway
+      component: llm-gateway
+      view: sequences:llm-gateway
+    - title: Как работает
+      key: how:llm-gateway
+      component: llm-gateway
+      source: docs/architecture/components/llm-gateway/docs/how.md
+    - title: Deploy
+      key: tech:llm-gateway
+      component: llm-gateway
+      source: docs/architecture/components/llm-gateway/docs/techspec.md
     - title: Замечания
-      source: docs/source/reviews/findings/llm-gateway.md
+      key: find:llm-gateway
+      component: llm-gateway
+      source: docs/architecture/components/llm-gateway/docs/findings.md
+    - title: Схема llm-gateway
+      source: docs/architecture/components/llm-gateway/docs/llm-gateway-architecture.md
+      component: llm-gateway
+    - title: Конфигурация llm-gateway
+      source: docs/architecture/components/llm-gateway/docs/llm-gateway-interfaces.md
+      component: llm-gateway
   - title: MCP / Tools
+    key: comp:mcp-tools
+    component: mcp-tools
+    view: component:mcp-tools
     children:
-    - title: Как работает
-      source: docs/source/how/mcp-tools.md
     - title: User Stories
+      key: stories:mcp-tools
+      component: mcp-tools
       view: stories:mcp-tools
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:mcp-tools
+      component: mcp-tools
+      view: integrations:mcp-tools
+    - title: Спека
+      key: reqs:mcp-tools
+      component: mcp-tools
+      view: spec:mcp-tools
+    - title: Трассировка
+      key: trace:mcp-tools
+      component: mcp-tools
+      view: trace:mcp-tools
+    - title: Блоки
+      key: blocks:mcp-tools
+      component: mcp-tools
       view: cards:mcp-tools
-    - title: Схема
-      source: docs/source/specs/tool-integration/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/tool-integration/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/mcp-tools.md
-    - title: API
-      source: docs/source/api/mcp-tools.md
+    - title: Данные и потоки
+      key: datamodel:mcp-tools
+      component: mcp-tools
+      view: datamodel:mcp-tools
+    - title: Сценарии
+      key: sequences:mcp-tools
+      component: mcp-tools
+      view: sequences:mcp-tools
+    - title: Как работает
+      key: how:mcp-tools
+      component: mcp-tools
+      source: docs/architecture/components/mcp-tools/docs/how.md
+    - title: Deploy
+      key: tech:mcp-tools
+      component: mcp-tools
+      source: docs/architecture/components/mcp-tools/docs/techspec.md
+    - title: Схема tool-integration
+      source: docs/architecture/components/mcp-tools/docs/tool-integration-architecture.md
+      component: mcp-tools
+    - title: Конфигурация tool-integration
+      source: docs/architecture/components/mcp-tools/docs/tool-integration-interfaces.md
+      component: mcp-tools
   - title: Memory
+    key: comp:memory
+    component: memory
+    view: component:memory
     children:
-    - title: Как работает
-      source: docs/source/how/memory.md
     - title: User Stories
+      key: stories:memory
+      component: memory
       view: stories:memory
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:memory
+      component: memory
+      view: integrations:memory
+    - title: Спека
+      key: reqs:memory
+      component: memory
+      view: spec:memory
+    - title: Трассировка
+      key: trace:memory
+      component: memory
+      view: trace:memory
+    - title: Блоки
+      key: blocks:memory
+      component: memory
       view: cards:memory
-    - title: Схема
-      source: docs/source/specs/agent-memory/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/agent-memory/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/memory.md
-    - title: API
-      source: docs/source/api/memory.md
+    - title: Данные и потоки
+      key: datamodel:memory
+      component: memory
+      view: datamodel:memory
+    - title: Сценарии
+      key: sequences:memory
+      component: memory
+      view: sequences:memory
+    - title: Как работает
+      key: how:memory
+      component: memory
+      source: docs/architecture/components/memory/docs/how.md
+    - title: Deploy
+      key: tech:memory
+      component: memory
+      source: docs/architecture/components/memory/docs/techspec.md
     - title: Замечания
-      source: docs/source/reviews/findings/memory.md
+      key: find:memory
+      component: memory
+      source: docs/architecture/components/memory/docs/findings.md
+    - title: Схема agent-memory
+      source: docs/architecture/components/memory/docs/agent-memory-architecture.md
+      component: memory
+    - title: Конфигурация agent-memory
+      source: docs/architecture/components/memory/docs/agent-memory-interfaces.md
+      component: memory
   - title: Observability
+    key: comp:observability
+    component: observability
+    view: component:observability
     children:
-    - title: Как работает
-      source: docs/source/how/observability.md
     - title: User Stories
+      key: stories:observability
+      component: observability
       view: stories:observability
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:observability
+      component: observability
+      view: integrations:observability
+    - title: Спека
+      key: reqs:observability
+      component: observability
+      view: spec:observability
+    - title: Трассировка
+      key: trace:observability
+      component: observability
+      view: trace:observability
+    - title: Блоки
+      key: blocks:observability
+      component: observability
       view: cards:observability
-    - title: Схема
-      source: docs/source/specs/observability/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/observability/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/observability.md
-    - title: API
-      source: docs/source/api/observability.md
+    - title: Данные и потоки
+      key: datamodel:observability
+      component: observability
+      view: datamodel:observability
+    - title: Сценарии
+      key: sequences:observability
+      component: observability
+      view: sequences:observability
+    - title: Как работает
+      key: how:observability
+      component: observability
+      source: docs/architecture/components/observability/docs/how.md
+    - title: Deploy
+      key: tech:observability
+      component: observability
+      source: docs/architecture/components/observability/docs/techspec.md
     - title: Замечания
-      source: docs/source/reviews/findings/observability.md
+      key: find:observability
+      component: observability
+      source: docs/architecture/components/observability/docs/findings.md
+    - title: Схема observability
+      source: docs/architecture/components/observability/docs/observability-architecture.md
+      component: observability
+    - title: Конфигурация observability
+      source: docs/architecture/components/observability/docs/observability-interfaces.md
+      component: observability
   - title: Platform module
+    key: comp:platform-module
+    component: platform-module
+    view: component:platform-module
     children:
-    - title: Как работает
-      source: docs/source/how/platform-module.md
     - title: User Stories
+      key: stories:platform-module
+      component: platform-module
       view: stories:platform-module
-    - title: Карточки блоков
+    - title: Интеграции
+      key: integrations:platform-module
+      component: platform-module
+      view: integrations:platform-module
+    - title: Спека
+      key: reqs:platform-module
+      component: platform-module
+      view: spec:platform-module
+    - title: Трассировка
+      key: trace:platform-module
+      component: platform-module
+      view: trace:platform-module
+    - title: Блоки
+      key: blocks:platform-module
+      component: platform-module
       view: cards:platform-module
-    - title: Схема (agent-registry)
-      source: docs/source/specs/agent-registry/architecture.md
-    - title: Интерфейсы и отказы (agent-registry)
-      source: docs/source/specs/agent-registry/interfaces.md
-    - title: Схема (control-plane)
-      source: docs/source/specs/control-plane/architecture.md
-    - title: Интерфейсы и отказы (control-plane)
-      source: docs/source/specs/control-plane/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/platform-module.md
-    - title: API
-      source: docs/source/api/platform-module.md
-    - title: Замечания
-      source: docs/source/reviews/findings/platform-module.md
-  - title: Sandbox
-    children:
+    - title: Данные и потоки
+      key: datamodel:platform-module
+      component: platform-module
+      view: datamodel:platform-module
+    - title: Сценарии
+      key: sequences:platform-module
+      component: platform-module
+      view: sequences:platform-module
     - title: Как работает
-      source: docs/source/how/sandbox.md
-    - title: User Stories
-      view: stories:sandbox
-    - title: Карточки блоков
-      view: cards:sandbox
-    - title: Схема
-      source: docs/source/specs/agent-sandbox/architecture.md
-    - title: Интерфейсы и отказы
-      source: docs/source/specs/agent-sandbox/interfaces.md
-    - title: Техспека
-      source: docs/source/techspec/sandbox.md
-    - title: API
-      source: docs/source/api/sandbox.md
+      key: how:platform-module
+      component: platform-module
+      source: docs/architecture/components/platform-module/docs/how.md
+    - title: Deploy
+      key: tech:platform-module
+      component: platform-module
+      source: docs/architecture/components/platform-module/docs/techspec.md
     - title: Замечания
-      source: docs/source/reviews/findings/sandbox.md
+      key: find:platform-module
+      component: platform-module
+      source: docs/architecture/components/platform-module/docs/findings.md
+    - title: Схема agent-registry
+      source: docs/architecture/components/platform-module/docs/agent-registry-architecture.md
+      component: platform-module
+    - title: Конфигурация agent-registry
+      source: docs/architecture/components/platform-module/docs/agent-registry-interfaces.md
+      component: platform-module
+    - title: Схема control-plane
+      source: docs/architecture/components/platform-module/docs/control-plane-architecture.md
+      component: platform-module
+    - title: Конфигурация control-plane
+      source: docs/architecture/components/platform-module/docs/control-plane-interfaces.md
+      component: platform-module
+  - title: Sandbox
+    key: comp:sandbox
+    component: sandbox
+    view: component:sandbox
+    children:
+    - title: User Stories
+      key: stories:sandbox
+      component: sandbox
+      view: stories:sandbox
+    - title: Интеграции
+      key: integrations:sandbox
+      component: sandbox
+      view: integrations:sandbox
+    - title: Спека
+      key: reqs:sandbox
+      component: sandbox
+      view: spec:sandbox
+    - title: Трассировка
+      key: trace:sandbox
+      component: sandbox
+      view: trace:sandbox
+    - title: Блоки
+      key: blocks:sandbox
+      component: sandbox
+      view: cards:sandbox
+    - title: Данные и потоки
+      key: datamodel:sandbox
+      component: sandbox
+      view: datamodel:sandbox
+    - title: Сценарии
+      key: sequences:sandbox
+      component: sandbox
+      view: sequences:sandbox
+    - title: Как работает
+      key: how:sandbox
+      component: sandbox
+      source: docs/architecture/components/sandbox/docs/how.md
+    - title: Deploy
+      key: tech:sandbox
+      component: sandbox
+      source: docs/architecture/components/sandbox/docs/techspec.md
+    - title: Замечания
+      key: find:sandbox
+      component: sandbox
+      source: docs/architecture/components/sandbox/docs/findings.md
+    - title: Схема agent-sandbox
+      source: docs/architecture/components/sandbox/docs/agent-sandbox-architecture.md
+      component: sandbox
+    - title: Конфигурация agent-sandbox
+      source: docs/architecture/components/sandbox/docs/agent-sandbox-interfaces.md
+      component: sandbox
+- title: Система
+  children:
+  - title: Панель готовности
+    key: readiness
+    view: readiness
+  - title: 'C1: система и окружение'
+    key: c1
+    view: c1
+  - title: 'C2: контейнеры'
+    key: c2
+    view: c2
+  - title: 'C3: блоки'
+    key: c3
+    view: c3
+  - title: Сквозные сценарии
+    key: seqall
+    view: seqall
+  - title: Как работают процессы
+    key: how
+    view: how
+  - title: Потоки данных
+    key: dfd
+    view: dfd
+  - title: Модель данных
+    key: er
+    view: er
+  - title: 'Данные: кто пишет и читает'
+    key: data
+    view: data
+  - title: Решения
+    key: decisions
+    view: decisions
+  - title: Реестры
+    key: registers
+    view: registers
+  - title: Матрица покрытия
+    key: coverage
+    view: coverage
+  - title: Типы данных
+    key: types
+    view: types
+    children:
+    - title: AgUiEvent
+      key: type:AgUiEvent
+      view: type:AgUiEvent
+    - title: AgentDefinition
+      key: type:AgentDefinition
+      view: type:AgentDefinition
+    - title: AgentSettings
+      key: type:AgentSettings
+      view: type:AgentSettings
+    - title: ApprovalDecision
+      key: type:ApprovalDecision
+      view: type:ApprovalDecision
+    - title: ChatCompletionRequest
+      key: type:ChatCompletionRequest
+      view: type:ChatCompletionRequest
+    - title: Checkpoint
+      key: type:Checkpoint
+      view: type:Checkpoint
+    - title: CostAggregate
+      key: type:CostAggregate
+      view: type:CostAggregate
+    - title: Criterion
+      key: type:Criterion
+      view: type:Criterion
+    - title: Heartbeat
+      key: type:Heartbeat
+      view: type:Heartbeat
+    - title: M3Record
+      key: type:M3Record
+      view: type:M3Record
+    - title: McpToolCall
+      key: type:McpToolCall
+      view: type:McpToolCall
+    - title: OpaBundleData
+      key: type:OpaBundleData
+      view: type:OpaBundleData
+    - title: PolicyDecision
+      key: type:PolicyDecision
+      view: type:PolicyDecision
+    - title: PolicyInput
+      key: type:PolicyInput
+      view: type:PolicyInput
+    - title: Process
+      key: type:Process
+      view: type:Process
+    - title: ProcessStep
+      key: type:ProcessStep
+      view: type:ProcessStep
+    - title: RepoGrant
+      key: type:RepoGrant
+      view: type:RepoGrant
+    - title: Run
+      key: type:Run
+      view: type:Run
+    - title: RunBundle
+      key: type:RunBundle
+      view: type:RunBundle
+    - title: RunEvent
+      key: type:RunEvent
+      view: type:RunEvent
+    - title: RunResult
+      key: type:RunResult
+      view: type:RunResult
+    - title: RunSummary
+      key: type:RunSummary
+      view: type:RunSummary
+    - title: SandboxClaim
+      key: type:SandboxClaim
+      view: type:SandboxClaim
+    - title: UserMessage
+      key: type:UserMessage
+      view: type:UserMessage
+    - title: Verdict
+      key: type:Verdict
+      view: type:Verdict
+    - title: VirtualKey
+      key: type:VirtualKey
+      view: type:VirtualKey
+    - title: WorkspaceSource
+      key: type:WorkspaceSource
+      view: type:WorkspaceSource
 - title: R&D
   children:
-  - title: 'R&D: Цепочки агентов: маршрутизация, возвраты, лимиты, самообучение'
-    source: docs/source/rnd/agent-chain.md
-  - title: 'R&D: Рабочее пространство агентов и доступы'
-    source: docs/source/rnd/agent-workspace.md
-  - title: 'R&D: Автоподхват задач агентом'
-    source: docs/source/rnd/autopickup-rules.md
-  - title: 'R&D: Где хранятся определения и настройки агентов'
-    source: docs/source/rnd/config-storage.md
-  - title: 'R&D: Хранилища данных (Postgres и объектное хранилище)'
-    source: docs/source/rnd/data-stores.md
-  - title: 'R&D: Базы, схемы и роли БД сервисов'
-    source: docs/source/rnd/db-roles-schemas.md
-  - title: 'R&D: Разработка, деплой и мониторинг: гарантированный контроль токенов'
-    source: docs/source/rnd/dev-deploy-monitoring.md
-  - title: 'R&D: Автоматизация правил документации — навыки, хуки и инструмент вме'
-    source: docs/source/rnd/doc-automation.md
-  - title: 'R&D: Срок хранения запусков, переписки и истории задачи в таблицах фор'
-    source: docs/source/rnd/fork-run-retention.md
-  - title: 'R&D: Движок правил guardrails'
-    source: docs/source/rnd/guardrails-engine.md
-  - title: 'R&D: Фреймворк агентского цикла'
-    source: docs/source/rnd/harness-framework.md
-  - title: 'R&D: Вход и балансировка'
-    source: docs/source/rnd/ingress-and-balancing.md
-  - title: 'R&D: Kubernetes и упаковка платформы'
-    source: docs/source/rnd/kubernetes-runtime.md
-  - title: 'R&D: Шлюз к моделям (LLM Gateway)'
-    source: docs/source/rnd/llm-gateway.md
-  - title: 'R&D: Профиль нагрузки и ёмкость'
-    source: docs/source/rnd/load-profile.md
-  - title: 'R&D: Тулы агента — MCP, прямые вызовы, нативные тулы'
-    source: docs/source/rnd/mcp-vs-direct.md
-  - title: 'R&D: Модель памяти агентов'
-    source: docs/source/rnd/memory-model.md
-  - title: 'R&D: Наблюдаемость агентов'
-    source: docs/source/rnd/observability.md
-  - title: 'R&D: Где администратор задаёт настройки Platform module'
-    source: docs/source/rnd/platform-module-screens.md
-  - title: 'R&D: Поиск по знаниям (RAG)'
-    source: docs/source/rnd/rag.md
   - title: 'R&D: обоснование решений'
-    source: docs/source/rnd/README.md
+    source: docs/research/README.md
+    key: rnd:README.md
+  - title: 'R&D: Цепочки агентов: маршрутизация, возвраты, лимиты, самообучение'
+    source: docs/research/agent-chain.md
+    key: rnd:agent-chain.md
+  - title: 'R&D: Рабочее пространство агентов и доступы'
+    source: docs/research/agent-workspace.md
+    key: rnd:agent-workspace.md
+  - title: 'R&D: Автоподхват задач агентом'
+    source: docs/research/autopickup-rules.md
+    key: rnd:autopickup-rules.md
+  - title: 'R&D: Где хранятся определения и настройки агентов'
+    source: docs/research/config-storage.md
+    key: rnd:config-storage.md
+  - title: 'R&D: Хранилища данных (Postgres и объектное хранилище)'
+    source: docs/research/data-stores.md
+    key: rnd:data-stores.md
+  - title: 'R&D: Базы, схемы и роли БД сервисов'
+    source: docs/research/db-roles-schemas.md
+    key: rnd:db-roles-schemas.md
+  - title: 'R&D: Разработка, деплой и мониторинг: гарантированный контроль токенов'
+    source: docs/research/dev-deploy-monitoring.md
+    key: rnd:dev-deploy-monitoring.md
+  - title: 'R&D: Автоматизация правил документации — навыки, хуки и инструмент вме'
+    source: docs/research/doc-automation.md
+    key: rnd:doc-automation.md
+  - title: 'R&D: Срок хранения запусков, переписки и истории задачи в таблицах фор'
+    source: docs/research/fork-run-retention.md
+    key: rnd:fork-run-retention.md
+  - title: 'R&D: Движок правил guardrails'
+    source: docs/research/guardrails-engine.md
+    key: rnd:guardrails-engine.md
+  - title: 'R&D: Фреймворк агентского цикла'
+    source: docs/research/harness-framework.md
+    key: rnd:harness-framework.md
+  - title: 'R&D: Вход и балансировка'
+    source: docs/research/ingress-and-balancing.md
+    key: rnd:ingress-and-balancing.md
+  - title: 'R&D: Kubernetes и упаковка платформы'
+    source: docs/research/kubernetes-runtime.md
+    key: rnd:kubernetes-runtime.md
+  - title: 'R&D: Шлюз к моделям (LLM Gateway)'
+    source: docs/research/llm-gateway.md
+    key: rnd:llm-gateway.md
+  - title: 'R&D: Профиль нагрузки и ёмкость'
+    source: docs/research/load-profile.md
+    key: rnd:load-profile.md
+  - title: 'R&D: Тулы агента — MCP, прямые вызовы, нативные тулы'
+    source: docs/research/mcp-vs-direct.md
+    key: rnd:mcp-vs-direct.md
+  - title: 'R&D: Модель памяти агентов'
+    source: docs/research/memory-model.md
+    key: rnd:memory-model.md
+  - title: 'R&D: Наблюдаемость агентов'
+    source: docs/research/observability.md
+    key: rnd:observability.md
+  - title: 'R&D: Где администратор задаёт настройки Platform module'
+    source: docs/research/platform-module-screens.md
+    key: rnd:platform-module-screens.md
+  - title: 'R&D: Поиск по знаниям (RAG)'
+    source: docs/research/rag.md
+    key: rnd:rag.md
   - title: 'R&D: Как проводить и подавать исследования'
-    source: docs/source/rnd/rnd-methodology-choice.md
+    source: docs/research/rnd-methodology-choice.md
+    key: rnd:rnd-methodology-choice.md
   - title: 'R&D: Как пользователь видит работу агента в задаче'
-    source: docs/source/rnd/run-view.md
+    source: docs/research/run-view.md
+    key: rnd:run-view.md
   - title: 'R&D: Защита от разгона агента'
-    source: docs/source/rnd/runaway-protection.md
+    source: docs/research/runaway-protection.md
+    key: rnd:runaway-protection.md
   - title: 'R&D: Откуда Agent Runner берёт определение агента'
-    source: docs/source/rnd/runner-agent-definition.md
+    source: docs/research/runner-agent-definition.md
+    key: rnd:runner-agent-definition.md
   - title: 'R&D: Runner и очередь запусков'
-    source: docs/source/rnd/runner-and-scheduling.md
+    source: docs/research/runner-and-scheduling.md
+    key: rnd:runner-and-scheduling.md
   - title: 'R&D: Изоляция запусков (Sandbox)'
-    source: docs/source/rnd/sandbox-isolation.md
+    source: docs/research/sandbox-isolation.md
+    key: rnd:sandbox-isolation.md
   - title: 'R&D: Контракт шага — данные, память и критерии приёмки между шагами'
-    source: docs/source/rnd/step-contract.md
+    source: docs/research/step-contract.md
+    key: rnd:step-contract.md
   - title: 'R&D: Выбор таск-трекера'
-    source: docs/source/rnd/tracker-choice.md
+    source: docs/research/tracker-choice.md
+    key: rnd:tracker-choice.md
   - title: 'R&D: Потоки аналогов «трекер + ИИ-агенты»'
-    source: docs/source/rnd/us-analogs-agent-tracker.md
+    source: docs/research/us-analogs-agent-tracker.md
+    key: rnd:us-analogs-agent-tracker.md
   - title: Последствия исследований
     source: docs/source/rnd-consequences.md
 - title: Планы и задачи
@@ -365,19 +860,17 @@ tree:
       source: docs/source/tasks/4.8-load-test.md
 - title: Справка
   children:
+  - title: Как читать проект
+    source: docs/index.md
   - title: Технологии
     source: docs/source/TECHNOLOGIES.md
   - title: Типы данных
     source: docs/source/data-types.md
   - title: Персоны
-    source: docs/source/stories/personas.md
-  - title: Покрытие историй
-    source: docs/source/stories/coverage.md
-  - title: Подтверждения ролей
-    source: docs/source/approvals.md
+    source: docs/source/personas.md
   - title: Расходы
     source: docs/source/costs.yaml
-- title: Документы
+- title: Документы BMAD
   children:
   - title: PRD
     source: _bmad-output/planning-artifacts/prds/prd-agent-tasktracker-max-2026-11-01/prd.md

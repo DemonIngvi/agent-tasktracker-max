@@ -1,0 +1,45 @@
+id: harness-bootstrap
+title: Bootstrap
+kind: service
+does:
+- 'Собирает агента: промпт, навыки, тулы, лимиты'
+- Даёт агенту только тулы и навыки из определения
+- Проверяет параметры по границам «Мин»–«Макс» с именем параметра в ошибке (FR-31)
+tech: Python, загрузка AgentDefinition
+stories:
+- '3.1'
+- '8.7'
+io:
+- dir: in
+  with: Agent Runner
+  what: '`RunBundle`: определение версии запуска, задание, память на старте, манифест, MCP'
+  via: I7
+- dir: out
+  with: Context Manager
+  what: 'собранный агент: инструкция, навыки, тулы, лимиты'
+data:
+- table: ai_agent
+  access: read
+  why: 'через Runner: определение агента в `RunBundle` (владелец — ICPlan; источник — Platform module, I4)'
+- table: agent_settings_version
+  access: read
+  why: 'через Runner: версия определения запуска (владелец — Platform module, AD-23)'
+params:
+- prompt.platform_version
+reqs:
+- FR-19
+- FR-31
+tasks:
+- '1.3'
+on_failure: 'Определение не проходит схему: цикл не стартует, запуск завершается `invalid_definition`; Навык из
+  определения не найден: запуск завершается ошибкой с именем навыка; Параметр вне границ: значение отклонено, ошибка
+  называет параметр и границы'
+why: Агент полностью задаётся конфигом.
+rnd: harness-framework.md
+operations:
+- name: POST /run
+  caller: Agent Runner (Run supervisor)
+  via: I7
+- name: GET /ready
+  caller: Agent Runner
+  via: I7

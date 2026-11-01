@@ -1,0 +1,19 @@
+id: I17
+title: исходящий трафик через egress-прокси (allowlist)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: sandbox
+to: external-hosts
+purpose: исходящий трафик через egress-прокси (allowlist)
+integration_type: sync-api
+protocol: HTTP / HTTPS (CONNECT)
+format: не задан
+auth: allowlist хостов, подстановка секретов
+timeout: по хосту
+retry: нет
+idempotent: null
+mode: синхронно
+also:
+- sandbox
+- mcp-tools

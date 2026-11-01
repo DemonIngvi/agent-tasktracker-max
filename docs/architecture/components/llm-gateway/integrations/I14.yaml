@@ -1,0 +1,18 @@
+id: I14
+title: ключи, бюджеты, журнал затрат в БД `litellm`
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: llm-gateway
+to: infrastructure
+purpose: ключи, бюджеты, журнал затрат в БД `litellm`
+integration_type: unknown
+protocol: протокол PostgreSQL
+format: таблицы LiteLLM
+auth: пароль из Secret
+timeout: 5 с
+retry: встроенный
+idempotent: null
+mode: синхронно
+also:
+- observability

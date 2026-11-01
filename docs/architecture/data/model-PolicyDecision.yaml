@@ -8,7 +8,18 @@ sensitivity: internal
 attributes:
 - name: allow
   type: bool
+  required: true
+  note: можно ли выполнить сразу; при `true` поле `approval` = `false`
 - name: approval
   type: bool
+  required: true
+  note: 'при `allow = false`: `true` — можно после подтверждения человеком (пауза), `false` — запрещено'
 - name: reason
   type: string
+  required: true
+  note: причина для аудита и ленты
+source:
+  kind: ours
+  ref: ''
+  why: 'Ответ нашего правила Rego, OPA кладёт его в `{result: …}`. Три исхода: выполнить сразу (`allow`), после
+    подтверждения (`approval`), запрещено.'

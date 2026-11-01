@@ -9,6 +9,7 @@
 Результат: PRD, эпики, Spine, модель системы в docs/architecture и отчёт docs/migration.md.
 """
 import collections
+import os
 import pathlib
 import re
 import sys
@@ -49,11 +50,14 @@ def write(rel, unit):
     path = ARCH / rel
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump(unit, allow_unicode=True, sort_keys=False, width=110), encoding="utf-8", newline="\n")
-    report[rel.split("/")[0]] += 1
+    parts = rel.split("/")
+    report[parts[2] if parts[0] == "components" and len(parts) > 3 else parts[0]] += 1
 
 
-def obj(folder, key, title, **fields):
-    write(f"{folder}/{key}.yaml", {"id": key, "title": title, **OWN["common"], **fields})
+def obj(folder, key, title, comp=None, **fields):
+    """Единица компонента лежит в его папке, общая единица в папке типа."""
+    rel = f"components/{comp}/{folder}/{key}.yaml" if comp in COMPONENTS else f"{folder}/{key}.yaml"
+    write(rel, {"id": key, "title": title, **OWN["common"], **fields})
 
 
 def text_or(value, default="не задано", limit=200):
@@ -148,8 +152,12 @@ sensitivity: [public, internal, personal, secret]
     hosts = {row["owner"]: row["host"] for row in load(DATA / "hosts.yaml") if "block" not in row}
     for key, unit in COMPONENTS.items():
         extra = {"host": hosts[key]} if key in hosts else {}
-        does = (unit.get("about") or {}).get("purpose") or unit.get("desc", "")
-        obj("components", key, unit["name"], system="icplan" if key == "icplan" else "agent-platform", responsibility=line(does), **extra)
+        about = unit.get("about") or {}
+        chain = [item["comp"] for item in about.get("chain", []) if item.get("comp") in COMPONENTS]
+        write(f"components/{key}/component.yaml", {"id": key, "title": unit["name"], **OWN["common"], "system": "icplan" if key == "icplan" else "agent-platform",
+                                                   "responsibility": line(unit.get("desc") or about.get("purpose", ""), 200), "purpose": line(about.get("purpose", ""), 300),
+                                                   "does": [line(item, 240) for item in about.get("does", [])], "chain": chain, **extra})
+    (ARCH / "components" / "_order.yaml").write_text(yaml.safe_dump({"components": [f for f, _, _ in EPICS]}), encoding="utf-8", newline="\n")
 
     tables = units("tables")
     table_ids = {}
@@ -159,8 +167,8 @@ sensitivity: [public, internal, personal, secret]
         key = name.replace("_", "-")
         table_ids[name] = key
         sensitivity = "secret" if re.search(r"key|secret|token", name) else "personal" if name in ("user", "users") else "internal"
-        attributes = [{"name": c["name"], "type": str(c.get("type", "?"))} for c in unit.get("columns", [])]
-        obj("data", key, f"Таблица {name}", **{"class": "master"}, sensitivity=sensitivity, attributes=attributes)
+        attributes = [{"name": c["name"], "type": str(c.get("type", "?")), **({"pk": True} if c.get("pk") else {}), **({"fk": c["fk"]} if c.get("fk") else {})} for c in unit.get("columns", [])]
+        obj("data", key, f"Таблица {name}", comp=unit.get("owner"), **{"class": "master"}, sensitivity=sensitivity, attributes=attributes)
         store = unit.get("store") or ("S6" if name.startswith("LiteLLM") else "S1")
         store_tables[store].append(name)
         table_store[name] = store
@@ -170,15 +178,17 @@ sensitivity: [public, internal, personal, secret]
         for name in domain["tables"]:
             if name not in table_ids:
                 table_ids[name] = name.replace("_", "-")
-                obj("data", table_ids[name], f"Таблица {name}", **{"class": "master"}, sensitivity="internal", attributes=[], states=[])
+                obj("data", table_ids[name], f"Таблица {name}", comp="icplan", **{"class": "master"}, sensitivity="internal", attributes=[], states=[])
                 store_tables["S1"].append(name)
                 table_store[name] = "S1"
                 report["таблиц форка без описания колонок"] += 1
     models = units("models")
     for name, unit in models.items():
-        attributes = [{"name": f["name"], "type": str(f.get("type", "?"))} for f in unit.get("fields", [])]
+        attributes = [{"name": f["name"], "type": str(f.get("type", "?")), "required": bool(f.get("required")), **({"note": line(f["desc"], 200)} if f.get("desc") else {})} for f in unit.get("fields", [])]
+        origin = unit.get("source") or {}
         write(f"data/model-{name}.yaml", {"id": name, "title": line(unit.get("purpose", name), 150), **OWN["common"], "class": "contract",
-                                          "sensitivity": "internal", "attributes": attributes})
+                                          "sensitivity": "internal", "attributes": attributes,
+                                          "source": {"kind": str(origin.get("kind", "")), "ref": line(str(origin.get("ref", "")), 200), "why": line(str(origin.get("why", "")), 500)}})
 
     stores, channels, params, fmea = {}, {}, {}, []
     for path in sorted(p for p in (SRC / "openspec" / "changes").rglob("interfaces.md") if "archive" not in p.parts):
@@ -195,7 +205,7 @@ sensitivity: [public, internal, personal, secret]
         owner = TITLE_TO_COMPONENT.get(plain(row.get("Владелец")), "infrastructure")
         names = store_tables.get(code, [])
         retention = text_or(row.get("Резервирование / срок"))
-        obj("stores", code, line(row["Хранилище"], 120), **{"owner": owner}, objects=[table_ids[n] for n in names], tables=names, writes=[owner], reads=[owner],
+        obj("stores", code, line(row["Хранилище"], 120), comp=owner, **{"owner": owner}, objects=[table_ids[n] for n in names], tables=names, writes=[owner], reads=[owner],
             deletes=owner, delete_trigger=retention, backup=retention)
     for code in set(store_tables) - set(stores):
         lost["хранилище из таблиц без описания"].append(code)
@@ -216,17 +226,17 @@ sensitivity: [public, internal, personal, secret]
             kind = "sync-api"
         elif re.search(r"очеред|nats|redis|stream|sse", text):
             kind = "event-stream"
-        obj("integrations", code, line(unit["what"], 120), **{"from": ends[0], "to": ends[1]}, purpose=line(unit["what"]), integration_type=kind,
+        obj("integrations", code, line(unit["what"], 120), comp=ends[0], **{"from": ends[0], "to": ends[1]}, purpose=line(unit["what"]), integration_type=kind,
             protocol=text_or(row.get("Протокол"), "не задан"), format=text_or(row.get("Формат"), "не задан"), auth=text_or(row.get("Аутентификация"), "не задан"),
-            timeout=text_or(row.get("Таймаут"), "не задан", 120), retry=text_or(row.get("Повтор"), "не задан"), idempotent=decided)
+            timeout=text_or(row.get("Таймаут"), "не задан", 120), retry=text_or(row.get("Повтор"), "не задан"), idempotent=decided, mode=text_or(row.get("Режим"), "не задан", 120),
+            **({"via": unit["via"]} if unit.get("via") else {}), **({"also": unit["also"]} if unit.get("also") else {}), **({"data_in_response": True} if unit.get("data_in_response") else {}))
         names = [m for m in unit.get("models", []) if m in known_data]
         lost["модель интеграции без описания"] += [f"{code}: {m}" for m in unit.get("models", []) if m not in known_data]
         if names:
             flows += 1
-            obj("flows", f"F-{code}", line(unit["what"], 120), **{"from": ends[0], "to": ends[1]}, objects=names, trigger=line(unit["what"], 200),
+            source_end, target_end = (ends[1], ends[0]) if unit.get("data_in_response") else (ends[0], ends[1])
+            obj("flows", f"F-{code}", line(unit["what"], 120), comp=source_end, **{"from": source_end, "to": target_end}, objects=names, trigger=line(unit["what"], 200),
                 flow_type="query" if unit.get("data_in_response") else "command", over=code)
-            if unit.get("data_in_response"):
-                obj("flows", f"F-{code}-reply", "Ответ: " + line(unit["what"], 110), **{"from": ends[1], "to": ends[0]}, objects=names, trigger="ответ на запрос", flow_type="query", over=code)
     for code in set(channels) - set(source):
         lost["интерфейс есть в спеке, нет в integrations.yaml"].append(code)
 
@@ -320,7 +330,7 @@ def write_blocks(table_ids, params):
             failures = "; ".join(line(f"{f['when']}: {f['then']}", 240) for f in unit.get("failures") or [])
             card = {"id": key, "title": unit["title"], "kind": kind, "does": [line(x, 240) for x in unit.get("does", [])], "tech": plain(unit.get("tech", "")),
                     "stories": [STORY[s] for s in unit.get("stories", []) if s in STORY], "io": io, "data": data, "params": names, "reqs": reqs,
-                    "tasks": [str(t) for t in unit.get("tasks", [])], "on_failure": failures or "не задано в источнике", "why": line(unit.get("why", ""), 300)}
+                    "tasks": [str(t) for t in unit.get("tasks", [])], "on_failure": failures or "не задано в источнике", "why": line(unit.get("why", ""), 300), **({"rnd": pathlib.PurePosixPath(unit["rnd"]).name.split("#")[0]} if unit.get("rnd") else {})}
             if kind == "ui":
                 card["screens"] = [{"path": line(s.get("where", s.get("name", "?")), 160), "shows": line(s.get("what", "?"), 240), "status": s.get("status", "новое"),
                                     **({"operation": line(str(s["api"]), 160)} if s.get("api") else {}), "file": str(s.get("code", "")), "story": STORY.get((s.get("stories") or [""])[0], "")}
@@ -330,7 +340,7 @@ def write_blocks(table_ids, params):
             else:
                 card["operations"] = [{"name": line(str(o.get("endpoint") or o.get("op", "?")), 160), "caller": line(str(o.get("who", "?")), 160),
                                        "via": (o.get("via") or ["внутри"])[0]} for o in unit.get("ops") or []]
-            path_out = f"blocks/{folder.name}/{path.stem}.yaml"
+            path_out = f"components/{folder.name}/blocks/{path.stem}.yaml"
             write(path_out, card)
             cards[key] = (folder.name, unit, reqs)
     rows = []
@@ -352,17 +362,18 @@ def write_functions(cards, table_ids):
                     by_story[story]["writes" if "write" in item["access"] else "reads"].add(table)
     names = {}
     for folder, _, items in EPICS:
-        for code, number, unit in items:
+        spec_nfrs = [r["id"] for r in NFR_LIST if SPEC_COMPONENT[r["spec"]] == folder]
+        for position, (code, number, unit) in enumerate(items):
             reqs, missing = story_reqs(unit)
             lost["требование истории без соответствия"] += [f"{code}: {m}" for m in missing]
             key = code.lower()
             names[code] = key
             story_unit = {"id": code.lower(), "number": number, "component": folder, "role": PERSONAS["roles"].get(unit.get("role"), unit.get("role", "пользователь")),
-                          "want": line(unit["want"], 300), "so_that": line(unit.get("so_that", ""), 300), "accept": [line(str(a), 300) for a in unit.get("accept", [])], "reqs": reqs, "source": code}
-            write(f"stories/{key}.yaml", story_unit)
+                          "want": line(unit["want"], 300), "so_that": line(unit.get("so_that", ""), 300), "accept": [line(str(a), 300) for a in unit.get("accept", [])], "reqs": reqs + (spec_nfrs if position == 0 else []), "source": code}
+            write(f"components/{folder}/stories/{key}.yaml", story_unit)
             if not reqs:
                 lost["история без требований"].append(code)
-            obj("functions", key, line(unit["want"], 150), system="icplan" if folder == "icplan" else "agent-platform", reqs=reqs,
+            obj("functions", key, line(unit["want"], 150), comp=folder, system="icplan" if folder == "icplan" else "agent-platform", reqs=reqs,
                 reads=sorted(by_story[code]["reads"]), writes=sorted(by_story[code]["writes"]))
     return names
 
@@ -399,7 +410,7 @@ def write_read_flows(cards, table_owner):
                 lost["чтение чужой таблицы без интеграции"].append(f"{table} -> {reader}")
                 continue
             made.add((table, reader))
-            obj("flows", f"F-api-{slug(table)}-{slug(reader)}", f"Таблица {table} через API владельца", **{"from": owner, "to": reader},
+            obj("flows", f"F-api-{slug(table)}-{slug(reader)}", f"Таблица {table} через API владельца", comp=owner, **{"from": owner, "to": reader},
                 objects=[table.replace("_", "-")], trigger="выведено при переносе: нужно подтвердить", flow_type="query", over=channel)
     report["потоков чтения через API"] = len(made)
 
@@ -428,13 +439,14 @@ def write_processes(names, models):
                 outputs += [a for a in made if a not in outputs]
                 links = [{"to": n} if isinstance(n, str) else {"to": n["to"], **({"label": line(n["label"], 60)} if n.get("label") else {})} for n in step.get("next", [])]
                 steps.append({"id": step["id"], "type": step.get("type", "task"), "title": line(step["label"], 160), "actor": lanes[step.get("lane", 0)],
-                              "inputs": [], "outputs": made, **({"next": links} if links else {})})
+                              "lane": process["lanes"][step.get("lane", 0)], "inputs": [], "outputs": made, "artifacts": [line(str(a), 60) for a in artifacts.get(step["id"], [])],
+                              **({"next": links} if links else {})})
             if not steps:
                 continue
             first = next((s["label"] for s in process["steps"] if s.get("type") == "start"), process["title"])
             key = f"{path.stem}-{slug(process['title'])[:40]}".strip("-")
             actors = sorted({s["actor"] for s in steps if (ARCH / f"actors/{s['actor']}.yaml").exists()})
-            obj("processes", key, line(process["title"], 150), trigger=line(first, 200), actors=actors, inputs=[], outputs=outputs, journeys=[f"UJ-{number}"], component=path.stem,
+            obj("processes", key, line(process["title"], 150), comp=path.stem, trigger=line(first, 200), actors=actors, inputs=[], outputs=outputs, journeys=[f"UJ-{number}"], component=path.stem,
                 stories=process.get("stories", []), steps=steps)
             journeys.append((number, process["title"], first))
     return journeys
@@ -453,7 +465,7 @@ def write_quality(names):
         functions = [names[code] for folder, _, items in EPICS if folder == component for code, _, _ in items]
         system = "icplan" if component == "icplan" else "agent-platform"
         if functions:
-            obj("services", f"svc-{component}", f"Сервис {COMPONENTS[component]['name']}", consumers=[ROLE_ID["П"], ROLE_ID["А"]], provider=system, functions=functions, objectives=objectives)
+            obj("services", f"svc-{component}", f"Сервис {COMPONENTS[component]['name']}", comp=component, consumers=[ROLE_ID["П"], ROLE_ID["А"]], provider=system, functions=functions, objectives=objectives)
     obj("nodes", "k3s-node", "Узел k3s", environment="production", runs=[k for k in COMPONENTS], tech="k3s")
     (ARCH / "domains.yaml").write_text("""domains:
 - {domain: аутентификация, status: decided, rule: AD-7}
@@ -477,54 +489,37 @@ def write_tasks():
 
 
 def write_prd(journeys):
-    parts = [f"---\ntitle: {TITLE}\nstatus: draft\ncreated: {DATE}\nupdated: {DATE}\n---\n\n# PRD: {TITLE}\n\n> Перенесено из `agent-architecture` скриптом `tools/migrate.py`. Код требования в исходных спеках указан у каждого FR.\n\n## 0. Document Purpose\n\nДокумент для владельца продукта, архитектора и разработчиков. Требования сгруппированы по исходным спекам и пронумерованы сквозным образом.\n"]
+    head = [f"---\ntitle: {TITLE}\nstatus: draft\ncreated: {DATE}\nupdated: {DATE}\n---\n\n# PRD: {TITLE}\n\n> Файл собран из `docs/architecture/components/*/prd.md` командой `arch.py assemble`, правьте источник.\n\n## 0. Document Purpose\n\nДокумент для владельца продукта, архитектора и разработчиков. Требования лежат в папках компонентов и пронумерованы сквозным образом.\n"]
     proposal = (SRC / "openspec/changes/define-agent-platform/proposal.md").read_text(encoding="utf-8")
     why = re.search(r"## Why\s+(.*?)\n## ", proposal, re.S)
-    parts.append(f"## 1. Vision\n\n{clean(why.group(1)) if why else 'Агентная платформа выполняет задачи трекера ICPlan.'}\n")
+    head.append(f"## 1. Vision\n\n{clean(why.group(1)) if why else 'Агентная платформа выполняет задачи трекера ICPlan.'}\n")
     roles = "\n".join(f"- **{item['name']}:** {clean(item.get('wants', ''))}." for item in PERSONAS["personas"].values())
     paths = "\n".join(f"- **UJ-{n}. {clean(title)}.** Начало: {clean(start)}." for n, title, start in journeys)
-    parts.append(f"## 2. Target User\n\n### 2.1 Jobs To Be Done\n\n{roles}\n\n### 2.2 Key User Journeys\n\n{paths}\n")
+    head.append(f"## 2. Target User\n\n### 2.1 Jobs To Be Done\n\n{roles}\n\n### 2.2 Key User Journeys\n\n{paths}\n")
     terms = [f"- **{u['name']}** — {line(u.get('desc', ''), 240)}" for u in COMPONENTS.values()]
     terms += [f"- **{name}** — {line(unit.get('purpose', ''), 200)}" for name, unit in units("models").items()]
-    parts.append("## 3. Glossary\n\n" + "\n".join(terms) + "\n")
-    parts.append("## 4. Features\n")
+    head.append("## 3. Glossary\n\n" + "\n".join(terms) + "\n")
+    head.append("## 4. Features\n")
+    sections = collections.defaultdict(list)
     for index, (spec, (purpose, reqs)) in enumerate(SPEC_DATA.items(), 1):
-        parts.append(f"### 4.{index} {spec}\n\n**Description:** {clean(purpose)}\n\n**Functional Requirements:**\n")
+        block = [f"### 4.{index} {spec}\n\n**Description:** {clean(purpose)}\n\n**Functional Requirements:**\n"]
         for req in [r for r in FR_LIST if r["spec"] == spec]:
             cases = "\n".join(f"- {clean(n)}: когда {clean(w)}, тогда {clean(t)}." for n, w, t in req["cases"])
-            parts.append(f"#### {req['id']}: {clean(req['title'])}\n\n{clean(req['text'])}\n\nКод в исходной спеке: `{req['code'] or 'нет'}`.\n\n**Consequences (testable):**\n{cases}\n")
+            block.append(f"#### {req['id']}: {clean(req['title'])}\n\n{clean(req['text'])}\n\nКод в исходной спеке: `{req['code'] or 'нет'}`.\n\n**Consequences (testable):**\n{cases}\n")
+        sections[SPEC_COMPONENT[spec]] += block
+    for component, block in sections.items():
+        (ARCH / "components" / component / "prd.md").write_text("\n".join(block), encoding="utf-8", newline="\n")
     questions = []
     for path in sorted(p for p in (SRC / "openspec/changes").rglob("open-questions.md") if "archive" not in p.parts):
         questions += [line(row.get("Вопрос", "")) for row in table_rows(path.read_text(encoding="utf-8"), "| ID |") if row.get("ID") not in ("—", None)]
     numbered = "\n".join(f"{i}. {q.rstrip('?.')}?" for i, q in enumerate(questions, 1)) or "Открытых вопросов в спеках нет."
     nfrs = "\n".join(f"- **{r['id']} {clean(r['title'])} ({r['spec']}):** {clean(r['text'])}" for r in NFR_LIST)
-    parts.append(f"## 5. Non-Goals (Explicit)\n\nСм. раздел Deferred архитектуры.\n\n## 6. MVP Scope\n\nСм. `docs/migration.md`.\n\n## 7. Success Metrics\n\nВ исходных спеках метрик продукта в формате SM нет, их нужно задать.\n\n## 8. Cross-Cutting NFRs\n\n{nfrs}\n\n## 9. Open Questions\n\n{numbered}\n\n## 10. Assumptions Index\n\nДопущений в спеках не отмечено.\n")
-    path = PLAN / f"prds/prd-{NAME}-{DATE}/prd.md"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(parts), encoding="utf-8", newline="\n")
-
-
-def write_epics():
-    coverage, parts = [], []
-    for folder, number, items in EPICS:
-        title = COMPONENTS.get(folder, {}).get("name", folder)
-        parts.append(f"## Epic {number}: {title}\n\n{line(COMPONENTS.get(folder, {}).get('desc', ''))}\n")
-        spec_nfrs = [r["id"] for r in NFR_LIST if SPEC_COMPONENT[r["spec"]] == folder]
-        for position, (code, story, unit) in enumerate(items):
-            reqs, _ = story_reqs(unit)
-            coverage += [(req, story) for req in reqs]
-            nfr = f"\nНагрузка: {', '.join(spec_nfrs)}.\n" if spec_nfrs and position == 0 else ""
-            role = PERSONAS["roles"].get(unit.get("role"), unit.get("role", "пользователь"))
-            criteria = []
-            for item in unit.get("accept", []):
-                given, sep, then = clean(str(item)).partition("→")
-                criteria.append(f"**Given** {given.strip()}\n**When** выполняется сценарий\n**Then** {then.strip()}" if sep else f"**Given** работает {title}\n**When** выполняется сценарий\n**Then** {given.strip()}")
-            joined = "\n\n".join(criteria)
-            parts.append(f"### Story {story}: {line(unit['want'], 120)}\n\nAs a {role},\nI want {clean(unit['want'])},\nSo that {clean(unit.get('so_that', ''))}.\n\nКод в источнике: {code}. Требования: {', '.join(reqs) or 'нет'}.{nfr}\n**Acceptance Criteria:**\n\n{joined}\n")
-    table = "\n".join(f"| {k} | {v} |" for k, v in sorted(set(coverage), key=lambda p: (int(p[0].split("-")[1]), p[1])) if k.startswith("FR-"))
-    text = f"---\nstatus: draft\n---\n\n# {TITLE} - Epic Breakdown\n\n## Overview\n\nИстории перенесены из `data/stories`, эпик соответствует компоненту.\n\n## Requirements Inventory\n\nFR-1 — FR-{len(FR_LIST)}, формулировки в PRD.\n\n### FR Coverage Map\n\n| FR | История |\n| --- | --- |\n{table}\n\n## Epic List\n\n" + "\n".join(f"{n}. {COMPONENTS.get(f, {}).get('name', f)}" for f, n, _ in EPICS) + "\n\n" + "\n".join(parts)
-    (PLAN / "epics.md").write_text(text, encoding="utf-8", newline="\n")
-    report["FR без истории"] = len(FR_LIST) - len({k for k, _ in coverage if k.startswith("FR-")})
+    tail = f"## 5. Non-Goals (Explicit)\n\nСм. раздел Deferred архитектуры.\n\n## 6. MVP Scope\n\nСм. `docs/migration.md`.\n\n## 7. Success Metrics\n\nВ исходных спеках метрик продукта в формате SM нет, их нужно задать.\n\n## 8. Cross-Cutting NFRs\n\n{nfrs}\n\n## 9. Open Questions\n\n{numbered}\n\n## 10. Assumptions Index\n\nДопущений в спеках не отмечено.\n"
+    folder = ARCH / "prd"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "head.md").write_text("\n".join(head), encoding="utf-8", newline="\n")
+    (folder / "tail.md").write_text(tail, encoding="utf-8", newline="\n")
+    (folder / "epics-head.md").write_text(f"---\nstatus: draft\n---\n\n# {TITLE} - Epic Breakdown\n\n> Файл собран из `docs/architecture/components/*/stories` командой `arch.py assemble`, правьте источник.\n\n## Overview\n\nЭпик соответствует компоненту.\n\n## Requirements Inventory\n\nFR-1 — FR-{len(FR_LIST)}, формулировки в PRD.\n", encoding="utf-8", newline="\n")
 
 
 def decisions():
@@ -631,87 +626,218 @@ graph TD
     path.write_text(text, encoding="utf-8", newline="\n")
 
 
-DOCS_DIR = ROOT / "docs" / "source"
-COPIED = ("docs/rnd", "docs/how", "docs/techspec", "docs/api", "docs/reviews", "docs/tasks", "docs/stories")
-SINGLE = ("docs/ROADMAP.md", "docs/BACKLOG.md", "docs/TASKS.md", "docs/TECHNOLOGIES.md", "docs/data-types.md", "docs/rnd-consequences.md", "docs/approvals.md", "architecture.md")
+OUT = "docs/source"
 
 
-def clean_document(text):
-    """Относительные ссылки исходного сайта становятся текстом, внешние остаются, коды заменяются новыми."""
-    text = re.sub(r"\[([^\]]+)\]\((?!https?:)[^)]*\)", r"\1", text)
+def component_doc(stem):
+    return stem if stem in COMPONENTS else SPEC_COMPONENT.get(stem)
+
+
+def plan_moves():
+    """Куда переезжает каждый документ: своё уходит в папку компонента, общее остаётся общим."""
+    moves = {}
+    base = "docs/architecture/components"
+    for folder, name in (("docs/how", "how"), ("docs/techspec", "techspec"), ("docs/reviews/findings", "findings")):
+        for path in sorted((SRC / folder).glob("*.md")):
+            owner = component_doc(path.stem)
+            target = f"{base}/{owner}/docs/{name}.md" if owner else f"{OUT}/{path.relative_to(SRC / 'docs').as_posix()}"
+            while target in moves.values():
+                target = target.replace(".md", f"-{path.stem}.md")
+            moves[f"{folder}/{path.name}"] = target
+    for path in SPECS:
+        for name in ("architecture.md", "interfaces.md"):
+            if (path.parent / name).exists():
+                rel = (path.parent / name).relative_to(SRC).as_posix()
+                moves[rel] = f"{base}/{SPEC_COMPONENT[path.parent.name]}/docs/{path.parent.name}-{name}"
+    for path in sorted((SRC / "docs/rnd").glob("*.md")):
+        moves[f"docs/rnd/{path.name}"] = f"docs/research/{path.name}"
+    for path in sorted((SRC / "docs/tasks").glob("*.md")):
+        moves[f"docs/tasks/{path.name}"] = f"{OUT}/tasks/{path.name}"
+    for path in sorted((SRC / "docs/reviews").glob("*.md")):
+        moves[f"docs/reviews/{path.name}"] = f"{OUT}/reviews/{path.name}"
+    moves["docs/stories/personas.md"] = f"{OUT}/personas.md"
+    for name in ("ROADMAP", "BACKLOG", "TASKS", "TECHNOLOGIES", "data-types", "rnd-consequences"):
+        moves[f"docs/{name}.md"] = f"{OUT}/{name}.md"
+    moves["architecture.md"] = f"{OUT}/architecture.md"
+    for change in ("define-agent-platform", "add-icplan-integration", "icplan-agent-autopickup"):
+        for name in ("design", "proposal", "tasks"):
+            if (SRC / f"openspec/changes/{change}/{name}.md").exists():
+                moves[f"openspec/changes/{change}/{name}.md"] = f"{OUT}/design/{change}/{name}.md"
+    return moves
+
+
+def normal(path):
+    parts = []
+    for part in pathlib.PurePosixPath(path).parts:
+        if part == ".." and parts:
+            parts.pop()
+        elif part != ".":
+            parts.append(part)
+    return "/".join(parts)
+
+
+def relative(target, start):
+    return pathlib.PurePosixPath(os.path.relpath(target, pathlib.PurePosixPath(start).parent)).as_posix()
+
+
+def clean_document(text, old, new, moves):
+    """Ссылка на перенесённый документ пересчитывается, ссылка на неперенесённое становится текстом."""
+    def link(match):
+        target = normal(pathlib.PurePosixPath(old).parent / match.group(2))
+        if target in moves:
+            report["ссылок между документами"] += 1
+            return f"[{match.group(1)}]({relative(moves[target], new)})"
+        return match.group(1)
+
+    text = re.sub(r"(?<!!)\[([^\]]+)\]\((?!https?:|mailto:|#)([^)#\s]+)(?:#[^)]*)?\)", link, text)
     text = re.sub(r"\bR-[A-Z]+-\d+\b", lambda m: CODES.get(m.group(0), m.group(0)), text)
     text = re.sub(r"(?<![\w-])D(\d{1,2})\b", r"AD-\1", text)
     return re.sub(r"\b[CD]:\\[^\s`|)]+(?: [^\s`|)]+)*", "локальный путь", text)
 
 
-def copy_document(source, target):
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(clean_document(source.read_text(encoding="utf-8")), encoding="utf-8", newline="\n")
-    report["документов перенесено"] += 1
+PARSED = ("| Параметр |", "| ID | Хранилище", "| ID | От → к", "| Отказ |")
+
+
+def strip_parsed(text):
+    """Таблицы, разобранные в YAML, из документа убираются: у факта один источник."""
+    lines, out, index = text.split("\n"), [], 0
+    while index < len(lines):
+        if lines[index].startswith(PARSED):
+            while index < len(lines) and lines[index].startswith("|"):
+                index += 1
+            out.append("Таблица перенесена в YAML компонента, см. страницу интеграций и реестры.")
+            continue
+        out.append(lines[index])
+        index += 1
+    return "\n".join(out)
+
+
+def link_sequences(text, owner):
+    """Диаграмма хранится объектом, в документе остаётся метка вставки."""
+    counter = iter(range(1, 100))
+    return re.sub(r"```mermaid\nsequenceDiagram.*?```", lambda m: f"{{{{seq:seq-{owner}-{next(counter)}}}}}", text, flags=re.S)
 
 
 def copy_documents():
-    for folder in COPIED:
-        for path in sorted((SRC / folder).rglob("*.md")):
-            copy_document(path, DOCS_DIR / path.relative_to(SRC / "docs"))
-    for name in SINGLE:
-        copy_document(SRC / name, DOCS_DIR / pathlib.Path(name).name)
+    moves = plan_moves()
+    for old, new in moves.items():
+        target = ROOT / new
+        target.parent.mkdir(parents=True, exist_ok=True)
+        body = clean_document((SRC / old).read_text(encoding="utf-8"), old, new, moves)
+        if new.endswith("interfaces.md"):
+            body = strip_parsed(body)
+        if old.startswith("docs/how/") and pathlib.PurePosixPath(old).stem in COMPONENTS:
+            body = link_sequences(body, pathlib.PurePosixPath(old).stem)
+        target.write_text(body, encoding="utf-8", newline="\n")
+        report["документов перенесено"] += 1
+    (ROOT / OUT / "costs.yaml").write_text((SRC / "data/costs.yaml").read_text(encoding="utf-8"), encoding="utf-8", newline="\n")
+    return moves
+
+
+def write_sequences():
+    """Диаграммы последовательности становятся объектами, чтобы их находили без чтения документов."""
+    sources = [(SRC / "architecture.md", None)] + [(SRC / f"docs/how/{key}.md", key) for key in COMPONENTS]
+    for path, owner in sources:
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for index, match in enumerate(re.finditer(r"```mermaid\n(sequenceDiagram.*?)```", text, re.S), 1):
+            headings = re.findall(r"^#{2,4} (.+)$", text[:match.start()], re.M)
+            title = clean(headings[-1]) if headings else "Сценарий"
+            key = f"seq-{owner or 'platform'}-{index}"
+            body = re.sub(r"\bR-[A-Z]+-\d+\b", lambda m: CODES.get(m.group(0), m.group(0)), match.group(1)).rstrip()
+            body = "\n".join(row if row.lstrip().startswith("%%") else row.replace(";", ",") for row in body.split("\n"))
+            rel = f"components/{owner}/sequences/{key}.yaml" if owner else f"sequences/{key}.yaml"
+            write(rel, {"id": key, "title": title, **({"component": owner} if owner else {}), "diagram": body})
+
+
+def write_endpoints():
+    """Эндпоинт это данные, а не текст: таблицы docs/api становятся endpoints.yaml компонента."""
+    tag = lambda value: re.sub(r"<[^>]+>", "", value or "").strip()
+    for key in COMPONENTS:
+        path = SRC / "docs" / "api" / f"{key}.md"
+        if not path.exists():
+            continue
+        source = path.read_text(encoding="utf-8")
+        rows = []
+        for section in re.split(r"^## ", source, flags=re.M)[1:]:
+            title, _, body = section.partition("\n")
+            for row in table_rows(body, "| Метод |"):
+                rows.append({"section": clean(title), "method": tag(row.get("Метод")), "path": plain(tag(row.get("Путь"))), "status": tag(row.get("Статус")), "does": line(tag(row.get("Что делает")), 240),
+                             "caller": line(tag(row.get("Кто вызывает")), 160), "stories": re.findall(r"US-[A-Z]+-\d+", row.get("Истории", "")),
+                             "reqs": [CODES[c] for c in re.findall(r"R-[A-Z]+-\d+", row.get("Требования", "")) if c in CODES], "via": re.findall(r"\bI\d+\b", row.get("I", ""))})
+        notes = [line(item, 300) for item in re.findall(r"^(?!#|\||←|>)(\S.+)$", source.split("## ")[0], re.M)]
+        if rows:
+            (ARCH / "components" / key / "endpoints.yaml").write_text(yaml.safe_dump({"notes": notes, "rows": rows}, allow_unicode=True, sort_keys=False, width=110), encoding="utf-8", newline="\n")
+            report["эндпоинтов"] += len(rows)
+
+
+def write_approvals():
+    """Подтверждения ролей остаются данными: из них считается полоска готовности."""
+    rows = collections.defaultdict(list)
     for path in SPECS:
-        for name in ("architecture.md", "interfaces.md", "traceability.md"):
-            if (path.parent / name).exists():
-                copy_document(path.parent / name, DOCS_DIR / "specs" / path.parent.name / name)
-    for change in ("define-agent-platform", "add-icplan-integration", "icplan-agent-autopickup"):
-        for name in ("design.md", "proposal.md", "tasks.md"):
-            path = SRC / "openspec/changes" / change / name
-            if path.exists():
-                copy_document(path, DOCS_DIR / "design" / change / name)
-    costs = SRC / "data" / "costs.yaml"
-    (DOCS_DIR / "costs.yaml").write_text(costs.read_text(encoding="utf-8"), encoding="utf-8", newline="\n")
+        file = path.parent / "approvals.md"
+        if not file.exists():
+            continue
+        for row in table_rows(file.read_text(encoding="utf-8"), "| Требование |"):
+            code = CODES.get(row.get("Требование"))
+            if code:
+                rows[SPEC_COMPONENT[path.parent.name]].append({"req": code, "role": row.get("Роль", ""), "kind": row.get("Тип", ""), "date": row.get("Дата", ""), "decision": row.get("Решение", "")})
+    for key, items in rows.items():
+        (ARCH / "components" / key / "approvals.yaml").write_text(yaml.safe_dump({"rows": items}, allow_unicode=True, sort_keys=False, width=110), encoding="utf-8", newline="\n")
+        report["подтверждений ролей"] += len(items)
 
 
-def heading(path):
-    found = re.search(r"^# (.+)$", path.read_text(encoding="utf-8"), re.M)
-    return clean(found.group(1))[:70] if found else path.stem
+def heading(rel):
+    found = re.search(r"^# (.+)$", (ROOT / rel).read_text(encoding="utf-8"), re.M)
+    return clean(found.group(1))[:70] if found else pathlib.PurePosixPath(rel).stem
 
 
-def doc_pages(folder, skip=()):
-    return [{"title": heading(p), "source": p.relative_to(ROOT).as_posix()} for p in sorted((DOCS_DIR / folder).glob("*.md")) if p.stem not in skip]
-
-
-def component_pages(key):
-    spec_names = [spec for spec, owner in SPEC_COMPONENT.items() if owner == key and spec in SPEC_DATA]
+def doc_pages(moves, prefix, key=None):
     pages = []
-    add = lambda title, rel: pages.append({"title": title, "source": rel.relative_to(ROOT).as_posix()}) if rel.exists() else None
-    add("Как работает", DOCS_DIR / "how" / f"{key}.md")
-    pages.append({"title": "User Stories", "view": f"stories:{key}"})
-    pages.append({"title": "Карточки блоков", "view": f"cards:{key}"})
-    for spec in spec_names:
-        suffix = f" ({spec})" if len(spec_names) > 1 else ""
-        add(f"Схема{suffix}", DOCS_DIR / "specs" / spec / "architecture.md")
-        add(f"Интерфейсы и отказы{suffix}", DOCS_DIR / "specs" / spec / "interfaces.md")
-    add("Техспека", DOCS_DIR / "techspec" / f"{key}.md")
-    add("API", DOCS_DIR / "api" / f"{key}.md")
-    add("Замечания", DOCS_DIR / "reviews" / "findings" / f"{key}.md")
+    for rel in sorted(v for v in moves.values() if v.startswith(prefix)):
+        page = {"title": heading(rel), "source": rel}
+        if key:
+            page["key"] = f"{key}:{pathlib.PurePosixPath(rel).name}"
+        pages.append(page)
     return pages
 
 
-def write_docmost():
-    views = [("Панель готовности", "readiness"), ("C1: система и окружение", "c1"), ("C2: контейнеры", "c2"), ("C3: блоки", "c3"), ("Как работает", "how"),
-             ("Данные", "data"), ("Реестры", "registers"), ("Матрица покрытия", "coverage")]
-    design = [{"title": heading(p), "source": p.relative_to(ROOT).as_posix()} for p in sorted((DOCS_DIR / "design").rglob("*.md"))]
-    documents = [{"title": "PRD", "source": f"_bmad-output/planning-artifacts/prds/prd-{NAME}-{DATE}/prd.md"},
-                 {"title": "Architecture Spine", "source": f"_bmad-output/planning-artifacts/architecture/architecture-{NAME}-{DATE}/ARCHITECTURE-SPINE.md"},
-                 {"title": "Эпики и истории", "source": "_bmad-output/planning-artifacts/epics.md"}, {"title": "Отчёт о переносе", "source": "docs/migration.md"},
-                 {"title": "Решения и замысел", "children": design}]
-    tree = [{"title": "Как читать проект", "source": "docs/index.md"}, {"title": "Обзор системы", "children": [{"title": t, "view": v} for t, v in views]},
-            {"title": "Компоненты", "children": [{"title": COMPONENTS[k]["name"], "children": component_pages(k)} for k in COMPONENTS]},
-            {"title": "R&D", "children": [*doc_pages("rnd"), {"title": "Последствия исследований", "source": "docs/source/rnd-consequences.md"}]},
-            {"title": "Планы и задачи", "children": [{"title": "ROADMAP", "source": "docs/source/ROADMAP.md"}, {"title": "Сводка задач", "source": "docs/source/TASKS.md"},
-                                                     {"title": "Бэклог", "source": "docs/source/BACKLOG.md"}, {"title": "Задачи", "children": doc_pages("tasks")}]},
-            {"title": "Справка", "children": [{"title": "Технологии", "source": "docs/source/TECHNOLOGIES.md"}, {"title": "Типы данных", "source": "docs/source/data-types.md"},
-                                              {"title": "Персоны", "source": "docs/source/stories/personas.md"}, {"title": "Покрытие историй", "source": "docs/source/stories/coverage.md"},
-                                              {"title": "Подтверждения ролей", "source": "docs/source/approvals.md"}, {"title": "Расходы", "source": "docs/source/costs.yaml"}]},
-            {"title": "Документы", "children": documents}]
+def component_pages(key, moves):
+    page = lambda title, tab, view=None, **extra: {"title": title, "key": f"{tab}:{key}", "component": key, **({"view": view} if view else {}), **extra}
+    pages = [page("User Stories", "stories", f"stories:{key}"), page("Интеграции", "integrations", f"integrations:{key}"), page("Спека", "reqs", f"spec:{key}"),
+             page("Трассировка", "trace", f"trace:{key}"), page("Блоки", "blocks", f"cards:{key}"), page("Данные и потоки", "datamodel", f"datamodel:{key}"), page("Сценарии", "sequences", f"sequences:{key}")]
+    folder = f"docs/architecture/components/{key}/docs"
+    for name, title, tab in (("how", "Как работает", "how"), ("techspec", "Deploy", "tech"), ("findings", "Замечания", "find")):
+        if f"{folder}/{name}.md" in moves.values():
+            pages.append(page(title, tab, source=f"{folder}/{name}.md"))
+    for rel in sorted(v for v in moves.values() if v.startswith(f"{folder}/")):
+        stem = pathlib.PurePosixPath(rel).stem
+        if stem.endswith("-architecture"):
+            pages.append({"title": f"Схема {stem.removesuffix('-architecture')}", "source": rel, "component": key})
+        elif stem.endswith("-interfaces"):
+            pages.append({"title": f"Конфигурация {stem.removesuffix('-interfaces')}", "source": rel, "component": key})
+    return pages
+
+
+def write_docmost(moves):
+    system = [("Панель готовности", "readiness"), ("C1: система и окружение", "c1"), ("C2: контейнеры", "c2"), ("C3: блоки", "c3"), ("Сквозные сценарии", "seqall"), ("Как работают процессы", "how"),
+              ("Потоки данных", "dfd"), ("Модель данных", "er"), ("Данные: кто пишет и читает", "data"), ("Решения", "decisions"), ("Реестры", "registers"), ("Матрица покрытия", "coverage")]
+    def single(title, rel):
+        return {"title": title, "source": rel}
+    tree = [{"title": "Карта платформы", "key": "home", "view": "home"},
+            {"title": "Компоненты", "children": [{"title": COMPONENTS[f]["name"], "key": f"comp:{f}", "component": f, "view": f"component:{f}", "children": component_pages(f, moves)} for f, _, _ in EPICS]},
+            {"title": "Система", "children": [*[{"title": t, "key": v, "view": v} for t, v in system],
+                                              {"title": "Типы данных", "key": "types", "view": "types",
+                                               "children": [{"title": name, "key": f"type:{name}", "view": f"type:{name}"} for name in sorted(units("models"))]}]},
+            {"title": "R&D", "children": [*doc_pages(moves, "docs/research/", "rnd"), single("Последствия исследований", f"{OUT}/rnd-consequences.md")]},
+            {"title": "Планы и задачи", "children": [single("ROADMAP", f"{OUT}/ROADMAP.md"), single("Сводка задач", f"{OUT}/TASKS.md"), single("Бэклог", f"{OUT}/BACKLOG.md"), {"title": "Задачи", "children": doc_pages(moves, f"{OUT}/tasks/")}]},
+            {"title": "Справка", "children": [single("Как читать проект", "docs/index.md"), single("Технологии", f"{OUT}/TECHNOLOGIES.md"), single("Типы данных", f"{OUT}/data-types.md"), single("Персоны", f"{OUT}/personas.md"),
+                                              single("Расходы", f"{OUT}/costs.yaml")]},
+            {"title": "Документы BMAD", "children": [single("PRD", f"_bmad-output/planning-artifacts/prds/prd-{NAME}-{DATE}/prd.md"),
+                                                     single("Architecture Spine", f"_bmad-output/planning-artifacts/architecture/architecture-{NAME}-{DATE}/ARCHITECTURE-SPINE.md"),
+                                                     single("Эпики и истории", "_bmad-output/planning-artifacts/epics.md"), single("Отчёт о переносе", "docs/migration.md"),
+                                                     {"title": "Решения и замысел", "children": doc_pages(moves, f"{OUT}/design/")}]}]
     config = {"url": "http://localhost:3100", "credentials": "../docmost-stack/admin-credentials.txt",
               "space": {"name": TITLE, "slug": "agent-tasktracker-max", "description": "Агентная платформа в новой структуре документации"}, "tree": tree}
     (ROOT / "docmost.yaml").write_text(yaml.safe_dump(config, allow_unicode=True, sort_keys=False), encoding="utf-8", newline="\n")
@@ -746,7 +872,8 @@ def write_map():
 - Сценарии качества выведены из требований о нагрузке, поле проверки нужно уточнить.
 - Домены отмечены по названиям решений.
 - Критерии историй приведены к Given, When, Then по стрелке в исходной строке.
-- Шаги процессов взяты из задач схем, входы шагов не заполнены.
+- Шаги процессов взяты из схем BPMN, входы шагов не заполнены.
+- Функции сейчас один к одному повторяют истории: другого источника функций в проекте нет. Их нужно схлопнуть при вычитке.
 
 Соответствие старых и новых кодов лежит в `docs/requirements-map.yaml`.
 """, encoding="utf-8", newline="\n")
@@ -762,7 +889,9 @@ def write_map():
 | Истории | Эпики |
 | Качество | `_quality/check-report.yaml` |
 | Что требует разбора | Отчёт о переносе |
-| Исследования, задачи, техспеки, API | `docs/source`, разделы R&D, Компоненты и Планы |
+| Всё по компоненту | `docs/architecture/components/<компонент>` |
+| Исследования | `docs/research` |
+| Планы, задачи, справка | `docs/source` |
 """, encoding="utf-8", newline="\n")
 
 
@@ -774,10 +903,12 @@ journeys = write_processes(names, models)
 write_quality(names)
 write_tasks()
 write_prd(journeys)
-write_epics()
 write_spine()
-copy_documents()
-write_docmost()
+write_sequences()
+write_endpoints()
+write_approvals()
+moves = copy_documents()
+write_docmost(moves)
 write_map()
 print(dict(report))
 print({k: len(v) for k, v in lost.items()})

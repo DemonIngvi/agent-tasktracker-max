@@ -1,0 +1,16 @@
+id: I11
+title: запись и чтение M3, контекст памяти
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: harness
+to: memory
+purpose: запись и чтение M3, контекст памяти
+integration_type: sync-api
+protocol: HTTP REST
+format: JSON `M3Record`, контекст
+auth: токен запуска
+timeout: 2 с
+retry: 2 раза
+idempotent: true
+mode: синхронно

@@ -9,9 +9,24 @@ sensitivity: internal
 attributes:
 - name: runId
   type: int
+  required: true
+  note: = `agent_run.id`
 - name: seq
   type: int
+  required: true
+  note: порядковый номер от Harness; ключ идемпотентности и порядка; Runner своих событий не нумерует, кроме `RUN_ERROR`
+    при сбое среды (`seq` = последний + 1)
 - name: at
   type: timestamp
+  required: true
+  note: время события в Harness, ISO 8601 UTC
 - name: event
   type: AgUiEvent
+  required: true
+  note: 'событие AG-UI как есть: `type` и поля протокола'
+source:
+  kind: ours
+  ref: ''
+  why: 'Конверт добавляет к событию AG-UI то, чего в протоколе нет: номер запуска, сквозной `seq` для порядка и
+    идемпотентности и время в Harness. Поля события не меняем — их понимает чат форка; единственное отличие в хранилище:
+    дельты сообщения собираются, и `*_END` несёт полный текст в `delta`.'

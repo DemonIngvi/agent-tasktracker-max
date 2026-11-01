@@ -1,0 +1,632 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> `https://<домен>/api` (api ICPlan, порт 3000)</div>
+- '<div><span class="about-label">Аутентификация</span> UI — сессия пользователя; агент и Runner — `Authorization:
+  Bearer <ключ агента>`</div>'
+- </div>
+rows:
+- section: Агенты
+  method: GET
+  path: /teams/:teamId/ai-agents
+  status: ✅ есть
+  does: список агентов команды
+  caller: Администратор (UI) · сессия
+  stories:
+  - US-ICP-20
+  reqs:
+  - FR-8
+  via:
+  - I20
+- section: Агенты
+  method: POST
+  path: /teams/:teamId/ai-agents
+  status: ✅ есть
+  does: создать агента (kind `external` для платформы); ключ показывается один раз
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-20
+  reqs:
+  - FR-54
+  - FR-1
+  via:
+  - I20
+- section: Агенты
+  method: PATCH
+  path: /teams/:teamId/ai-agents/:agentId
+  status: 🛠 доработка форка
+  does: 'изменить модель, инструкцию, триггеры; доработка — выключить / включить агента и судьба активных запусков
+    (`enabled`, `onDisable`: `finish` / `cancel`)'
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-21
+  - US-ICP-22
+  reqs:
+  - FR-55
+  - FR-11
+  via:
+  - I20
+- section: Агенты
+  method: DELETE
+  path: /teams/:teamId/ai-agents/:agentId
+  status: ✅ есть
+  does: удалить агента; шаги процессов становятся ручными
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-23
+  reqs:
+  - FR-195
+  via:
+  - I20
+- section: Агенты
+  method: PUT
+  path: /teams/:teamId/ai-agents/:agentId/projects
+  status: ✅ есть
+  does: проекты агента
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-20
+  reqs:
+  - FR-54
+  via:
+  - I20
+- section: Агенты
+  method: PUT
+  path: /teams/:teamId/ai-agents/:agentId/skills
+  status: ✅ есть
+  does: навыки агента (M5)
+  caller: Администратор · сессия
+  stories:
+  - US-MCP-04
+  reqs:
+  - FR-181
+  via:
+  - I20
+- section: Агенты
+  method: PUT
+  path: /teams/:teamId/ai-agents/:agentId/tool-configs
+  status: ✅ есть
+  does: тулы агента
+  caller: Администратор · сессия
+  stories:
+  - US-MCP-01
+  reqs:
+  - FR-177
+  via:
+  - I20
+- section: Агенты
+  method: POST
+  path: /teams/:teamId/ai-agents/:agentId/regenerate-key
+  status: ✅ есть
+  does: перевыпустить ключ агента (Runner)
+  caller: Администратор / безопасность · сессия
+  stories:
+  - US-INF-07
+  reqs:
+  - FR-166
+  via:
+  - I20
+- section: Агенты
+  method: GET
+  path: /teams/:teamId/ai-agents/:agentId/runs
+  status: ✅ есть
+  does: запуски агента
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-28
+  reqs:
+  - FR-152
+  via:
+  - I20
+- section: Протокол раннера
+  method: POST
+  path: /agent-runs/claim
+  status: ✅ есть
+  does: выдать следующий запуск агенту с арендой (`AGENT_RUN_LEASE_SECONDS`)
+  caller: Agent Runner · ключ агента
+  stories:
+  - US-ICP-07
+  - US-RUN-01
+  reqs:
+  - FR-2
+  - FR-3
+  - FR-198
+  via:
+  - I1
+- section: Протокол раннера
+  method: POST
+  path: /agent-runs/:runId/heartbeat
+  status: 🛠 доработка форка
+  does: 'продлить аренду; сейчас ответ 204 без тела, 404 — запуск не найден или уже завершён (отменён); доработка
+    — ответ `Heartbeat`: решения по approve и указания пользователя; отмена — по-прежнему 404 (единственный сигнал)'
+  caller: Agent Runner · ключ агента
+  stories:
+  - US-ICP-04
+  - US-ICP-14
+  - US-ICP-10
+  - US-HAR-06
+  reqs:
+  - FR-7
+  - FR-10
+  via:
+  - I3
+- section: Протокол раннера
+  method: POST
+  path: /agent-runs/:runId/events
+  status: 🆕 новое
+  does: 'события запуска для чата в задаче: `{events: RunEvent[]}` — события AG-UI, как у `POST /agent-chats/:messageId/events`
+    (AD-21)'
+  caller: Agent Runner · ключ агента
+  stories:
+  - US-ICP-02
+  - US-OBS-01
+  reqs:
+  - FR-4
+  - FR-146
+  via:
+  - I2
+- section: Протокол раннера
+  method: POST
+  path: /agent-runs/:runId/result
+  status: 🛠 доработка форка
+  does: 'итог запуска: статус, вывод, токены (M2); доработка — причина, артефакты, проверка по критериям, критерии
+    следующему шагу, стоимость'
+  caller: Agent Runner · ключ агента
+  stories:
+  - US-ICP-01
+  - US-MEM-02
+  reqs:
+  - FR-4
+  - FR-73
+  - FR-197
+  via:
+  - I2
+- section: Чат с агентом
+  method: POST
+  path: /projects/:projectKey/ai-agents/:agentId/chat
+  status: ✅ есть
+  does: сообщение агенту в чате (тред пользователь × агент)
+  caller: Пользователь / администратор · сессия
+  stories:
+  - US-ICP-10
+  - US-ICP-24
+  reqs:
+  - FR-12
+  via:
+  - I20
+- section: Чат с агентом
+  method: GET
+  path: /projects/:projectKey/ai-agents/:agentId/chat/:messageId/stream
+  status: ✅ есть
+  does: поток ответа агента
+  caller: UI · сессия
+  stories:
+  - US-ICP-10
+  reqs:
+  - FR-12
+  via:
+  - I20
+- section: Чат с агентом
+  method: POST
+  path: /projects/:projectKey/ai-agents/:agentId/chat/:messageId/cancel
+  status: ✅ есть
+  does: остановить ответ в чате
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-04
+  reqs:
+  - FR-7
+  via:
+  - I20
+- section: Чат с агентом
+  method: GET
+  path: /projects/:projectKey/ai-agents/:agentId/threads
+  status: ✅ есть
+  does: треды чата (M1)
+  caller: Пользователь · сессия
+  stories:
+  - US-MEM-06
+  reqs:
+  - FR-38
+  via:
+  - I20
+- section: Чат с агентом
+  method: POST
+  path: /agent-chats/claim
+  status: ✅ есть
+  does: Runner забирает сообщение чата
+  caller: Agent Runner · ключ агента
+  stories:
+  - US-ICP-24
+  reqs:
+  - FR-12
+  via:
+  - I1
+- section: Чат с агентом
+  method: POST
+  path: /agent-chats/:messageId/events
+  status: ✅ есть
+  does: шаги ответа в чате
+  caller: Agent Runner · ключ агента
+  stories:
+  - US-ICP-24
+  reqs:
+  - FR-12
+  via:
+  - I2
+- section: Чат с агентом
+  method: POST
+  path: /agent-chats/:messageId/result
+  status: ✅ есть
+  does: итог ответа в чате
+  caller: Agent Runner · ключ агента
+  stories:
+  - US-ICP-24
+  reqs:
+  - FR-12
+  via:
+  - I2
+- section: Задачи и поручение агенту
+  method: POST
+  path: /projects/:projectKey/issues
+  status: ✅ есть
+  does: создать задачу (тип = процесс → первый шаг)
+  caller: Пользователь, Telegram-бот, API · сессия / ключ
+  stories:
+  - US-ICP-01
+  reqs:
+  - FR-189
+  - FR-204
+  via:
+  - I20
+- section: Задачи и поручение агенту
+  method: PATCH
+  path: /issues/:issueId
+  status: 🛠 доработка форка
+  does: 'изменить задачу: колонка, делегат, исполнитель, приоритет; доработка — флаг `reviewWithMe` (проверять со
+    мной все шаги)'
+  caller: Пользователь; агент (без смены колонки в процессе) · сессия / ключ
+  stories:
+  - US-ICP-08
+  - US-ICP-17
+  - US-ICP-15
+  reqs:
+  - FR-191
+  - FR-204
+  - FR-182
+  - FR-199
+  via:
+  - I20
+- section: Задачи и поручение агенту
+  method: POST
+  path: /issues/:issueId/comments
+  status: ✅ есть
+  does: комментарий; `@агент` создаёт запуск
+  caller: Пользователь, агент · сессия / ключ
+  stories:
+  - US-ICP-09
+  - US-ICP-11
+  reqs:
+  - FR-204
+  via:
+  - I20
+- section: Задачи и поручение агенту
+  method: GET
+  path: /issues/:issueId/checklists
+  status: ✅ есть
+  does: чек-лист «Критерии приёмки» для quality gate
+  caller: Harness (через MCP) · ключ агента
+  stories:
+  - US-HAR-03
+  reqs:
+  - FR-26
+  via:
+  - I9
+- section: Задачи и поручение агенту
+  method: GET
+  path: /issues/:issueId/timeline
+  status: ✅ есть
+  does: 'история задачи: подхваты, переходы, итоги'
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-02
+  reqs:
+  - FR-194
+  via:
+  - I20
+- section: Задачи и поручение агенту
+  method: POST
+  path: /projects/:projectKey/ai-agents/:agentId/run
+  status: ✅ есть
+  does: ручной запуск агента
+  caller: Пользователь / администратор · сессия
+  stories:
+  - US-ICP-24
+  reqs:
+  - FR-12
+  via:
+  - I20
+- section: Ход задачи
+  method: GET
+  path: /agent-runs/:runId/stream
+  status: 🆕 новое
+  does: живой поток событий запуска (SSE, одно событие AG-UI в строке `data:`), как `…/chat/:messageId/stream` (AD-21)
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-02
+  reqs:
+  - FR-147
+  via:
+  - I20
+- section: Ход задачи
+  method: GET
+  path: /issues/:issueId/agent-feed
+  status: 🆕 новое
+  does: 'история чата запусков задачи по шагам процесса: запуски, сохранённые события, итоги (AD-21)'
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-02
+  - US-OBS-01
+  reqs:
+  - FR-147
+  via:
+  - I20
+- section: Ход задачи
+  method: POST
+  path: /issues/:issueId/agent-verdict
+  status: 🆕 новое
+  does: вердикт «принято / не выполнено» с заметкой
+  caller: Исполнитель, владелец процесса · сессия
+  stories:
+  - US-ICP-13
+  reqs:
+  - FR-200
+  via:
+  - I20
+- section: Ход задачи
+  method: POST
+  path: /issues/:issueId/process/pause · /resume
+  status: 🆕 новое
+  does: остановить / возобновить процесс по задаче
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-14
+  reqs:
+  - FR-201
+  via:
+  - I20
+- section: Ход задачи
+  method: POST
+  path: /issues/:issueId/process/retry
+  status: 🆕 новое
+  does: повторить шаг или начать с шага N (`fromStep`)
+  caller: Пользователь, владелец процесса · сессия
+  stories:
+  - US-ICP-16
+  reqs:
+  - FR-202
+  via:
+  - I20
+- section: Ход задачи
+  method: GET
+  path: /issues/:issueId/agent-status
+  status: 🆕 новое
+  does: место в очереди и причина ожидания
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-18
+  reqs:
+  - FR-198
+  - FR-194
+  via:
+  - I20
+- section: Ход задачи
+  method: POST
+  path: /agent-runs/:runId/decisions
+  status: 🆕 новое
+  does: 'решение пользователя: approve, reject или ответ на вопрос (`ApprovalDecision`)'
+  caller: Task UI · сессия
+  stories:
+  - US-ICP-11
+  reqs:
+  - FR-5
+  via:
+  - I20
+- section: Ход задачи
+  method: POST
+  path: /agent-runs/:runId/messages
+  status: 🆕 новое
+  does: указание пользователя активному запуску (`UserMessage`)
+  caller: Task UI · сессия
+  stories:
+  - US-ICP-10
+  reqs:
+  - FR-10
+  via:
+  - I20
+- section: Ход задачи
+  method: POST
+  path: /agent-runs/:runId/cancel
+  status: 🆕 новое
+  does: отменить запуск по задаче
+  caller: Task UI · сессия
+  stories:
+  - US-ICP-04
+  reqs:
+  - FR-7
+  via:
+  - I20
+- section: Ход задачи
+  method: GET
+  path: /issues/:issueId/costs
+  status: 🆕 новое
+  does: затраты задачи по агентам (`CostAggregate`)
+  caller: Task UI · сессия
+  stories:
+  - US-ICP-12
+  reqs:
+  - FR-150
+  via:
+  - I20
+- section: Процессы и автоматизация
+  method: GET
+  path: /projects/:projectKey/processes
+  status: 🆕 новое
+  does: процессы проекта по типам задач
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-05
+  reqs:
+  - FR-196
+  via:
+  - I20
+- section: Процессы и автоматизация
+  method: PUT
+  path: /projects/:projectKey/processes/:issueTypeId
+  status: 🆕 новое
+  does: создать / изменить процесс (новая версия; перенос задач при удалении шага)
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-05
+  - US-ICP-25
+  - US-ICP-26
+  reqs:
+  - FR-196
+  - FR-203
+  - FR-188
+  via:
+  - I20
+- section: Процессы и автоматизация
+  method: POST
+  path: /projects/:projectKey/columns
+  status: ✅ есть
+  does: колонка (шаг процесса)
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-05
+  reqs:
+  - FR-196
+  via:
+  - I20
+- section: Процессы и автоматизация
+  method: POST
+  path: /projects/:projectKey/issue-types
+  status: ✅ есть
+  does: тип задачи (тип процесса)
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-05
+  reqs:
+  - FR-189
+  via:
+  - I20
+- section: Процессы и автоматизация
+  method: POST
+  path: /projects/:projectKey/actions
+  status: 🛠 доработка форка
+  does: 'Действие: условие и эффект (частичная правка задачи); доработка — эффект «делегировать агенту» = ключ `delegateUserId`
+    в `effect`'
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-27
+  reqs:
+  - FR-190
+  via:
+  - I20
+- section: Процессы и автоматизация
+  method: POST
+  path: /projects/:projectKey/agent-schedules
+  status: ✅ есть
+  does: расписание агента
+  caller: Пользователь / администратор · сессия
+  stories:
+  - US-ICP-19
+  reqs:
+  - FR-204
+  via:
+  - I20
+- section: Сводка и статистика
+  method: GET
+  path: /projects/:projectKey/analytics/agent-run-stats
+  status: ✅ есть
+  does: статистика запусков агентов
+  caller: Администратор, владелец продукта · сессия
+  stories:
+  - US-ICP-28
+  - US-OBS-05
+  reqs:
+  - FR-152
+  via:
+  - I20
+- section: Сводка и статистика
+  method: GET
+  path: /projects/:projectKey/analytics/agent-runs
+  status: ✅ есть
+  does: запуски за период
+  caller: Администратор · сессия
+  stories:
+  - US-OBS-02
+  reqs:
+  - FR-152
+  via:
+  - I20
+- section: Сводка и статистика
+  method: GET
+  path: /projects/:projectKey/analytics/agent-workload
+  status: ✅ есть
+  does: загрузка агентов
+  caller: Администратор · сессия
+  stories:
+  - US-ICP-28
+  reqs:
+  - FR-152
+  via:
+  - I20
+- section: Сводка и статистика
+  method: GET
+  path: /me/agent-summary
+  status: 🆕 новое
+  does: 'мои задачи с агентами: в работе, в очереди, ждут меня, время, токены и $'
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-12
+  reqs:
+  - FR-152
+  via:
+  - I20
+- section: Уведомления, документы, MCP
+  method: GET
+  path: /notifications
+  status: ✅ есть
+  does: 'уведомления: вопрос агента, итог, ошибка шага'
+  caller: Пользователь · сессия
+  stories:
+  - US-ICP-03
+  reqs:
+  - FR-6
+  via:
+  - I20
+- section: Уведомления, документы, MCP
+  method: GET
+  path: /projects/:projectKey/documents/:documentId
+  status: ✅ есть
+  does: документ проекта (M6)
+  caller: Агент через MCP · ключ агента
+  stories:
+  - US-MEM-08
+  reqs:
+  - FR-36
+  via:
+  - I9
+- section: Уведомления, документы, MCP
+  method: POST
+  path: /mcp
+  status: ✅ есть
+  does: 'MCP `itsaplan-core`: REST ICPlan как тулы (путь вне OpenAPI, по коду форка)'
+  caller: MCP-прокси Agent Runner от имени Harness (AD-19) · ключ агента
+  stories:
+  - US-ICP-29
+  - US-HAR-01
+  reqs:
+  - FR-182
+  via:
+  - I24

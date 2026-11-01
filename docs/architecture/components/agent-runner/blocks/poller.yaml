@@ -1,0 +1,49 @@
+id: agent-runner-poller
+title: Poller
+kind: service
+does:
+- Опрашивает очередь ICPlan по ключу каждого обслуживаемого агента
+- Берёт запуск с арендой и создаёт у себя запись `run_id` в статусе `queued` (FR-66)
+- При ошибках ICPlan повторяет опрос с backoff до 60 с; активные запуски при этом продолжаются
+tech: Go, протокол раннера ICPlan @itsaplan/runner (D3, D8)
+stories:
+- '1.1'
+- '1.5'
+io:
+- dir: in
+  with: ICPlan Run Queue
+  what: выдача с арендой
+  via: I1
+- dir: out
+  with: Scheduler
+  what: '`Run` в статусе `queued`'
+data:
+- table: agent_run
+  access: read
+  why: '(`POST /agent-runs/claim`): таблица ICPlan, напрямую не читает'
+params:
+- poll_interval_ms
+- agents
+reqs:
+- FR-66
+- FR-2
+- FR-3
+- FR-9
+- FR-80
+- NFR-5
+- FR-79
+tasks:
+- '2.1'
+on_failure: 'ICPlan недоступен: опрос с backoff до 60 с, активные запуски продолжаются, события буферизуются (FMEA
+  «ICPlan недоступен», FR-80); Несовместимая версия протокола: Runner не берёт запуски; Ключ агента отклонён (401):
+  опрос этого агента не повторяется, событие с причиной (FR-79 «Аутентификация»); Runner упал после claim: аренда
+  истекает, ICPlan выдаёт запуск снова (FR-3 «Runner упал после получения»)'
+why: 'Pull-модель: ICPlan не нужно знать адрес Runner.'
+rnd: runner-and-scheduling.md
+operations:
+- name: POST /agent-runs/claim
+  caller: Poller раз в `poll_interval_ms` по каждому ключу из `agents`
+  via: I1
+- name: передать взятый запуск в Scheduler (статус `queued`)
+  caller: Poller
+  via: внутри

@@ -8,23 +8,54 @@ sensitivity: internal
 attributes:
 - name: apiVersion
   type: 'const: agent/v1'
+  required: true
+  note: версия формата
 - name: id
   type: string
+  required: true
+  note: имя агента (`username` в ICPlan)
 - name: version
   type: int
+  required: true
+  note: версия определения
 - name: model
   type: string
+  required: true
+  note: алиас LiteLLM
 - name: instructions
   type: string
+  required: true
+  note: инструкция агента
 - name: skills
   type: string[]
+  required: false
+  note: навыки
 - name: mcp
   type: '{server, tools[]}[]'
+  required: false
+  note: 'MCP-серверы и разрешённые тулы; источник — `project_resource` (`mcp`) и `access_policy` Platform module:
+    MCP-серверов агента в форке нет'
 - name: limits
   type: '{max_steps, timeout_s, max_tokens}'
+  required: false
+  note: параметры `limits.*`
 - name: approval
   type: '{tools[]}'
+  required: false
+  note: тулы с подтверждением
 - name: memory
   type: '{profile, read[], write[]}'
+  required: false
+  note: профиль памяти
 - name: sandbox
   type: '{profile}'
+  required: false
+  note: профиль среды
+source:
+  kind: ours
+  ref: FR-56, FR-99, задача 1.2
+  why: 'Файл для ревью и переноса агента между окружениями: снимок `ai_agent` (ICPlan) и `AgentSettings` (Platform
+    module), источник правды — они, файл только читается и импортируется. Агент в файле — `id` = `username`, потому
+    что числовой `agentId` в другом окружении другой. Имена — как у параметров конфигурации: YAML snake_case (`limits.max_steps`,
+    `memory.read` — уровни памяти M0–M6), единицы — суффиксом `_s`. Исключение — `apiVersion`: заголовок формата,
+    как в манифестах Kubernetes.'

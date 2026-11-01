@@ -1,0 +1,18 @@
+id: I18
+title: короткоживущие токены репозиториев
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: git-provider
+purpose: короткоживущие токены репозиториев
+integration_type: sync-api
+protocol: HTTPS REST (GitHub App / Gitea API)
+format: JSON
+auth: ключ приложения (Secret)
+timeout: 10 с
+retry: 2 раза
+idempotent: true
+mode: синхронно
+also:
+- sandbox

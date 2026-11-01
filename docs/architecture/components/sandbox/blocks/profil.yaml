@@ -1,0 +1,46 @@
+id: sandbox-profil
+title: Профиль
+kind: storage
+does:
+- Ограничивает ресурсы и права (G3)
+- Задаёт образ и runtime среды (runc; runsc — после проверки 2.2.8)
+- Отклоняет значения вне границ `resources` с именем параметра
+tech: Ограничения контейнера
+stories:
+- '11.1'
+- '11.3'
+io:
+- dir: in
+  with: Platform module
+  what: профиль агента через Runner (I4, `sandbox_profile`)
+  via: I4
+- dir: out
+  with: SandboxProvider
+  what: параметры создания среды
+data:
+- table: sandbox_profile
+  access: read
+  why: профиль среды агента (владелец — Platform module)
+- table: agent_settings
+  access: read
+  why: '`sandbox_profile_id` агента (владелец — Platform module)'
+params:
+- resources.cpu
+- resources.memory_mb
+- resources.disk_gb
+- image
+- runtime
+reqs:
+- FR-86
+- FR-90
+- FR-91
+tasks:
+- '2.2'
+on_failure: 'Профиль не найден: запуск отклоняется до создания контейнера; `runtime: runsc`, а на узле нет runsc:
+  запуск отклоняется с причиной «runtime недоступен»; Процесс превысил лимит RAM: контейнер останавливается, запуск
+  `failed` с причиной; Переполнен диск `/workspace`: запись отклоняется, агент получает ошибку'
+why: Агент не съест хост и не выйдет за границы.
+rnd: sandbox-isolation.md
+schema_ref: 'Таблица `sandbox_profile` (схема `platform`, владелец — Platform module): `image`, `runtime`, `cpu`,
+  `memory_mb`, `disk_gb`, `egress_allow`, `pool_size`. Изоляция контейнера — Deploy Sandbox: read-only rootfs, `no-new-privileges`,
+  drop ALL capabilities, seccomp RuntimeDefault.'

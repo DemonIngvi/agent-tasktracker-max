@@ -1,0 +1,80 @@
+id: mcp-tools-podklyuchenie-serverov-navykov-i-proverk
+title: Подключение серверов, навыков и проверка прав
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Нужен новый тул или навык
+actors:
+- administrator-bezopasnost
+inputs: []
+outputs: []
+journeys:
+- UJ-17
+component: mcp-tools
+stories:
+- US-MCP-01
+- US-MCP-04
+- US-MCP-05
+steps:
+- id: s
+  type: start
+  title: Нужен новый тул или навык
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: rg
+- id: rg
+  type: gateway
+  title: Сервер отвечает?
+  actor: agent-platform
+  lane: MCP / Tools
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: al
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: Ошибка регистрации
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: al
+  type: task
+  title: Allowlist тулов агенту, навыки
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts:
+  - набор тулов агента
+  - навыки
+  next:
+  - to: rv
+- id: rv
+  type: task
+  title: 'Проверка прав: агент × тулы'
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts:
+  - матрица агент × тулы
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Со следующего запуска
+  actor: agent-platform
+  lane: MCP / Tools
+  inputs: []
+  outputs: []
+  artifacts: []

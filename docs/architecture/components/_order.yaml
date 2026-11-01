@@ -1,0 +1,12 @@
+components:
+- agent-runner
+- guardrails
+- harness
+- icplan
+- infrastructure
+- llm-gateway
+- mcp-tools
+- memory
+- observability
+- platform-module
+- sandbox

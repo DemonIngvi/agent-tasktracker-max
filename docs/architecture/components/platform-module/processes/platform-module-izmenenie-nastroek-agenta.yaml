@@ -1,0 +1,111 @@
+id: platform-module-izmenenie-nastroek-agenta
+title: Изменение настроек агента
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Изменить настройки
+actors:
+- administrator
+- litellm-opa
+inputs: []
+outputs:
+- AgentSettings
+journeys:
+- UJ-21
+component: platform-module
+stories:
+- US-PM-01
+- US-PM-02
+- US-PM-04
+- US-PM-05
+- US-PM-06
+- US-PM-08
+steps:
+- id: s
+  type: start
+  title: Изменить настройки
+  actor: administrator
+  lane: Администратор
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: g1
+- id: g1
+  type: gateway
+  title: Значения верны?
+  actor: agent-platform
+  lane: Platform module
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t1
+    label: да
+  - to: x1
+    label: нет
+- id: x1
+  type: error
+  title: Ошибка поля
+  actor: administrator
+  lane: Администратор
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: t1
+  type: task
+  title: Новая версия
+  actor: agent-platform
+  lane: Platform module
+  inputs: []
+  outputs:
+  - AgentSettings
+  artifacts:
+  - AgentDefinition (версия)
+  - AgentSettings
+  next:
+  - to: t2
+- id: t2
+  type: task
+  title: Раздать настройки
+  actor: litellm-opa
+  lane: LiteLLM / OPA
+  inputs: []
+  outputs: []
+  artifacts:
+  - virtual key
+  - OPA bundle
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: Применено?
+  actor: litellm-opa
+  lane: LiteLLM / OPA
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: e1
+    label: да
+  - to: t3
+    label: нет
+- id: t3
+  type: task
+  title: «Не применено», повтор
+  actor: agent-platform
+  lane: Platform module
+  inputs: []
+  outputs: []
+  artifacts:
+  - событие «не применено»
+  next:
+  - to: t2
+- id: e1
+  type: end
+  title: Действует со след. запуска
+  actor: agent-platform
+  lane: Platform module
+  inputs: []
+  outputs: []
+  artifacts: []

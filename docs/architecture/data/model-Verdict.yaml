@@ -8,13 +8,29 @@ sensitivity: internal
 attributes:
 - name: issueId / stepId
   type: int / string
+  required: true
+  note: задача и шаг, по которому вердикт
 - name: runId
   type: int | null
+  required: false
+  note: запуск, чей итог оценивается; нет — ручной шаг
 - name: verdict
   type: 'enum: accepted · rejected'
+  required: true
+  note: '`accepted` → переход `onSuccess` шага, `rejected` → `onFailure`'
 - name: note
   type: string
+  required: false
+  note: заметка возврата; следующий запуск шага, на который вернули задачу, получает её в `RunBundle.task.returnNote`
 - name: by
   type: string
+  required: true
+  note: '`username` того, кто вынес вердикт'
 - name: criteria
   type: Criterion[]
+  required: false
+  note: критерии ревьюера при возврате
+source:
+  kind: ours
+  ref: ''
+  why: Вердикт шага из карточки итога; при возврате ревьюер может добавить критерии с происхождением `reviewer:<кто>`.

@@ -1,0 +1,104 @@
+id: llm-gateway-vyzov-modeli
+title: Вызов модели
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Вызов модели
+actors:
+- litellm
+- provayder-mock
+inputs: []
+outputs: []
+journeys:
+- UJ-14
+component: llm-gateway
+stories:
+- US-LLM-02
+- US-LLM-03
+- US-LLM-04
+steps:
+- id: s
+  type: start
+  title: Вызов модели
+  actor: agent-platform
+  lane: Harness
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: g1
+- id: g1
+  type: gateway
+  title: Ключ, бюджет, лимит?
+  actor: litellm
+  lane: LiteLLM
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t1
+    label: ок
+  - to: x1
+    label: превышен
+- id: x1
+  type: error
+  title: Отказ до траты
+  actor: agent-platform
+  lane: Harness
+  inputs: []
+  outputs: []
+  artifacts:
+  - ошибка лимита
+- id: t1
+  type: task
+  title: Основная модель
+  actor: provayder-mock
+  lane: Провайдер / mock
+  inputs: []
+  outputs: []
+  artifacts:
+  - запрос провайдеру
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: Успех?
+  actor: litellm
+  lane: LiteLLM
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t3
+    label: да
+  - to: t2
+    label: сбой
+- id: t2
+  type: task
+  title: Fallback-модель
+  actor: provayder-mock
+  lane: Провайдер / mock
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t3
+- id: t3
+  type: task
+  title: Учёт затрат
+  actor: litellm
+  lane: LiteLLM
+  inputs: []
+  outputs: []
+  artifacts:
+  - spend log
+  next:
+  - to: e1
+- id: e1
+  type: end
+  title: Ответ
+  actor: agent-platform
+  lane: Harness
+  inputs: []
+  outputs: []
+  artifacts: []

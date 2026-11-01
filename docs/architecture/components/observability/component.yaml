@@ -1,0 +1,19 @@
+id: observability
+title: Observability
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: События запуска → чат запуска в задаче, затраты. Langfuse и метрики — в бэклоге.
+purpose: 'Прозрачность: что агент делал по шагам и сколько это стоило.'
+does:
+- Пишет события каждого запуска
+- Строит чат запуска в задаче ICPlan
+- Считает затраты по запуску, задаче, агенту, модели
+- Хранит аудит guardrails
+- Удаляет старые события по сроку
+chain:
+- agent-runner
+- observability
+- icplan
+host: icplan

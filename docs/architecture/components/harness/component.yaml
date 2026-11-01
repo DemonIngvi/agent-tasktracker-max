@@ -1,0 +1,20 @@
+id: harness
+title: Harness
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Агентский цикл на LangGraph: контекст → LLM → тулы, hooks, пауза на approve, возобновление, стрим
+  шагов.'
+purpose: 'Агентский цикл: делает из модели агента и заставляет его работать по правилам платформы.'
+does:
+- 'Собирает агента из определения: промпт, навыки, тулы, лимиты'
+- Крутит цикл контекст → модель → тулы
+- Проверяет действия через hooks (G2)
+- Останавливается на approve и продолжает с того же шага
+- Соблюдает лимиты, сжимает историю, стримит шаги
+chain:
+- agent-runner
+- harness
+- llm-gateway
+host: sandbox

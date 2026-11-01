@@ -1,0 +1,13 @@
+id: seq-agent-runner-1
+title: С1. Запуск от очереди до итога
+component: agent-runner
+diagram: "sequenceDiagram\n  autonumber\n  participant IC as ICPlan\n  participant R as Agent Runner\n  participant\
+  \ G as Guardrails (OPA)\n  participant PM as Platform module\n  participant S as Sandbox\n  participant H as Harness\n\
+  \  Note over R,IC: Bearer API-ключ агента\n  R->>IC: POST /agent-runs/claim (I1)\n  IC-->>R: Run ↩\n  R->>R: слоты:\
+  \ queued → admitted\n  R->>G: PolicyInput G1 (I5)\n  G-->>R: PolicyDecision ↩\n  alt отказ G1\n    R->>IC: POST\
+  \ /agent-runs/:runId/result — failed (I2)\n  else допущен\n    Note over R,PM: сервисный токен, 404 — запуск не\
+  \ pending или агент не external\n    R->>PM: GET /platform/runs/:runId/agent (I4, D23)\n    PM-->>R: {version,\
+  \ definition: AgentDefinition, settings: AgentSettings} ↩\n    R->>S: контейнер из пула — SandboxClaim (I6)\n\
+  \    R->>H: RunBundle (I7)\n    loop шаги агента\n      H-->>R: RunEvent (I7)\n      R->>IC: POST /agent-runs/:runId/events\
+  \ (I2)\n    end\n    H-->>R: RunResult (I7)\n    R->>IC: POST /agent-runs/:runId/result (I2)\n    R->>S: уничтожить\
+  \ контейнер, долить пул (I6)\n  end"

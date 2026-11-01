@@ -1,0 +1,19 @@
+id: guardrails
+title: Guardrails
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Единая политика: Rego в git, данные в БД ICPlan, OPA для G1/G2; каждая точка включается в конфиге
+  деплоя.'
+purpose: 'Ограничения: что агенту можно и что нельзя — в четырёх точках, каждая включается отдельно.'
+does:
+- G1 — допуск и бюджет до запуска (Runner)
+- G2 — проверка каждого действия и approve (Harness)
+- G3 — изоляция сети, файлов, ресурсов (Sandbox)
+- G4 — проверка запросов к модели (LiteLLM)
+- OPA как движок, Rego в git, аудит каждого решения
+chain:
+- platform-module
+- guardrails
+- agent-runner

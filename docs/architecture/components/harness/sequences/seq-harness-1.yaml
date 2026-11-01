@@ -1,0 +1,11 @@
+id: seq-harness-1
+title: С1. Шаг цикла с вызовом тула
+component: harness
+diagram: "sequenceDiagram\n  autonumber\n  participant R as Agent Runner\n  participant H as Harness\n  participant\
+  \ M as Memory\n  participant L as LLM Gateway\n  participant G as Guardrails (OPA)\n  R->>H: RunBundle (I7)\n\
+  \  H->>M: контекст задачи (I11)\n  M-->>H: M3Record, итоги запусков ↩\n  loop пока модель просит тулы\n    H->>L:\
+  \ ChatCompletionRequest (I8)\n    L-->>H: ответ модели, tool_calls ↩\n    H->>G: PolicyInput G2 (I10)\n    G-->>H:\
+  \ PolicyDecision ↩\n    alt allow\n      H->>R: tools/call через MCP-прокси (I9)\n      R-->>H: результат тула\
+  \ ↩\n    else confirm\n      H-->>R: RunEvent approval_request (I7)\n      R-->>H: ApprovalDecision ↩ (I7)\n \
+  \   else deny\n      H->>H: отказ в контекст\n    end\n    H->>R: Checkpoint (I12)\n    H-->>R: RunEvent (I7)\n\
+  \  end\n  H-->>R: RunResult (I7)"

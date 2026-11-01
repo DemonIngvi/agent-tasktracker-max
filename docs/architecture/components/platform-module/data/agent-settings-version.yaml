@@ -1,0 +1,23 @@
+id: agent-settings-version
+title: Таблица agent_settings_version
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: agent_id
+  type: int
+  pk: true
+  fk: agent_settings
+- name: version
+  type: int
+  pk: true
+- name: data
+  type: jsonb
+- name: definition_hash
+  type: text
+- name: created_by
+  type: text
+- name: created_at
+  type: timestamptz

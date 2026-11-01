@@ -8,15 +8,33 @@ sensitivity: internal
 attributes:
 - name: model
   type: string
+  required: true
+  note: алиас из `model_list`
 - name: messages
   type: '{role, content}[]'
+  required: true
+  note: слои промпта
 - name: tools
   type: '{type, function: {name, parameters}}[]'
+  required: false
 - name: tool_choice / parallel_tool_calls
   type: enum / bool
+  required: false
+  note: 'Harness: `auto`, без параллельных вызовов'
 - name: temperature / max_tokens / reasoning_effort
   type: number / enum
+  required: false
+  note: '`model.*`; неподдерживаемое отбрасывает `drop_params`'
 - name: metadata
   type: '{run_id, issue_key, agent}'
+  required: true
+  note: 'наши ключи для атрибуции затрат (FR-136): `run_id` = `Run.id`, `issue_key` = `issueIdentifier`, `agent`
+    = `username`'
 - name: stream
   type: bool
+  required: false
+source:
+  kind: ext
+  ref: https://platform.openai.com/docs/api-reference/chat/create
+  why: Стандартный запрос OpenAI Chat Completions, который LiteLLM принимает для любого провайдера. `metadata` —
+    наши ключи для атрибуции затрат; их имена в стиле LiteLLM, потому что они попадают в его журнал затрат.

@@ -8,23 +8,52 @@ sensitivity: internal
 attributes:
 - name: issueId
   type: int
+  required: true
+  note: задача, = `issue.id`; ключ записи — (задача, область)
 - name: scope
   type: 'enum: issue · agent · project · team'
+  required: true
+  note: 'кто видит запись (FR-37): агенты этой задачи, этот агент в других задачах, проект, команда'
 - name: agentId
   type: int
+  required: true
+  note: автор записи
 - name: done
   type: string[]
+  required: true
+  note: сделано
 - name: next
   type: string[]
+  required: true
+  note: дальше
 - name: blockers
   type: string[]
+  required: false
+  note: что мешает продолжить
 - name: artifacts
   type: '{path, ref}[]'
+  required: false
+  note: 'артефакты: путь и ветка@коммит'
 - name: questions
   type: string[]
+  required: false
+  note: открытые вопросы
 - name: criteriaNext
   type: Criterion[]
+  required: false
+  note: критерии, предложенные следующему шагу
 - name: notesFor
   type: '{step, text}[]'
+  required: false
+  note: 'заметки к исходу: адресат (`step` — шаг процесса или он же, себе) и текст; следующий запуск этого шага
+    получает заметку в контексте (FR-205, AD-27)'
 - name: version
   type: int
+  required: true
+  note: версия записи для конкурентной записи
+source:
+  kind: ours
+  ref: ''
+  why: 'M3 — память состояния задачи и передача между шагами: «сделано / дальше / блокеры» и ссылки на артефакты
+    вместо содержимого. Harness пишет её в Memory API (отдельный сервис платформы) по токену запуска, а не в БД;
+    Memory API хранит её в `memory_m3` по ключу (задача, область), `version` защищает от одновременной записи.'

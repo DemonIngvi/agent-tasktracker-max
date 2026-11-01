@@ -1,0 +1,50 @@
+id: platform-module-profili-pamyati
+title: Профили памяти
+kind: service
+does:
+- Какие уровни памяти агент читает и пишет, сколько хранить; для M1 и M2 срок — фильтр чтения, строки форка удаляет
+  ICPlan (AD-25)
+tech: Профили Memory
+stories:
+- '10.1'
+io:
+- dir: in
+  with: ICPlan UI
+  what: профили памяти и выбор профиля агента
+  via: I20
+- dir: out
+  with: Agent Runner
+  what: профиль памяти агента в настройках запуска
+  via: I4
+data:
+- table: memory_profile
+  access: read-write
+  why: уровни чтения и записи, сроки
+- table: agent_settings
+  access: read-write
+  why: '`memory_profile_id` агента'
+params:
+- memory_profile.read
+- memory_profile.write
+- memory.m2_last_runs
+- memory.retention
+reqs:
+- FR-95
+- FR-97
+tasks:
+- '4.4'
+on_failure: 'Недопустимое значение профиля: 400 с названием поля; Удаление профиля, который используется,: 409,
+  в ответе агенты с этим профилем (`agent_settings.memory_profile_id`); Смена профиля во время запуска: активный
+  запуск идёт по прежнему'
+why: Баланс преемственности и токенов на агента.
+rnd: memory-model.md
+operations:
+- name: '`GET /platform/memory-profiles`, `PUT`, `DELETE /platform/memory-profiles/:name` — профили'
+  caller: Владелец экземпляра
+  via: I20
+- name: Профиль агента — `memory_profile` в настройках агента
+  caller: Администратор
+  via: I20
+- name: Отдать профиль запуска
+  caller: Agent Runner
+  via: I4

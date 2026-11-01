@@ -1,0 +1,28 @@
+id: issue-process-state
+title: Таблица issue_process_state
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+class: master
+sensitivity: internal
+attributes:
+- name: issue_id
+  type: int
+  pk: true
+  fk: issue
+- name: process_id
+  type: int
+  fk: process
+- name: process_version
+  type: int
+- name: step_id
+  type: int
+  fk: process_step
+- name: runs_on_step
+  type: int
+- name: state
+  type: text
+- name: last_verdict
+  type: text
+- name: updated_at
+  type: timestamptz

@@ -8,6 +8,7 @@ sensitivity: internal
 attributes:
 - name: request_id
   type: String
+  pk: true
 - name: api_key
   type: String
 - name: model

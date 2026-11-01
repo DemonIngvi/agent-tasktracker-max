@@ -1,0 +1,12 @@
+id: seq-platform-1
+title: С1. Сквозной поток MVP
+diagram: "sequenceDiagram\n  autonumber\n  actor U as Пользователь\n  participant IC as ICPlan\n  participant R\
+  \ as Agent Runner\n  participant G as Guardrails\n  participant H as Sandbox + Harness\n  participant L as LLM\
+  \ Gateway\n  participant M as MCP / Memory\n  U->>IC: двигает задачу\n  IC->>IC: агент шага — делегат, запуск\
+  \ в очередь\n  R->>IC: POST /agent-runs/claim (I1)\n  IC-->>R: Run ↩\n  R->>G: PolicyInput G1 (I5)\n  G-->>R:\
+  \ PolicyDecision ↩\n  R->>H: среда из пула, RunBundle (I6, I7)\n  loop шаги агента\n    H->>L: ChatCompletionRequest\
+  \ (I8)\n    L-->>H: ответ модели ↩\n    H->>M: тулы через MCP-прокси Runner, память (I9, I11)\n    H-->>R: RunEvent\
+  \ (I7)\n    R->>IC: события в чат запуска (I2)\n  end\n  opt нужно подтверждение\n    U->>IC: approve\n    IC-->>R:\
+  \ ApprovalDecision в ответе heartbeat ↩ (I3)\n    R->>H: ApprovalDecision (I7)\n  end\n  H-->>R: RunResult (I7)\n\
+  \  R->>IC: итог запуска (I2)\n  R->>H: уничтожить среду (I6)\n  IC->>IC: переход по итогу запуска (D17) — следующий\
+  \ шаг"

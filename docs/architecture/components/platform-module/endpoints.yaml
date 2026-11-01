@@ -1,0 +1,319 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> `/api/platform` (в api форка ICPlan)</div>
+- <div><span class="about-label">Аутентификация</span> UI — сессия администратора; Runner — сервисный токен</div>
+- </div>
+rows:
+- section: Настройки агента
+  method: GET
+  path: /platform/agents/:agentId/settings
+  status: 🆕 новое
+  does: бюджеты, профили, автономия, данные guardrails
+  caller: Администратор, Runner (I4) · сессия / сервисный токен
+  stories:
+  - US-PM-01
+  reqs:
+  - FR-95
+  - FR-100
+  via:
+  - I4
+- section: Настройки агента
+  method: PATCH
+  path: /platform/agents/:agentId/settings
+  status: 🆕 новое
+  does: изменить настройки (со следующего запуска)
+  caller: Администратор · сессия
+  stories:
+  - US-PM-01
+  - US-PM-02
+  - US-PM-05
+  reqs:
+  - FR-95
+  - FR-97
+  - FR-117
+  via:
+  - I20
+- section: Настройки агента
+  method: GET
+  path: /platform/agents/:agentId/export
+  status: 🆕 новое
+  does: экспорт определения в YAML
+  caller: Администратор · сессия
+  stories:
+  - US-PM-03
+  reqs:
+  - FR-99
+  via:
+  - I20
+- section: Настройки агента
+  method: POST
+  path: /platform/agents/import
+  status: 🆕 новое
+  does: импорт YAML (новая версия)
+  caller: Администратор · сессия
+  stories:
+  - US-PM-03
+  reqs:
+  - FR-99
+  via:
+  - I20
+- section: Настройки агента
+  method: GET
+  path: /platform/agents/:agentId/settings/versions
+  status: 🆕 новое
+  does: 'история настроек: версия, кто, когда'
+  caller: Администратор · сессия (карточка агента → «Платформа», AD-24)
+  stories:
+  - US-PM-02
+  reqs:
+  - FR-98
+  via:
+  - I20
+- section: Настройки агента
+  method: POST
+  path: /platform/agents/:agentId/settings/rollback
+  status: 🆕 новое
+  does: 'откат к версии: новая версия с её содержимым, со следующего запуска'
+  caller: Администратор · сессия, право `ai_agents`
+  stories:
+  - US-PM-02
+  reqs:
+  - FR-98
+  - FR-101
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: GET
+  path: /platform/sandbox-profiles
+  status: 🆕 новое
+  does: профили среды (`sandbox_profile`)
+  caller: Администратор · сессия
+  stories:
+  - US-PM-01
+  reqs:
+  - FR-86
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: PUT
+  path: /platform/sandbox-profiles/:name
+  status: 🆕 новое
+  does: создать или изменить профиль среды
+  caller: Владелец экземпляра · сессия (God mode → «Платформа», AD-24)
+  stories:
+  - US-PM-01
+  reqs:
+  - FR-86
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: DELETE
+  path: /platform/sandbox-profiles/:name
+  status: 🆕 новое
+  does: удалить профиль среды; запрещено, пока профиль используется
+  caller: Владелец экземпляра · сессия (God mode → «Платформа», AD-24)
+  stories:
+  - US-PM-01
+  reqs:
+  - FR-86
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: GET
+  path: /platform/memory-profiles
+  status: 🆕 новое
+  does: профили памяти (`memory_profile`)
+  caller: Администратор · сессия
+  stories:
+  - US-MEM-04
+  reqs:
+  - FR-48
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: PUT
+  path: /platform/memory-profiles/:name
+  status: 🆕 новое
+  does: создать или изменить профиль памяти
+  caller: Владелец экземпляра · сессия (God mode → «Платформа», AD-24)
+  stories:
+  - US-MEM-04
+  reqs:
+  - FR-48
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: DELETE
+  path: /platform/memory-profiles/:name
+  status: 🆕 новое
+  does: удалить профиль памяти; запрещено, пока профиль используется
+  caller: Владелец экземпляра · сессия (God mode → «Платформа», AD-24)
+  stories:
+  - US-MEM-04
+  reqs:
+  - FR-48
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: GET
+  path: /platform/kill-switch
+  status: 🆕 новое
+  does: 'состояние аварийной остановки: `platform`, `agent:`'
+  caller: Администратор, эксплуатация · сессия / сервисный токен
+  stories:
+  - US-GRD-04
+  reqs:
+  - FR-124
+  via:
+  - I20
+- section: 'Экземпляр: профили и kill switch'
+  method: PUT
+  path: /platform/kill-switch/:scope
+  status: 🆕 новое
+  does: включить или выключить kill switch агента или платформы, сразу
+  caller: '`agent:` — администратор (право `ai_agents`), `platform` — владелец экземпляра; эксплуатация · сервисный
+    токен (AD-24)'
+  stories:
+  - US-GRD-04
+  reqs:
+  - FR-124
+  - FR-97
+  via:
+  - I20
+- section: Проект
+  method: GET
+  path: /platform/projects/:projectKey
+  status: 🆕 новое
+  does: 'настройки проекта для экрана «Платформа: проект»: руководство, месячный бюджет, шаг подготовки (`project_platform`)'
+  caller: Администратор · сессия, право `ai_agents`
+  stories:
+  - US-PM-08
+  - US-PM-06
+  reqs:
+  - FR-102
+  via:
+  - I20
+- section: Проект
+  method: PUT
+  path: /platform/projects/:projectKey/guidance
+  status: 🆕 новое
+  does: руководство проекта для агентов
+  caller: Администратор · сессия
+  stories:
+  - US-PM-08
+  reqs:
+  - FR-102
+  via:
+  - I20
+- section: Проект
+  method: PUT
+  path: /platform/projects/:projectKey/budget
+  status: 🆕 новое
+  does: бюджет проекта
+  caller: Администратор · сессия
+  stories:
+  - US-PM-06
+  reqs:
+  - FR-120
+  via:
+  - I20
+- section: Проект
+  method: GET
+  path: /platform/projects/:projectKey/access
+  status: 🆕 новое
+  does: политика доступа агент × ресурс × право
+  caller: Администратор, безопасность · сессия
+  stories:
+  - US-SBX-06
+  reqs:
+  - FR-76
+  via:
+  - I20
+- section: Проект
+  method: PUT
+  path: /platform/projects/:projectKey/access
+  status: 🆕 новое
+  does: изменить политику доступа
+  caller: Администратор · сессия
+  stories:
+  - US-SBX-06
+  reqs:
+  - FR-76
+  via:
+  - I20
+- section: Проект
+  method: GET
+  path: /platform/projects/:projectKey/resources
+  status: 🆕 новое
+  does: 'ресурсы проекта: git, папки, документы, MCP (`project_resource`)'
+  caller: Администратор · сессия
+  stories:
+  - US-SBX-06
+  reqs:
+  - FR-76
+  via:
+  - I20
+- section: Проект
+  method: PUT
+  path: /platform/projects/:projectKey/resources
+  status: 🆕 новое
+  does: изменить ресурсы проекта
+  caller: Администратор · сессия, право `ai_agents` (Проект → ИИ-команда → «Платформа», AD-24)
+  stories:
+  - US-SBX-06
+  reqs:
+  - FR-76
+  via:
+  - I20
+- section: Проект
+  method: PUT
+  path: /platform/projects/:projectKey/setup
+  status: 🆕 новое
+  does: 'шаг подготовки проекта: скрипт и lock-файлы (AD-19)'
+  caller: Администратор · сессия, право `ai_agents`
+  stories:
+  - US-SBX-06
+  reqs:
+  - FR-89
+  via:
+  - I20
+- section: Для Runner и журнал
+  method: GET
+  path: /platform/runs/:runId/manifest
+  status: 🆕 новое
+  does: манифест рабочего пространства запуска
+  caller: Agent Runner · сервисный токен
+  stories:
+  - US-SBX-05
+  reqs:
+  - FR-76
+  via:
+  - I4
+- section: Для Runner и журнал
+  method: GET
+  path: /platform/runs/:runId/agent
+  status: 🆕 новое
+  does: 'определение и настройки версии запуска одним ответом: `{version, definition, settings}`; версия закрепляется
+    в `agent_run.agent_version` при первом вызове; 404 — запуск не `pending` или агент не `external`, 409 — версии
+    нет (AD-23)'
+  caller: Agent Runner · сервисный токен
+  stories:
+  - US-MEM-07
+  reqs:
+  - FR-54
+  - FR-55
+  - FR-97
+  via:
+  - I4
+- section: Для Runner и журнал
+  method: GET
+  path: /platform/audit
+  status: 🆕 новое
+  does: журнал изменений настроек и политик
+  caller: Безопасность (право чтения), владелец экземпляра (God mode → «Платформа», AD-24) · сессия
+  stories:
+  - US-PM-07
+  reqs:
+  - FR-101
+  via:
+  - I20

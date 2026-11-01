@@ -8,13 +8,30 @@ sensitivity: internal
 attributes:
 - name: agents.<id>.tools_allow
   type: string[]
+  required: true
+  note: '`<id>` — `agentId`'
 - name: agents.<id>.approval
   type: string[]
+  required: true
+  note: тулы с паузой
 - name: agents.<id>.autonomy
   type: 'enum: R0–R5'
+  required: true
 - name: agents.<id>.budget
   type: '{run_usd, day_usd}'
+  required: true
+  note: лимиты $ = `AgentSettings.budget`
 - name: projects.<id>.budget.month_usd
   type: number
+  required: false
+  note: лимит проекта на месяц = `project_platform.budget_month_usd`
 - name: platform.kill_switch
   type: bool
+  required: true
+  note: аварийная остановка всех агентов
+source:
+  kind: ours
+  ref: ''
+  why: 'Данные, которые Platform module кладёт в бандл OPA рядом с правилами Rego: что разрешено агенту, где нужна
+    пауза, бюджет и аварийный выключатель. Это выгрузка параметров конфигурации как есть, поэтому имена — как у
+    параметров (`guardrails.tools_allow`, `kill_switch`): их и читают правила Rego.'

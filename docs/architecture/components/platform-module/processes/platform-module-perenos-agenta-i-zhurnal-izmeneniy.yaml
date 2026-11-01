@@ -1,0 +1,89 @@
+id: platform-module-perenos-agenta-i-zhurnal-izmeneniy
+title: Перенос агента и журнал изменений
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Перенести агента
+actors:
+- administrator-bezopasnost
+inputs: []
+outputs: []
+journeys:
+- UJ-22
+component: platform-module
+stories:
+- US-PM-03
+- US-PM-07
+steps:
+- id: s
+  type: start
+  title: Перенести агента
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: ex
+- id: ex
+  type: task
+  title: Экспорт YAML
+  actor: agent-platform
+  lane: Platform module
+  inputs: []
+  outputs: []
+  artifacts:
+  - YAML агента
+  next:
+  - to: im
+- id: im
+  type: gateway
+  title: 'Импорт: связи верны?'
+  actor: agent-platform
+  lane: Platform module
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: vr
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: Ошибка по полю
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: vr
+  type: task
+  title: Новая версия, журнал
+  actor: agent-platform
+  lane: Platform module
+  inputs: []
+  outputs: []
+  artifacts:
+  - версия определения
+  - запись журнала
+  next:
+  - to: au
+- id: au
+  type: task
+  title: Просмотр журнала изменений
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Изменения видны
+  actor: administrator-bezopasnost
+  lane: Администратор / Безопасность
+  inputs: []
+  outputs: []
+  artifacts: []

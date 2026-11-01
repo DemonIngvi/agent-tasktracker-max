@@ -1,0 +1,105 @@
+id: observability-razbor-zadachi-trassa-polza-agentov
+title: Разбор задачи, трасса, польза агентов
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Вопрос о работе агентов
+actors:
+- administrator-ekspluatatsiya-vladelets-produkta
+inputs: []
+outputs: []
+journeys:
+- UJ-20
+component: observability
+stories:
+- US-OBS-02
+- US-OBS-04
+- US-OBS-05
+steps:
+- id: s
+  type: start
+  title: Вопрос о работе агентов
+  actor: administrator-ekspluatatsiya-vladelets-produkta
+  lane: Администратор / Эксплуатация / Владелец продукта
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Что нужно?
+  actor: administrator-ekspluatatsiya-vladelets-produkta
+  lane: Администратор / Эксплуатация / Владелец продукта
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: rn
+    label: разбор задачи
+  - to: tr
+    label: сбой
+  - to: pv
+    label: польза
+- id: rn
+  type: task
+  title: Запуски, версии, итоги
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts:
+  - список запусков
+  next:
+  - to: g2
+- id: tr
+  type: task
+  title: Трасса Runner → Harness → LiteLLM
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts:
+  - трасса
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: События ещё хранятся?
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: e
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: 'Срок `retention_days` истёк: события удалены, остались агрегаты затрат'
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: pv
+  type: task
+  title: Закрыто, возвраты, затраты
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts:
+  - отчёт
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Ответ получен
+  actor: administrator-ekspluatatsiya-vladelets-produkta
+  lane: Администратор / Эксплуатация / Владелец продукта
+  inputs: []
+  outputs: []
+  artifacts: []

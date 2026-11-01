@@ -1,0 +1,115 @@
+id: sandbox-rabochee-prostranstvo-i-repozitorii
+title: Рабочее пространство и репозитории
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Политика доступа
+actors:
+- administrator
+- agent
+inputs: []
+outputs: []
+journeys:
+- UJ-24
+component: sandbox
+stories:
+- US-SBX-02
+- US-SBX-04
+- US-SBX-05
+- US-SBX-06
+- US-SBX-07
+steps:
+- id: s
+  type: start
+  title: Политика доступа
+  actor: administrator
+  lane: Администратор
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: pl
+- id: pl
+  type: task
+  title: Агент × ресурс × право
+  actor: administrator
+  lane: Администратор
+  inputs: []
+  outputs: []
+  artifacts:
+  - политика доступа (📌 ОВ-WS)
+  next:
+  - to: mf
+- id: mf
+  type: task
+  title: Манифест workspace запуска
+  actor: agent-platform
+  lane: Sandbox
+  inputs: []
+  outputs: []
+  artifacts:
+  - манифест workspace
+  next:
+  - to: g
+- id: g
+  type: gateway
+  title: Право есть?
+  actor: agent-platform
+  lane: Sandbox
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: cl
+    label: да
+  - to: x
+    label: нет
+- id: x
+  type: error
+  title: Отказ с причиной
+  actor: agent-platform
+  lane: Sandbox
+  inputs: []
+  outputs: []
+  artifacts: []
+- id: cl
+  type: task
+  title: Клон, чтение прошлых шагов
+  actor: agent
+  lane: Агент
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: wr
+- id: wr
+  type: task
+  title: Запись в свою подпапку / ветку
+  actor: agent
+  lane: Агент
+  inputs: []
+  outputs: []
+  artifacts:
+  - артефакты шага
+  next:
+  - to: pb
+- id: pb
+  type: task
+  title: Вложения и PR в задаче
+  actor: icplan
+  lane: ICPlan
+  inputs: []
+  outputs: []
+  artifacts:
+  - вложения
+  - PR
+  next:
+  - to: e
+- id: e
+  type: end
+  title: Результат доступен
+  actor: icplan
+  lane: ICPlan
+  inputs: []
+  outputs: []
+  artifacts: []

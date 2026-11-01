@@ -8,23 +8,56 @@ sensitivity: internal
 attributes:
 - name: id
   type: int
+  required: true
+  note: '`agent_run.id`'
 - name: trigger
   type: 'enum: mention · delegation · field · schedule · manual · process_step'
+  required: true
+  note: 'что создало запуск: упоминание агента в комментарии, назначение делегатом, изменение поля задачи, расписание,
+    ручной запуск; `process_step` — шаг процесса'
 - name: prompt
   type: string
+  required: true
+  note: задание, собранное ICPlan
 - name: systemPrompt
   type: string
+  required: true
+  note: правила самого запуска от ICPlan
 - name: attempts
   type: int
+  required: true
+  note: 'сколько раз запуск уже выдавался: аренда `AGENT_RUN_LEASE_SECONDS` = 300 с, Runner продлевает её heartbeat-ом
+    (I3); не продлил — запуск выдаётся снова; после `AGENT_RUN_MAX_ATTEMPTS` = 3 выдач без …'
 - name: issueId
   type: int | null
+  required: true
+  note: задача; `null` — запуск без задачи (расписание)
 - name: issueIdentifier
   type: string | null
+  required: true
+  note: читаемый ключ задачи, `MKT-42`
 - name: rule
   type: '{process, stepId}'
+  required: false
+  note: 'шаг процесса, создавший запуск, при `trigger = process_step` (AD-17): `process` — название типа задачи
+    (= процесса), `stepId` — `ProcessStep.id`; иначе поля нет'
 - name: parentRunId
   type: int | null
+  required: false
+  note: 'запуск, после которого создан этот (возврат, повтор шага): по цепочке `parentRunId` считаются круги и стоимость
+    на принятую задачу (FR-152); у первого запуска `null`'
 - name: startReason
   type: 'enum: first · return · retry · manual'
+  required: false
+  note: 'причина запуска: первый вход в шаг, возврат по переходу (FR-205), повтор шага (FR-202), ручной запуск'
 - name: settingsVersionId
   type: int | null
+  required: false
+  note: 'версия настроек агента, на которой запускать (FR-55): `null` — последняя на старте; несуществующая — запуск
+    отклоняется с ошибкой версии; пишется в `agent_run.agent_version`'
+source:
+  kind: fork
+  ref: POST /agent-runs/claim
+  why: 'Это ответ форка любому внешнему раннеру: так ICPlan уже выдаёт запуски. `prompt` и `systemPrompt` разделены,
+    потому что раннер передаёт первое как задание, второе — как системные правила. Мы добавляем только `rule` —
+    какой шаг процесса создал запуск (AD-17): по нему Runner берёт критерии шага, а лента задачи — разделитель шага.'

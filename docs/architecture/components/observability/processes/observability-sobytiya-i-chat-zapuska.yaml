@@ -1,0 +1,118 @@
+id: observability-sobytiya-i-chat-zapuska
+title: События и чат запуска
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+trigger: Шаг запуска
+actors:
+- harness-runner
+- polzovatel
+inputs: []
+outputs:
+- RunEvent
+journeys:
+- UJ-19
+component: observability
+stories:
+- US-OBS-01
+- US-OBS-03
+steps:
+- id: s
+  type: start
+  title: Шаг запуска
+  actor: harness-runner
+  lane: Harness / Runner
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t1
+- id: t1
+  type: task
+  title: Маскировать данные
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts:
+  - замаскированное событие
+  next:
+  - to: t2
+- id: t2
+  type: task
+  title: Записать событие
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs:
+  - RunEvent
+  artifacts:
+  - RunEvent
+  next:
+  - to: g1
+- id: g1
+  type: gateway
+  title: Запись удалась?
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: t3
+    label: да
+  - to: t4
+    label: нет
+- id: t4
+  type: task
+  title: Буфер, досылка
+  actor: harness-runner
+  lane: Harness / Runner
+  inputs: []
+  outputs: []
+  artifacts:
+  - буфер событий
+  next:
+  - to: t2
+- id: t3
+  type: task
+  title: Чат запуска и затраты
+  actor: polzovatel
+  lane: Пользователь
+  inputs: []
+  outputs: []
+  artifacts:
+  - чат запуска
+  - агрегат затрат
+  next:
+  - to: g2
+- id: g2
+  type: gateway
+  title: Цена модели задана?
+  actor: polzovatel
+  lane: Пользователь
+  inputs: []
+  outputs: []
+  artifacts: []
+  next:
+  - to: e1
+    label: да
+  - to: x1
+    label: нет
+- id: x1
+  type: error
+  title: 'Цены нет: токены учтены, стоимость «неизвестна»'
+  actor: agent-platform
+  lane: Observability
+  inputs: []
+  outputs: []
+  artifacts:
+  - агрегат затрат без стоимости
+- id: e1
+  type: end
+  title: Пользователь видит
+  actor: polzovatel
+  lane: Пользователь
+  inputs: []
+  outputs: []
+  artifacts: []

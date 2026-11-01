@@ -11,19 +11,46 @@ attributes:
     · TEXT_MESSAGE_END · REASONING_START · REASONING_MESSAGE_START · REASONING_MESSAGE_CONTENT · REASONING_MESSAGE_END
     · REASONING_END · TOOL_CALL_START · TOOL_CALL_ARGS · TOOL_CALL_END · TOOL_CALL_RESULT · ACTIVITY_SNAPSHOT ·
     CUSTOM'
+  required: true
+  note: тип события по протоколу
 - name: runId / threadId
   type: string
+  required: false
+  note: 'у `RUN_*`: `runId` — запуск строкой (так требует AG-UI); `threadId` — `issueIdentifier`, у запуска без
+    задачи — `run-<runId>`'
 - name: stepName
   type: string
+  required: false
+  note: 'у `STEP_*`: шаг цикла'
 - name: messageId / role / delta
   type: string
+  required: false
+  note: 'у `TEXT_MESSAGE_*`, `REASONING_MESSAGE_*`: сообщение, роль, фрагмент текста; в хранилище платформы `*_END`
+    несёт собранный текст сообщения в `delta`'
 - name: toolCallId / toolCallName / parentMessageId / content
   type: string
+  required: false
+  note: 'у `TOOL_CALL_*`: вызов тула, имя, сообщение-родитель, результат'
 - name: activityType / content
   type: string / object
+  required: false
+  note: 'у `ACTIVITY_SNAPSHOT`: `plan` и план `{done[], next[]}` из M3'
 - name: name
   type: string
+  required: false
+  note: 'у `CUSTOM` — наш подтип: `question`, `approval_request`, `decision_applied`, `message_received`, `guardrail_decision`,
+    `memory_write`, `llm_call`'
 - name: value
   type: object
+  required: false
+  note: 'у `CUSTOM` — наши данные: `question` → `{text}`; `approval_request` → `{tool, argsHash, reason}`; `decision_applied`
+    → `{seq}`; `message_received` → `{id}`; `guardrail_decision` → `{point: g1 · g2 · …'
 - name: message / code
   type: string
+  required: false
+  note: 'у `RUN_ERROR`: причина'
+source:
+  kind: ext
+  ref: https://docs.ag-ui.com/concepts/events
+  why: Протокол AG-UI без изменений; тот же формат форк уже принимает в чате агента (`POST /agent-chats/:messageId/events`,
+    OpenAPI 1.3.0). Имена и регистр типов — по протоколу.

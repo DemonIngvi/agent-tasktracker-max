@@ -8,6 +8,7 @@ sensitivity: internal
 attributes:
 - name: token
   type: String
+  pk: true
 - name: key_alias
   type: String
 - name: models
@@ -24,6 +25,7 @@ attributes:
   type: BigInt
 - name: budget_id
   type: String
+  fk: LiteLLM_BudgetTable
 - name: team_id
   type: String
 - name: metadata

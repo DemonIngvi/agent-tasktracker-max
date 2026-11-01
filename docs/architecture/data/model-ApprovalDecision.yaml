@@ -8,13 +8,29 @@ sensitivity: internal
 attributes:
 - name: runId
   type: int
+  required: true
 - name: seq
   type: int
+  required: true
+  note: '`seq` события `CUSTOM` `approval_request` или `question`'
 - name: decision
   type: 'enum: approve · reject · answer'
+  required: true
+  note: на `approval_request` — `approve` или `reject`; на `question` — `answer`
 - name: scope
   type: 'enum: once · run'
+  required: false
+  note: 'только для `approve`: этот вызов или такие же вызовы до конца запуска'
 - name: by
   type: string
+  required: true
+  note: '`username` того, кто решил'
 - name: comment
   type: string | null
+  required: false
+  note: при `answer` — ответ на вопрос; иначе пояснение
+source:
+  kind: ours
+  ref: ''
+  why: 'Решение привязано к `seq` события-вопроса: так Harness понимает, на какой вопрос ответ, даже если их несколько.
+    Доставляется в ответе heartbeat.'

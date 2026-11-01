@@ -1,0 +1,19 @@
+id: I19
+title: файлы задачи и артефакты в RustFS (S3 API)
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+from: agent-runner
+to: infrastructure
+purpose: файлы задачи и артефакты в RustFS (S3 API)
+integration_type: unknown
+protocol: S3 API
+format: файлы
+auth: ключи сервиса (Secret)
+timeout: 30 с
+retry: 3 раза
+idempotent: true
+mode: синхронно
+also:
+- sandbox
+- icplan

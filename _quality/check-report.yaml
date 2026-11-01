@@ -1248,7 +1248,7 @@ coverage:
     components: 11
     data: 67
     stores: 11
-    flows: 36
+    flows: 33
     integrations: 24
     nodes: 1
 readiness:

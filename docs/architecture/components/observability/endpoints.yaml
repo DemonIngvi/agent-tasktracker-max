@@ -1,0 +1,19 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> в api ICPlan</div>
+- <div><span class="about-label">Аутентификация</span> сессия</div>
+- </div>
+rows:
+- section: Где описано
+  method: GET
+  path: '[ICPlan → Сводка и статистика](icplan.md)'
+  status: ✅ есть
+  does: аналитика агентов, сводка, чат запуска
+  caller: Пользователь, администратор · сессия
+  stories:
+  - US-OBS-01
+  - US-OBS-05
+  reqs:
+  - FR-152
+  via:
+  - I20

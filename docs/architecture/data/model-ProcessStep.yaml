@@ -8,23 +8,53 @@ sensitivity: internal
 attributes:
 - name: id
   type: string
+  required: true
+  note: ключ шага в процессе (`sdd`) — колонка `process_step.key`, уникальна в процессе
 - name: column
   type: string
+  required: true
+  note: название колонки проекта (`SDD`)
 - name: agentId
   type: int
+  required: false
+  note: агент шага; нет — ручной шаг
 - name: onSuccess / onFailure
   type: '{step} · {process} · {done: true}'
+  required: true
+  note: 'куда переходит задача: на шаг этого процесса по `id`, на первый шаг другого процесса (тип задачи меняется)
+    или завершается'
 - name: maxRuns
   type: int
+  required: false
+  note: сколько раз шаг может запускаться по одной задаче, 1–10, по умолчанию 3 (FR-197); превышен — `onFailure`
 - name: transitions
   type: '{reason, to}[]'
+  required: false
+  note: 'переходы по причинам (FR-205): `reason` из справочника `done · defect · spec_question · blocked`, `to`
+    — шаг процесса, человек или завершение; агент выбирает исход запуска только из них; …'
 - name: maxTotalRuns
   type: int
+  required: false
+  note: сколько запусков всего может быть по одной задаче в процессе (вся цепочка); значение по умолчанию 8, 1–30,
+    пересмотр по замеру (agent-chain.md, ворота G9); превышен — `onFailure` с причиной «лимит …
 - name: requireReview
   type: bool
+  required: true
+  note: итог шага проверяет человек (вердикт), прежде чем задача перейдёт дальше
 - name: deliverable
   type: string
+  required: false
+  note: 'что шаг сдаёт: артефакты и формат'
 - name: doneCriteria
   type: Criterion[]
+  required: false
+  note: готовность шага
 - name: criteriaApproval
   type: 'enum: auto · review · always'
+  required: true
+  note: 'как подтверждаются критерии, предложенные агентом (AD-20): `auto` — без подтверждения, но если у шага `requireReview`
+    или у агента-автора автономия R0–R1, работает как `review`; `review` — …'
+source:
+  kind: ours
+  ref: ''
+  why: 'Шаг = колонка + агент + переходы (AD-17) и контракт шага (AD-20): что сдать и как проверить.'

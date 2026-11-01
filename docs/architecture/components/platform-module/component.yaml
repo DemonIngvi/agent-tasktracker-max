@@ -1,0 +1,19 @@
+id: platform-module
+title: Platform module
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: 'Модуль ICPlan (своя схема в БД ICPlan): алиасы LLM, бюджеты, профили sandbox и памяти, данные guardrails,
+  версии агентов.'
+purpose: Хранит внутри ICPlan наши настройки, которых в ICPlan нет, и отдаёт их исполнителям.
+does:
+- Алиасы моделей и бюджеты агентов
+- Профили sandbox и памяти
+- Данные правил guardrails (allowlist, лимиты)
+- Версии определений агентов, экспорт и импорт YAML
+chain:
+- icplan
+- platform-module
+- agent-runner
+host: icplan

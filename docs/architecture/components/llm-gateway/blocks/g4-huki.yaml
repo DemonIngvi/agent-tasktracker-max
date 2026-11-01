@@ -1,0 +1,39 @@
+id: llm-gateway-g4-huki
+title: G4 хуки
+kind: service
+does:
+- Маскирует секреты и PII во входе
+- Модерирует ответ
+tech: LiteLLM guardrail hooks pre_call / post_call
+stories:
+- '6.3'
+io:
+- dir: in
+  with: Harness
+  what: вызов модели
+  via: I8
+- dir: out
+  with: «провайдер / mock»
+  what: запрос после маскирования
+  via: I13
+data:
+- table: LiteLLM_SpendLogs
+  access: write
+  why: результат вызова с хуками (владелец — LiteLLM)
+params:
+- guardrails
+reqs:
+- FR-114
+tasks:
+- '4.5'
+on_failure: 'Секрет в промпте: строка маскируется до отправки провайдеру; Ответ нарушает политику модерации: блокируется,
+  агент получает отказ'
+why: Весь трафик к модели проходит через одну точку.
+rnd: guardrails-engine.md
+operations:
+- name: 'pre_call: маскирование секретов и PII, детект injection'
+  caller: Harness
+  via: I8
+- name: 'post_call: модерация ответа'
+  caller: провайдер / mock
+  via: I13

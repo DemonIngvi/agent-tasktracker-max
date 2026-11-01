@@ -1,0 +1,8 @@
+id: seq-platform-module-1
+title: 'С1. Настройки агента: от администратора до запуска'
+component: platform-module
+diagram: "sequenceDiagram\n  autonumber\n  actor A as Администратор\n  participant UI as Control Plane UI (ICPlan)\n\
+  \  participant PM as Platform module\n  participant L as LLM Gateway\n  participant G as Guardrails (OPA)\n  participant\
+  \ R as Agent Runner\n  A->>UI: меняет бюджет и профиль агента\n  UI->>PM: AgentSettings (I20)\n  PM->>PM: новая\
+  \ версия AgentDefinition\n  PM->>L: virtual key, бюджет — VirtualKey (I15)\n  PM->>G: данные правил — OpaBundleData\
+  \ (I16)\n  Note over R,PM: перед каждым запуском\n  R->>PM: настройки агента (I4)\n  PM-->>R: AgentSettings ↩"

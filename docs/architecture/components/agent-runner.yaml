@@ -1,8 +1,0 @@
-id: agent-runner
-title: Agent Runner
-owner: владелец платформы
-lifecycle: planned
-criticality: medium
-system: agent-platform
-responsibility: 'Исполнитель: превращает запуск из очереди ICPlan в работу агента в изолированной среде и возвращает
-  итог.'

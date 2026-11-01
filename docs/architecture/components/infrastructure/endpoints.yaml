@@ -1,0 +1,30 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> ingress Traefik</div>
+- <div><span class="about-label">Аутентификация</span> TLS</div>
+- </div>
+rows:
+- section: Входные точки
+  method: GET
+  path: https:///
+  status: ✅ есть
+  does: web ICPlan
+  caller: Пользователи · сессия
+  stories:
+  - US-INF-02
+  reqs:
+  - FR-161
+  via:
+  - I21
+- section: Входные точки
+  method: GET
+  path: https:///api/* · /mcp
+  status: ✅ есть
+  does: api и MCP ICPlan
+  caller: Пользователи, внешние агенты · сессия / ключ
+  stories:
+  - US-INF-02
+  reqs:
+  - FR-161
+  via:
+  - I21

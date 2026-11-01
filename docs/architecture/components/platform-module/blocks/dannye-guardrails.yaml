@@ -1,0 +1,55 @@
+id: platform-module-dannye-guardrails
+title: Данные guardrails
+kind: service
+does:
+- Что агенту разрешено и что ждёт человека
+- Попадает в OPA без изменения Rego
+tech: Данные для OPA (bundle data)
+stories:
+- '10.4'
+- '10.5'
+io:
+- dir: in
+  with: ICPlan UI
+  what: тулы агента, подтверждения, уровень автономии
+  via: I20
+- dir: out
+  with: OPA
+  what: данные правил — bundle, OPA забирает опросом 30 с
+  via: I16
+data:
+- table: agent_settings
+  access: read-write
+  why: '`tools_allow`, `approval_tools`, `autonomy_level`'
+- table: access_policy
+  access: read-write
+  why: права агентов на ресурсы проекта
+- table: kill_switch
+  access: read-write
+  why: аварийная остановка, действует сразу
+params:
+- guardrails.tools_allow
+- guardrails.approval
+- guardrails.approval_timeout
+- autonomy_level
+reqs:
+- FR-100
+- FR-108
+- FR-97
+tasks:
+- '4.4'
+on_failure: 'OPA не забрал bundle: решения по старым данным, предупреждение администратору; Рассинхронизация данных
+  модуля и OPA: предупреждение, новые запуски используют настройки модуля; Нет права на область kill switch: 403,
+  состояние не меняется'
+why: 'Логика — в git (Rego), данные — в БД: стандартное разделение OPA.'
+rnd: guardrails-engine.md
+operations:
+- name: Собрать bundle данных правил из настроек агентов
+  caller: Platform module
+  via: I16
+- name: '`GET /platform/kill-switch`, `PUT /platform/kill-switch/:scope` — аварийная остановка'
+  caller: Администратор, владелец экземпляра
+  via: I20
+- name: PUT /platform/projects/:projectKey/access
+  caller: Администратор
+  via: I20

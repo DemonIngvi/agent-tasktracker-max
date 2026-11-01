@@ -8,7 +8,20 @@ sensitivity: internal
 attributes:
 - name: text
   type: string
+  required: true
+  note: проверяемая формулировка
 - name: origin
   type: 'enum: process · user:<username> · agent:<username> · reviewer:<username>'
+  required: true
+  note: 'кто задал: процесс, человек, агент предыдущего шага, ревьюер при возврате; `<username>` — `username` пользователя
+    или агента ICPlan; порядок при конфликте: user и reviewer > process > agent; …'
 - name: status
   type: 'enum: active · pending_approval'
+  required: true
+  note: '`pending_approval` — критерий агента ждёт подтверждения человеком (по `criteriaApproval` шага); проверка
+    gate берёт только `active`'
+source:
+  kind: ours
+  ref: ''
+  why: Критерий хранится пунктом чек-листа задачи ICPlan (`issue_checklist_item`) с полями `origin` и `status`.
+    Происхождение нужно, чтобы применить порядок «человек > процесс > агент» и показать, кто что задал.

@@ -8,13 +8,29 @@ sensitivity: internal
 attributes:
 - name: profile
   type: string
+  required: true
+  note: имя профиля среды
 - name: sandboxId
   type: string
+  required: false
+  note: 'в ответе: идентификатор среды, назначает провайдер'
 - name: image
   type: string
+  required: true
+  note: образ Harness из профиля
 - name: runtime
   type: 'enum: runc · runsc'
+  required: true
+  note: runc — обычный контейнер; runsc — gVisor, изоляция ядра для недоверенного кода
 - name: cpu / memoryMb / diskGb
   type: number
+  required: true
+  note: ядра, МБ памяти, ГБ диска из профиля
 - name: readyMs
   type: int
+  required: false
+  note: 'в ответе: время до готовности среды'
+source:
+  kind: ours
+  ref: ''
+  why: 'Заявка Runner провайдеру среды (Docker, позже Kubernetes): профиль, образ и ресурсы.'

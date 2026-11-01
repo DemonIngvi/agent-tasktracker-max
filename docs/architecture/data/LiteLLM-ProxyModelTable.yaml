@@ -8,6 +8,7 @@ sensitivity: internal
 attributes:
 - name: model_id
   type: String
+  pk: true
 - name: model_name
   type: String
 - name: litellm_params

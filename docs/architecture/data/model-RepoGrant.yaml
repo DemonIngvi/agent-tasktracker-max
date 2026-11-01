@@ -8,11 +8,25 @@ sensitivity: internal
 attributes:
 - name: repo
   type: string
+  required: true
+  note: репозиторий `org/name`
 - name: access
   type: 'enum: read · write'
+  required: true
+  note: право на репозиторий
 - name: branchPrefix
   type: string
+  required: true
+  note: 'в какие ветки можно писать: `agent/`'
 - name: protected
   type: string[]
+  required: true
+  note: ветки без записи
 - name: ttlSec
   type: int
+  required: true
+  note: срок токена; сам токен в модель не входит — его подставляет прокси
+source:
+  kind: ours
+  ref: ''
+  why: 'Короткоживущий доступ к репозиторию на запуск: только ветки с префиксом агента, защищённые ветки без записи.'

@@ -1,0 +1,59 @@
+notes:
+- <div class="api-head">
+- <div><span class="about-label">Базовый адрес</span> `http://memory-api:8085`</div>
+- <div><span class="about-label">Аутентификация</span> токен запуска (Harness), сервисный токен (администрирование)</div>
+- </div>
+rows:
+- section: Память
+  method: GET
+  path: /context?issueId=&agentId=
+  status: 🆕 новое
+  does: 'контекст запуска: M1, M2, M3 по профилю; M1 и M2 старше `retention` профиля не отдаются (AD-25)'
+  caller: Harness · токен запуска
+  stories:
+  - US-MEM-01
+  - US-MEM-02
+  - US-MEM-06
+  reqs:
+  - FR-40
+  - FR-39
+  - FR-43
+  via:
+  - I11
+- section: Память
+  method: PUT
+  path: /m3/:issueId
+  status: 🆕 новое
+  does: записать состояние задачи (проверки до записи)
+  caller: Harness (тул памяти) · токен запуска
+  stories:
+  - US-MEM-01
+  reqs:
+  - FR-39
+  - FR-44
+  via:
+  - I11
+- section: Память
+  method: DELETE
+  path: /records/:level/:id
+  status: 🆕 новое
+  does: удалить запись
+  caller: Администратор · сервисный токен
+  stories:
+  - US-MEM-03
+  reqs:
+  - FR-42
+  via:
+  - I11
+- section: Память
+  method: POST
+  path: /retention/run
+  status: 🆕 новое
+  does: 'очистка по срокам своих уровней: M3, позже M4; M1 и M2 в таблицах форка не удаляет — только фильтр чтения,
+    строки удаляет ICPlan (AD-25) (CronJob)'
+  caller: Kubernetes CronJob · сервисный токен
+  stories:
+  - US-MEM-10
+  reqs:
+  - FR-43
+  via: []

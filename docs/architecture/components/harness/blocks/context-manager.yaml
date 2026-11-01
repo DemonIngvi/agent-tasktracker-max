@@ -1,0 +1,65 @@
+id: harness-context-manager
+title: Context Manager
+kind: service
+does:
+- Собирает контекст шага по слоям; нижний слой не отменяет правила промпта платформы
+- Сжимает историю при переполнении
+- Подгружает память M2 / M3 по профилю
+- Добавляет указания пользователя и описание `/workspace` в контекст
+tech: Python, узел графа LangGraph
+stories:
+- '3.1'
+- '3.6'
+- '8.5'
+- '11.5'
+io:
+- dir: in
+  with: Bootstrap
+  what: агент и задание
+- dir: out
+  with: Memory
+  what: '`M3Record`, контекст памяти'
+  via: I11
+- dir: in
+  with: Agent Runner
+  what: '?'
+  via: I7
+- dir: out
+  with: LLM client
+  what: запрос к модели по слоям
+data:
+- table: memory_m3
+  access: read
+  why: чтение, запись через Memory API (I11, владелец — Memory)
+- table: project_platform
+  access: read
+  why: 'через Runner: `guidance` в `RunBundle` (владелец — Platform module)'
+params:
+- compaction.threshold
+- prompt.cache
+- prompt.platform_version
+reqs:
+- FR-25
+- FR-28
+- FR-29
+- FR-30
+tasks:
+- '1.3'
+- '1.6'
+- '3.8'
+on_failure: 'Даже после сжатия контекст не помещается: запуск `limit` с причиной `context_overflow`; Memory API
+  недоступен: запуск идёт без M3 / M2, событие-предупреждение; запись M3 повторяется в конце; Инструкция или задача
+  требуют игнорировать правила платформы: правила действуют, событие «конфликт слоёв»'
+why: Длинные задачи не падают на окне модели, токены не тратятся на лишнее.
+rnd: memory-model.md
+operations:
+- name: 'узел `context`: сборка запроса по слоям — промпт платформы → руководство проекта → инструкция и навыки
+    → тулы и рабочее пространство → память → задание → …'
+  caller: граф LangGraph
+  via: внутри
+- name: чтение контекста памяти и запись M3
+  caller: Context Manager → Memory API
+  via: I11
+- name: POST /run/message
+  caller: Agent Runner
+  via: I7

@@ -1,0 +1,7 @@
+id: seq-infrastructure-1
+title: С1. Запрос пользователя к ICPlan
+component: infrastructure
+diagram: "sequenceDiagram\n  autonumber\n  actor U as Пользователь\n  participant T as Traefik\n  participant A\
+  \ as api ICPlan\n  participant B as PgBouncer\n  participant PG as PostgreSQL\n  participant S as RustFS\n  U->>T:\
+  \ HTTPS (I21)\n  T->>A: запрос к api\n  A->>B: SQL (I22)\n  B->>PG: SQL\n  PG-->>A: строки ↩\n  opt вложение задачи\n\
+  \    A->>S: S3 API: файл (I19)\n    S-->>A: файл ↩\n  end\n  A-->>U: JSON ↩"

@@ -1,0 +1,16 @@
+id: seq-icplan-1
+title: С1. Задача проходит шаг процесса
+component: icplan
+diagram: "sequenceDiagram\n  autonumber\n  actor U as Пользователь\n  participant UI as Task UI\n  participant IC\
+  \ as ICPlan (api)\n  participant PM as Platform module (в api ICPlan)\n  participant DB as БД ICPlan\n  participant\
+  \ R as Agent Runner\n  Note over R,IC: Runner — Bearer API-ключ агента\n  U->>UI: двигает задачу по доске\n  UI->>IC:\
+  \ PATCH /issues/:issueId (колонка)\n  IC->>IC: автоподхват: делегат = агент шага (delegateUserId)\n  IC->>DB:\
+  \ запуск в очередь — Run (pending)\n  R->>IC: POST /agent-runs/claim (I1)\n  IC-->>R: Run ↩\n  R->>PM: GET /platform/runs/:runId/agent\
+  \ (I4, D23)\n  PM->>DB: agent_run.agent_version при первом вызове\n  PM-->>R: version, definition, settings ↩\n\
+  \  loop пока агент работает\n    R->>IC: POST /agent-runs/:runId/events — RunEvent (I2)\n    IC-->>UI: SSE: шаги\
+  \ в чат запуска\n    R->>IC: POST /agent-runs/:runId/heartbeat (I3)\n  end\n  opt нужно подтверждение\n    U->>UI:\
+  \ approve / отклонить\n    UI->>IC: POST /agent-runs/:runId/decisions — ApprovalDecision\n    IC->>DB: agent_run_delivery\n\
+  \    IC-->>R: ApprovalDecision в ответе heartbeat ↩ (после доработки, FR-10)\n  end\n  R->>IC: POST /agent-runs/:runId/result\
+  \ — RunResult (I2)\n  alt успех\n    IC->>IC: переход по process_step.on_success\n  else ошибка или лимит\n  \
+  \  IC->>IC: переход по process_step.on_failure, уведомление владельцу процесса\n  end\n  IC-->>UI: карточка итога\
+  \ в чате запуска"

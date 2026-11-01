@@ -8,23 +8,55 @@ sensitivity: internal
 attributes:
 - name: status
   type: 'enum: success · failed'
+  required: true
+  note: отмену фиксирует ICPlan сам, раннер её не сообщает
 - name: output
   type: string | null
+  required: false
+  note: итог для истории; ICPlan обрезает до 10 000 символов
 - name: error
   type: string | null
+  required: false
+  note: причина при `failed`; ICPlan обрезает до 500 символов
 - name: usage
   type: '{inputTokens, outputTokens, reasoningTokens, costUsd, iterations}'
+  required: false
+  note: расход; `reasoningTokens`, `costUsd`, `iterations` (итерации цикла) — добавляем
 - name: reason
   type: 'enum: done · limit · gate_failed · error'
+  required: false
+  note: 'причина Harness (FR-72): `done` → `status = success`; `limit`, `gate_failed`, `error` → `failed`'
 - name: artifacts
   type: '{name, url}[]'
+  required: false
+  note: 'опубликованное для человека: файл в RustFS (`s3://…`), ветка или PR (AD-20); в M3 — рабочие ссылки `{path,
+    ref}`'
 - name: gate
   type: '{passed: bool, failed: Criterion[]}'
+  required: false
+  note: 'проверка по критериям (FR-26, AD-20): не выполненные критерии'
 - name: criteriaNext
   type: Criterion[]
+  required: false
+  note: 'критерии, предложенные следующему шагу (AD-20, AD-26): Runner берёт их из итога Harness; ICPlan при приёме
+    итога создаёт пункты чек-листа задачи с `origin = agent:<username>` и `status` по …'
 - name: outcome
   type: string | null
+  required: false
+  note: исход запуска — `reason` одного из разрешённых `ProcessStep.transitions` шага (`done`, `defect`, `spec_question`,
+    `blocked`); вне списка ICPlan отклоняет (FR-205)
 - name: returnTo
   type: string | null
+  required: false
+  note: цель возврата — `ProcessStep.id` из разрешённого перехода при исходе `defect` или `spec_question`
 - name: returnNote
   type: string | null
+  required: false
+  note: 'заметка адресату возврата: что не так и что проверить; попадает в задание нового запуска, в историю задачи
+    и в `M3Record.notesFor`'
+source:
+  kind: fork
+  ref: POST /agent-runs/{runId}/result
+  why: 'Тело, которое форк уже принимает от раннера: `status`, `output`, `error`, `usage` с `inputTokens` и `outputTokens`.
+    Добавляем то, без чего не работают AD-18 и AD-20: причину Harness, артефакты, проверку по критериям, стоимость
+    и токены размышлений.'

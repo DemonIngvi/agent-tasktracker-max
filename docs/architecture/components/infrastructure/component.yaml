@@ -1,0 +1,20 @@
+id: infrastructure
+title: Инфраструктура
+owner: владелец платформы
+lifecycle: planned
+criticality: medium
+system: agent-platform
+responsibility: Кластер k3s, Helm, Traefik ingress, PostgreSQL (CloudNativePG) с PgBouncer, RustFS, секреты, бэкапы,
+  сетевые политики, профиль нагрузки.
+purpose: 'Основание платформы: где и как всё запущено, как распределяется нагрузка, где лежат данные и как они сохраняются.'
+does:
+- Кластер k3s на одном узле, namespaces по зонам
+- Вход только через Traefik по HTTPS
+- Балансировка между репликами — Service
+- PostgreSQL 17 под CloudNativePG, пул PgBouncer
+- RustFS (S3) для вложений и копий
+- Секреты, сетевые политики, бэкапы вне узла
+chain:
+- infrastructure
+- icplan
+- agent-runner

@@ -8,25 +8,61 @@ sensitivity: internal
 attributes:
 - name: agentId
   type: int
+  required: true
+  note: агент
 - name: version
   type: int
+  required: true
+  note: 'единая версия агента: растёт при любой правке определения или настроек (FR-98); та же в `AgentDefinition.version`
+    и `RunBundle.agent.version`'
 - name: autonomy
   type: 'enum: R0–R5'
+  required: true
+  note: 'уровень автономии: R0 — каждое действие с подтверждением … R5 — без подтверждений'
 - name: budget
   type: '{runUsd, dayUsd}'
+  required: true
+  note: 'лимиты агента в $: на запуск и на день'
 - name: sandboxProfile
   type: string
+  required: true
+  note: имя профиля среды (`sandbox_profile.name`)
 - name: memoryProfile
   type: string
+  required: true
+  note: имя профиля памяти
 - name: toolsAllow / approvalTools
   type: string[]
+  required: true
+  note: разрешённые тулы и тулы с подтверждением; в бандл OPA уходят как `tools_allow` и `approval`
 - name: scheduling
   type: '{parallel, max}'
+  required: false
+  note: '`parallel` — сколько запусков агента идёт одновременно; `max` — сколько запусков агента может ждать в очереди'
 - name: learning
   type: '{facts, playbook, skills, prompt_opt: off|suggest|apply_gated}'
+  required: false
+  note: режимы самообучения по видам, по умолчанию `off` для всех; эффективное значение — самое строгое из агента,
+    проекта, команды и политики администратора (FR-103); выше `suggest` — только при включённых …
 - name: snapshots
   type: '{enabled, schedule, retentionDays}'
+  required: false
+  note: 'снимки агента: включены перед каждым применением изменения, расписание, срок хранения (задаёт человек);
+    откат — перенос указателя версии (FR-64)'
 - name: toolsmith
   type: bool
+  required: false
+  note: агент-инструментальщик вкл/выкл (по умолчанию выкл); применять созданный тул может только человек (AD-28,
+    FR-131)
 - name: guardrails
   type: '{O1…O15: {enabled, params}}'
+  required: false
+  note: 'каталог ограничений против деградации обучения с параметрами: порог регрессии (О4), TTL (О11), лимит плейбука
+    (О13), карантин N (О12) и др.; администратор может зафиксировать (FR-131)'
+source:
+  kind: ours
+  ref: ''
+  why: 'Наши настройки агента, которых нет в ICPlan; источник правды для автономии, бюджета, тулов и профилей. Включён
+    ли агент — не здесь: источник правды один, `ai_agent.enabled` ICPlan (AD-17, FR-11); аварийная остановка — `kill_switch`
+    (`agent:<id>`). Из них собираются бандл OPA (`OpaBundleData`, имена конфигурации) и файл экспорта (`AgentDefinition`).
+    Версия нужна для отката и для того, чтобы запуск видел настройки версии, закреплённой при первом вызове I4 (AD-23).'

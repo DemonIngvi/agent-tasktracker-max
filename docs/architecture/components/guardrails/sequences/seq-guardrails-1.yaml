@@ -1,0 +1,9 @@
+id: seq-guardrails-1
+title: С1. Допуск запуска (G1) и проверка действия (G2)
+component: guardrails
+diagram: "sequenceDiagram\n  autonumber\n  participant R as Agent Runner\n  participant G as Guardrails (OPA)\n\
+  \  participant H as Harness\n  participant IC as ICPlan\n  R->>G: PolicyInput G1: агент, бюджет (I5)\n  G-->>R:\
+  \ PolicyDecision ↩\n  alt deny\n    R->>IC: итог failed, причина G1 (I2)\n  else allow\n    R->>H: RunBundle (I7)\n\
+  \    H->>G: PolicyInput G2: тул и аргументы (I10)\n    G-->>H: PolicyDecision ↩ allow / confirm / deny\n    opt\
+  \ вызов MCP\n      R->>G: повторная проверка G2 в MCP-прокси (I10)\n      G-->>R: PolicyDecision ↩\n    end\n\
+  \    R->>IC: RunEvent guardrail_decision (I2)\n  end"

@@ -1,7 +1,0 @@
-id: guardrails
-title: Guardrails
-owner: владелец платформы
-lifecycle: planned
-criticality: medium
-system: agent-platform
-responsibility: 'Ограничения: что агенту можно и что нельзя — в четырёх точках, каждая включается отдельно.'
