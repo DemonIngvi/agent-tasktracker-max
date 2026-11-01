@@ -1,0 +1,25 @@
+# Каталог страниц Docmost. Вид публикуется, только если описан здесь.
+views:
+  home: {purpose: Вход в документацию и переход к компоненту, source: components/*/component.yaml, action: Открыть компонент}
+  component: {purpose: Что это за компонент и с кем связан, source: component.yaml и integrations, action: Перейти к разделу или соседу}
+  stories: {purpose: Что должно работать с точки зрения человека, source: stories и processes компонента, action: Проверить критерии приёмки}
+  integrations: {purpose: С кем и по какому контракту работает компонент, source: integrations, flows и endpoints.yaml, action: Открыть контракт или соседа}
+  spec: {purpose: Требования и то, что их подтверждает, source: prd.md, stories, blocks, decisions, approvals.yaml, action: Проверить покрытие требования}
+  trace: {purpose: Найти неподтверждённое требование, source: stories, blocks и decisions, action: Закрыть разрыв}
+  cards: {purpose: Что нужно знать исполнителю блока, source: blocks компонента, action: Взять блок в работу}
+  datamodel: {purpose: Какие данные у компонента и куда они идут, source: data, stores и flows, action: Открыть таблицу или поток}
+  sequences: {purpose: Порядок взаимодействия по шагам, source: sequences, action: Понять сценарий}
+  seqall: {purpose: Сквозные сценарии системы, source: sequences, action: Понять сценарий}
+  readiness: {purpose: Что мешает считать документацию готовой, source: _quality/check-report.yaml, action: Разобрать блокеры}
+  c1: {purpose: Система и окружение, source: systems, actors и integrations, action: Понять границы}
+  c2: {purpose: Контейнеры и каналы, source: components, stores и integrations, action: Найти компонент}
+  c3: {purpose: Блоки по компонентам, source: blocks, action: Найти блок}
+  how: {purpose: Все процессы системы, source: processes, action: Понять порядок работы}
+  dfd: {purpose: Что движется между компонентами, source: flows, action: Найти поток}
+  er: {purpose: Модель данных по хранилищам, source: data и stores, action: Найти таблицу и связи}
+  data: {purpose: Кто пишет и читает каждый объект, source: data и functions, action: Оценить влияние изменения}
+  decisions: {purpose: Принятые решения, source: decisions, action: Понять причину}
+  registers: {purpose: Сводные реестры, source: integrations, flows, stores, params.yaml, fmea.yaml, quality.yaml, action: Сверить значения}
+  coverage: {purpose: Разрывы между требованиями и историями, source: epics и functions, action: Закрыть разрыв}
+  types: {purpose: Контракты данных между компонентами, source: data, action: Открыть тип}
+  type: {purpose: Поля контракта и где он передаётся, source: data и flows, action: Проверить контракт}

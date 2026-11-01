@@ -6,18 +6,18 @@
 
 | # | Поток | Участники | Данные | I | Сценарий |
 |---|---|---|---|---|---|
-| 1 | Опрос очереди | Agent Runner → ICPlan | `Run` | I1 | С1 |
-| 2 | Планирование: свободны ли слоты (глобальный, агента, модели, задачи) | Agent Runner → таблица слотов | `queued` → `admitted` | — | С1 |
-| 3 | Допуск и бюджет (G1) | Agent Runner → Guardrails | `PolicyInput` → `PolicyDecision` | I5 | С1 |
-| 4 | Определение и настройки версии запуска, после слотов; версия закрепляется в запуске (AD-23) | Agent Runner → Platform module | `AgentDefinition`, `AgentSettings` | I4 | С1 |
-| 5 | Контейнер из тёплого пула | Agent Runner → Sandbox | `SandboxClaim` | I6 | С1 |
-| 6 | Токен репозиториев на запуск | Agent Runner → git-провайдер | `RepoGrant` | I18 | — |
-| 7 | Задание для Harness | Agent Runner → Harness | `RunBundle` | I7 | С1 |
-| 8 | События шагов | Harness → Agent Runner → ICPlan | `RunEvent` | I7, I2 | С1 |
-| 9 | Решение по паузе | ICPlan → Agent Runner → Harness | `ApprovalDecision` | I3, I7 | — |
-| 10 | Итог | Harness → Agent Runner → ICPlan | `RunResult` | I7, I2 | С1 |
-| 11 | Таймаут или отмена | Agent Runner → Harness | сигнал остановки | I7 | — |
-| 12 | Уничтожение контейнера, долив пула | Agent Runner → Sandbox | `sandboxId` | I6 | С1 |
+| 1 | Опрос очереди | [Agent Runner](../README.md) → [ICPlan](../../icplan/README.md) | [`Run`](../../../data/model-Run.yaml) | [I1](../integrations/I1.yaml) | С1 |
+| 2 | Планирование: свободны ли слоты (глобальный, агента, модели, задачи) | [Agent Runner](../README.md) → таблица слотов | `queued` → `admitted` | — | С1 |
+| 3 | Допуск и бюджет (G1) | [Agent Runner](../README.md) → [Guardrails](../../guardrails/README.md) | [`PolicyInput`](../../../data/model-PolicyInput.yaml) → [`PolicyDecision`](../../../data/model-PolicyDecision.yaml) | [I5](../integrations/I5.yaml) | С1 |
+| 4 | Определение и настройки версии запуска, после слотов; версия закрепляется в запуске ([AD-23](../../../decisions/AD-23.yaml)) | [Agent Runner](../README.md) → [Platform module](../../platform-module/README.md) | [`AgentDefinition`](../../../data/model-AgentDefinition.yaml), [`AgentSettings`](../../../data/model-AgentSettings.yaml) | [I4](../integrations/I4.yaml) | С1 |
+| 5 | Контейнер из тёплого пула | [Agent Runner](../README.md) → [Sandbox](../../sandbox/README.md) | [`SandboxClaim`](../../../data/model-SandboxClaim.yaml) | [I6](../integrations/I6.yaml) | С1 |
+| 6 | Токен репозиториев на запуск | [Agent Runner](../README.md) → git-провайдер | [`RepoGrant`](../../../data/model-RepoGrant.yaml) | [I18](../integrations/I18.yaml) | — |
+| 7 | Задание для [Harness](../../harness/README.md) | [Agent Runner](../README.md) → [Harness](../../harness/README.md) | [`RunBundle`](../../../data/model-RunBundle.yaml) | [I7](../integrations/I7.yaml) | С1 |
+| 8 | События шагов | [Harness](../../harness/README.md) → [Agent Runner](../README.md) → [ICPlan](../../icplan/README.md) | [`RunEvent`](../../../data/model-RunEvent.yaml) | [I7](../integrations/I7.yaml), [I2](../integrations/I2.yaml) | С1 |
+| 9 | Решение по паузе | [ICPlan](../../icplan/README.md) → [Agent Runner](../README.md) → [Harness](../../harness/README.md) | [`ApprovalDecision`](../../../data/model-ApprovalDecision.yaml) | [I3](../integrations/I3.yaml), [I7](../integrations/I7.yaml) | — |
+| 10 | Итог | [Harness](../../harness/README.md) → [Agent Runner](../README.md) → [ICPlan](../../icplan/README.md) | [`RunResult`](../../../data/model-RunResult.yaml) | [I7](../integrations/I7.yaml), [I2](../integrations/I2.yaml) | С1 |
+| 11 | Таймаут или отмена | [Agent Runner](../README.md) → [Harness](../../harness/README.md) | сигнал остановки | [I7](../integrations/I7.yaml) | — |
+| 12 | Уничтожение контейнера, долив пула | [Agent Runner](../README.md) → [Sandbox](../../sandbox/README.md) | `sandboxId` | [I6](../integrations/I6.yaml) | С1 |
 
 #### С1. Запуск от очереди до итога
 
@@ -26,7 +26,7 @@
 ### Состояния запуска
 
 
-Единый список статусов запуска — требование FR-72; остальные документы ссылаются на него.
+Единый список статусов запуска — требование [FR-72](../prd.md); остальные документы ссылаются на него.
 
 ```mermaid
 stateDiagram-v2
@@ -49,7 +49,7 @@ stateDiagram-v2
   canceled --> [*]
 ```
 
-| Причина завершения Harness (FR-27) | Статус запуска (FR-72) | Статус в ICPlan (`agent_run`) |
+| Причина завершения [Harness](../../harness/README.md) ([FR-27](../../harness/prd.md)) | Статус запуска ([FR-72](../prd.md)) | Статус в [ICPlan](../../icplan/README.md) (`agent_run`) |
 |---|---|---|
 | `done` | `succeeded` | `success` |
 | `gate_failed` | `gate_failed` | `failed` с пометкой «не прошёл проверку» |

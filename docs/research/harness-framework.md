@@ -1,14 +1,14 @@
 # R&D: Фреймворк агентского цикла
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Harness** · решение: [design AD-2, AD-18](..\source\design\define-agent-platform\design.md) · спека: agent-harness
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Harness](../architecture/components/harness/README.md)** · решение: [design AD-2, AD-18](..\source\design\define-agent-platform\design.md) · спека: agent-harness
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
-На чём строить агентский цикл Harness: пауза на подтверждение, восстановление после сбоя, стрим шагов, любая модель через LiteLLM — внутри недоверенного sandbox?
+На чём строить агентский цикл [Harness](../architecture/components/harness/README.md): пауза на подтверждение, восстановление после сбоя, стрим шагов, любая модель через LiteLLM — внутри недоверенного sandbox?
 
-<div class="rnd-a">Ответ: LangGraph за своим интерфейсом Harness. Запасной вариант — OpenAI Agents SDK; выбор подтверждается прототипом с проверкой AG1–AG5 в задаче 1.3.</div>
+<div class="rnd-a">Ответ: LangGraph за своим интерфейсом [Harness](../architecture/components/harness/README.md). Запасной вариант — OpenAI Agents SDK; выбор подтверждается прототипом с проверкой AG1–AG5 в задаче 1.3.</div>
 
-<span class="rnd-badge trial">Trial → Adopt после прототипа</span> LangGraph 1.2.14 (AD-18) · MIT · 0 $ · данные 11.10.2026
+<span class="rnd-badge trial">Trial → Adopt после прототипа</span> LangGraph 1.2.14 ([AD-18](../architecture/decisions/AD-18.yaml)) · MIT · 0 $ · данные 11.10.2026
 </div>
 
 ```deck
@@ -55,17 +55,17 @@ stack Документы: 5 ok, 0 part, 3 mute
 <div markdown>
 **1. Пауза и восстановление — без своего кода**
 
-`interrupt` останавливает граф на подтверждении, checkpoint сохраняется после **каждого** шага. Значит, запуск продолжится с того же места и после «одобрить», и после падения контейнера (FR-23). У OpenAI Agents SDK состояние сохраняется на прерывании (`RunState`), сохранение после каждого шага не подтверждено ([Э9](#e9)).
+`interrupt` останавливает граф на подтверждении, checkpoint сохраняется после **каждого** шага. Значит, запуск продолжится с того же места и после «одобрить», и после падения контейнера ([FR-23](../architecture/components/harness/prd.md)). У OpenAI Agents SDK состояние сохраняется на прерывании (`RunState`), сохранение после каждого шага не подтверждено ([Э9](#e9)).
 </div>
 <div markdown>
 **2. Граф ложится на наши проверки G2**
 
-Проверки G2 (OPA, I10) встают узлами до и после `llm` и `tools` (FR-22). Свой checkpointer отправляет состояние в Runner по I12 — без учётных данных БД в sandbox (AD-18). Соседние компоненты не меняются ([Э7](#e7)).
+Проверки G2 (OPA, [I10](../architecture/components/harness/integrations/I10.yaml)) встают узлами до и после `llm` и `tools` ([FR-22](../architecture/components/harness/prd.md)). Свой checkpointer отправляет состояние в Runner по [I12](../architecture/components/harness/integrations/I12.yaml) — без учётных данных БД в sandbox ([AD-18](../architecture/decisions/AD-18.yaml)). Соседние компоненты не меняются ([Э7](#e7)).
 </div>
 <div markdown>
 **3. Hermes — готовый агент, а не цикл**
 
-Hermes Agent силён: подтверждения, 7 видов терминалов, MCP, память. Но он сам делает то, что у нас делают Runner, Sandbox, Memory и Guardrails. Брать его — значит заменить 4 компонента. Мы берём у Hermes идею «умного» подтверждения — в бэклог ([Э6](#e6)).
+Hermes Agent силён: подтверждения, 7 видов терминалов, MCP, память. Но он сам делает то, что у нас делают Runner, [Sandbox](../architecture/components/sandbox/README.md), [Memory](../architecture/components/memory/README.md) и [Guardrails](../architecture/components/guardrails/README.md). Брать его — значит заменить 4 компонента. Мы берём у Hermes идею «умного» подтверждения — в бэклог ([Э6](#e6)).
 </div>
 </div>
 
@@ -82,9 +82,9 @@ Hermes Agent силён: подтверждения, 7 видов термина
 <div class="adapt" markdown>
 **Адаптируем**
 
-- checkpointer → свой, через API Runner (I12);
-- события графа → наш `RunEvent` в NDJSON (I7);
-- «одобрить один раз / на сессию» (Hermes) → решение подтверждения в `ApprovalDecision`;
+- checkpointer → свой, через API Runner ([I12](../architecture/components/harness/integrations/I12.yaml));
+- события графа → наш [`RunEvent`](../architecture/data/model-RunEvent.yaml) в NDJSON ([I7](../architecture/components/agent-runner/integrations/I7.yaml));
+- «одобрить один раз / на сессию» (Hermes) → решение подтверждения в [`ApprovalDecision`](../architecture/data/model-ApprovalDecision.yaml);
 - `needs_approval` на тул (OpenAI SDK) → список `approval.tools` из guardrails (уже есть).
 </div>
 <div class="drop" markdown>
@@ -118,7 +118,7 @@ Hermes Agent силён: подтверждения, 7 видов термина
 <div markdown>**Э4 Альтернативы**9 кандидатов <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**4 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I7–I12 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I7](../architecture/components/agent-runner/integrations/I7.yaml)–[I12](../architecture/components/harness/integrations/I12.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**5 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**8 <span class="gate">G10</span></div>
@@ -130,35 +130,35 @@ Hermes Agent силён: подтверждения, 7 видов термина
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** Harness — образ, который Runner запускает в sandbox на каждый запуск (AD-18). Внутри работает агентский цикл: модель, тулы, проверки G2, события для таймлайна.
+**Ситуация.** [Harness](../architecture/components/harness/README.md) — образ, который Runner запускает в sandbox на каждый запуск ([AD-18](../architecture/decisions/AD-18.yaml)). Внутри работает агентский цикл: модель, тулы, проверки G2, события для таймлайна.
 
 **Осложнение.** Цикл можно написать самим или взять фреймворк. Фреймворков много, и каждый по-своему делает паузу, состояние и стрим. Есть и готовые агенты (Hermes), которые делают больше, чем цикл.
 
-**Вопрос.** На чём строить агентский цикл Harness?
+**Вопрос.** На чём строить агентский цикл [Harness](../architecture/components/harness/README.md)?
 
 **Решает:** владелец продукта по предложению архитектора. **Не решаем:** изоляцию ([Sandbox](sandbox-isolation.md)), очередь ([Runner](runner-and-scheduling.md)), MCP или прямые вызовы ([MCP](mcp-vs-direct.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-2, AD-18 и требованиями agent-harness.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-2](../architecture/decisions/AD-2.yaml), [AD-18](../architecture/decisions/AD-18.yaml) и требованиями agent-harness.
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | цикл «контекст → модель → тулы» с лимитами шагов и времени | FR-20, FR-27 | агент не завершается или зацикливается |
-| П2 | пауза на подтверждение и продолжение с того же шага в **другом процессе** (контейнер мог смениться) | FR-23, FR-112 | подтверждение = перезапуск с нуля, лишние токены |
-| П3 | восстановление после падения с последнего шага | FR-23, I12, AD-18 | сбой контейнера теряет работу |
-| П4 | любая модель через OpenAI-совместимый LiteLLM | FR-21, I8 | привязка к одному провайдеру |
-| П5 | стрим шагов для таймлайна | FR-24, I7 | пользователь не видит ход работы |
-| П6 | проверки до и после модели и тулов (G2) | FR-22, I10 | нет точки для политик |
-| П7 | тулы MCP | FR-176, I9 | свои адаптеры к каждому серверу |
-| П8 | указания пользователя во время работы | FR-28 | нельзя поправить агента на ходу |
-| П9 | работа в недоверенном sandbox: библиотека в образе, без учётных данных БД, без своих сервисов | AD-18, [техспека Harness](..\architecture\components\harness\docs\techspec.md) | секреты и состояние утекают в sandbox |
+| П1 | цикл «контекст → модель → тулы» с лимитами шагов и времени | [FR-20](../architecture/components/harness/prd.md), [FR-27](../architecture/components/harness/prd.md) | агент не завершается или зацикливается |
+| П2 | пауза на подтверждение и продолжение с того же шага в **другом процессе** (контейнер мог смениться) | [FR-23](../architecture/components/harness/prd.md), [FR-112](../architecture/components/guardrails/prd.md) | подтверждение = перезапуск с нуля, лишние токены |
+| П3 | восстановление после падения с последнего шага | [FR-23](../architecture/components/harness/prd.md), [I12](../architecture/components/harness/integrations/I12.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | сбой контейнера теряет работу |
+| П4 | любая модель через OpenAI-совместимый LiteLLM | [FR-21](../architecture/components/harness/prd.md), [I8](../architecture/components/harness/integrations/I8.yaml) | привязка к одному провайдеру |
+| П5 | стрим шагов для таймлайна | [FR-24](../architecture/components/harness/prd.md), [I7](../architecture/components/agent-runner/integrations/I7.yaml) | пользователь не видит ход работы |
+| П6 | проверки до и после модели и тулов (G2) | [FR-22](../architecture/components/harness/prd.md), [I10](../architecture/components/harness/integrations/I10.yaml) | нет точки для политик |
+| П7 | тулы MCP | [FR-176](../architecture/components/mcp-tools/prd.md), [I9](../architecture/components/harness/integrations/I9.yaml) | свои адаптеры к каждому серверу |
+| П8 | указания пользователя во время работы | [FR-28](../architecture/components/harness/prd.md) | нельзя поправить агента на ходу |
+| П9 | работа в недоверенном sandbox: библиотека в образе, без учётных данных БД, без своих сервисов | [AD-18](../architecture/decisions/AD-18.yaml), [техспека Harness](..\architecture\components\harness\docs\techspec.md) | секреты и состояние утекают в sandbox |
 
 <span class="gate">G2</span> ✅ у каждой потребности есть требование или решение.
 
 ## Э3. Опорное решение: LangGraph {#e3}
 
-Опорное решение — LangGraph, выбранный в AD-2 и закреплённый в AD-18 (1.2.14).
+Опорное решение — LangGraph, выбранный в [AD-2](../architecture/decisions/AD-2.yaml) и закреплённый в [AD-18](../architecture/decisions/AD-18.yaml) (1.2.14).
 
 | # | Функция | Что делает | Потребность |
 |---|---|---|---|
@@ -173,7 +173,7 @@ Hermes Agent силён: подтверждения, 7 видов термина
 
 **Вывод этапа.** LangGraph закрывает все потребности функциями фреймворка. Свой код нужен только для checkpointer через Runner (F3) и для преобразования событий (F4).
 
-<span class="gate">G3</span> ✅ функции связаны с потребностями; наличие — документация LangGraph (Б) и AD-2.
+<span class="gate">G3</span> ✅ функции связаны с потребностями; наличие — документация LangGraph (Б) и [AD-2](../architecture/decisions/AD-2.yaml).
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
@@ -201,14 +201,14 @@ Hermes Agent силён: подтверждения, 7 видов термина
 | Пауза с продолжением в другом процессе | П2 | подтверждение ждёт до 24 ч (`guardrails.approval_timeout`), контейнер не держим | есть у 6 фреймворков (Б) | базовая |
 | Состояние после каждого шага | П3 | сбой не теряет сделанное, повтор не тратит токены | LangGraph checkpointer (Б); MAF checkpoint (Б); ADK resumability (Б) | базовая |
 | OpenAI-совместимый endpoint | П4 | все модели через LiteLLM, бюджеты и ключи там | у 6 из 8 (Б) | базовая |
-| Работа как библиотека в образе без своих сервисов | П9 | sandbox недоверенный, состояние у Runner | AD-18 (А) | базовая |
+| Работа как библиотека в образе без своих сервисов | П9 | sandbox недоверенный, состояние у Runner | [AD-18](../architecture/decisions/AD-18.yaml) (А) | базовая |
 | Хуки до и после модели и тулов | П6 | место для G2 | узлы графа LangGraph (Б), RunHooks OpenAI SDK (Б), hooks Claude SDK (Б) | линейная |
-| Стрим событий | П5 | таймлайн в ICPlan | у всех фреймворков (Б) | линейная |
+| Стрим событий | П5 | таймлайн в [ICPlan](../architecture/components/icplan/README.md) | у всех фреймворков (Б) | линейная |
 | Подтверждение на уровне тула | П2 | проще описать, какие тулы ждут человека | OpenAI SDK, PydanticAI, ADK (Б) | линейная: у нас уже есть `approval.tools` |
 | «Умное» подтверждение: модель оценивает риск, спорное — человеку | П2 | меньше ручных подтверждений безопасных действий | Hermes (Б); одна реализация, опыт не подтверждён | привлекательная |
 | Отказ по таймауту подтверждения | П2 | неотвеченное подтверждение не висит вечно | Hermes (Б); у нас — `guardrails.approval_timeout` (А) | базовая, уже есть |
-| Durable execution на внешнем движке | П3 | — | Temporal / DBOS — новый сервис; состояние у Runner (AD-18) | обратная |
-| Память, расписание, свой sandbox в агенте | — | — | дублирует Memory, Runner, Sandbox | обратная |
+| Durable execution на внешнем движке | П3 | — | Temporal / DBOS — новый сервис; состояние у Runner ([AD-18](../architecture/decisions/AD-18.yaml)) | обратная |
+| Память, расписание, свой sandbox в агенте | — | — | дублирует [Memory](../architecture/components/memory/README.md), Runner, [Sandbox](../architecture/components/sandbox/README.md) | обратная |
 
 **Вывод этапа.** Базовые функции: пауза с продолжением в другом процессе, состояние после каждого шага, OpenAI-совместимый endpoint и работа как библиотека. Хуки и стрим — линейные. «Умное» подтверждение — привлекательная функция на будущее.
 
@@ -219,10 +219,10 @@ Hermes Agent силён: подтверждения, 7 видов термина
 | Функция | Решение | Как | Где |
 |---|---|---|---|
 | Граф, `interrupt`, стрим, MCP | брать | как в LangGraph | задачи 1.3–1.5 |
-| Checkpointer | адаптировать | свой saver: `PUT / GET /runs/{id}/checkpoint` в Runner | I12, FR-32 |
-| События графа | адаптировать | преобразование в `RunEvent` NDJSON | I7, FR-24 |
-| Подтверждение на тул | оставить | уже есть: `approval.tools` из guardrails | FR-23 |
-| «Одобрить один раз / на сессию» (Hermes) | адаптировать | поле в `ApprovalDecision`: только этот вызов или до конца запуска | FR-112, поле `scope` в `ApprovalDecision` |
+| Checkpointer | адаптировать | свой saver: `PUT / GET /runs/{id}/checkpoint` в Runner | [I12](../architecture/components/harness/integrations/I12.yaml), [FR-32](../architecture/components/harness/prd.md) |
+| События графа | адаптировать | преобразование в [`RunEvent`](../architecture/data/model-RunEvent.yaml) NDJSON | [I7](../architecture/components/agent-runner/integrations/I7.yaml), [FR-24](../architecture/components/harness/prd.md) |
+| Подтверждение на тул | оставить | уже есть: `approval.tools` из guardrails | [FR-23](../architecture/components/harness/prd.md) |
+| «Одобрить один раз / на сессию» (Hermes) | адаптировать | поле в [`ApprovalDecision`](../architecture/data/model-ApprovalDecision.yaml): только этот вызов или до конца запуска | [FR-112](../architecture/components/guardrails/prd.md), поле `scope` в [`ApprovalDecision`](../architecture/data/model-ApprovalDecision.yaml) |
 | «Умное» подтверждение (Hermes) | не брать сейчас | нужна оценка ложных пропусков; в бэклог | [BACKLOG](..\source\BACKLOG.md) |
 | Durable execution на Temporal | не брать | новый сервис, состояние у Runner | — |
 | Память, расписание, sandbox Hermes | не брать | это наши компоненты | — |
@@ -274,25 +274,25 @@ Hermes Agent силён: подтверждения, 7 видов термина
 
 | Стык | LangGraph | OpenAI Agents SDK | PydanticAI | MAF | Google ADK | Claude Agent SDK | Hermes Agent |
 |---|---|---|---|---|---|---|---|
-| I7 события → Runner | И2: стрим → `RunEvent` | И2 | И2 | И2 | И2 | И1: поток сообщений CLI | И1: API `/v1/runs` |
-| I8 модель через LiteLLM | И2: `ChatOpenAI(base_url)` | И2 | И2 | И2 | И2 | И1 | И1 |
-| I9 MCP | И2: `langchain[mcp]` | И2 | И1 | И1 | И1 | И2 | И2 |
-| I10 G2 → OPA | И2: узел графа | И2: hooks | И1 | И1 | И1: callbacks | И2: hooks | И0: свои подтверждения |
-| I11 Memory API | И2: тул или узел | И2 | И2 | И2 | И1: своя память | И2 | И0: своя память |
-| I12 checkpoint → Runner | И2: свой saver | И2: `RunState` строкой | И2: история сообщений | И1: своё хранилище checkpoint | И1: свой сервис сессий | И0: сессии в файлах | И0 |
+| [I7](../architecture/components/agent-runner/integrations/I7.yaml) события → Runner | И2: стрим → [`RunEvent`](../architecture/data/model-RunEvent.yaml) | И2 | И2 | И2 | И2 | И1: поток сообщений CLI | И1: API `/v1/runs` |
+| [I8](../architecture/components/harness/integrations/I8.yaml) модель через LiteLLM | И2: `ChatOpenAI(base_url)` | И2 | И2 | И2 | И2 | И1 | И1 |
+| [I9](../architecture/components/harness/integrations/I9.yaml) MCP | И2: `langchain[mcp]` | И2 | И1 | И1 | И1 | И2 | И2 |
+| [I10](../architecture/components/harness/integrations/I10.yaml) G2 → OPA | И2: узел графа | И2: hooks | И1 | И1 | И1: callbacks | И2: hooks | И0: свои подтверждения |
+| [I11](../architecture/components/harness/integrations/I11.yaml) [Memory](../architecture/components/memory/README.md) API | И2: тул или узел | И2 | И2 | И2 | И1: своя память | И2 | И0: своя память |
+| [I12](../architecture/components/harness/integrations/I12.yaml) checkpoint → Runner | И2: свой saver | И2: `RunState` строкой | И2: история сообщений | И1: своё хранилище checkpoint | И1: свой сервис сессий | И0: сессии в файлах | И0 |
 
 **Изменения у соседей:**
 
 | Кандидат | Что меняется у соседей |
 |---|---|
-| LangGraph, OpenAI SDK, PydanticAI, MAF | ничего: библиотека внутри образа Harness |
-| Google ADK | Runner: хранение сессий ADK вместо checkpoint (I12 меняет формат) |
-| Claude Agent SDK | техспека Harness: в образе Node и CLI Claude Code; LiteLLM: Anthropic-endpoint |
-| Hermes Agent | Runner (своё расписание и диспетчер), Sandbox (свои терминалы), Memory (своя память), Guardrails (свои подтверждения) — четыре компонента переписываются |
+| LangGraph, OpenAI SDK, PydanticAI, MAF | ничего: библиотека внутри образа [Harness](../architecture/components/harness/README.md) |
+| Google ADK | Runner: хранение сессий ADK вместо checkpoint ([I12](../architecture/components/harness/integrations/I12.yaml) меняет формат) |
+| Claude Agent SDK | техспека [Harness](../architecture/components/harness/README.md): в образе Node и CLI Claude Code; LiteLLM: Anthropic-endpoint |
+| Hermes Agent | Runner (своё расписание и диспетчер), [Sandbox](../architecture/components/sandbox/README.md) (свои терминалы), [Memory](../architecture/components/memory/README.md) (своя память), [Guardrails](../architecture/components/guardrails/README.md) (свои подтверждения) — четыре компонента переписываются |
 
-**Вывод этапа.** ==Библиотеки встают в Harness без изменений у соседей; Hermes заменил бы четыре компонента платформы.== У LangGraph все стыки на уровне И2: протокол совпадает с нашими I-кодами, свой код — checkpointer и преобразование событий.
+**Вывод этапа.** ==Библиотеки встают в [Harness](../architecture/components/harness/README.md) без изменений у соседей; Hermes заменил бы четыре компонента платформы.== У LangGraph все стыки на уровне И2: протокол совпадает с нашими I-кодами, свой код — checkpointer и преобразование событий.
 
-<span class="gate">G7</span> ✅ отсев до сравнения; готовность по I7–I12 у каждого прошедшего; изменения у соседей названы.
+<span class="gate">G7</span> ✅ отсев до сравнения; готовность по [I7](../architecture/components/agent-runner/integrations/I7.yaml)–[I12](../architecture/components/harness/integrations/I12.yaml) у каждого прошедшего; изменения у соседей названы.
 
 ## Э8. Спор ролей {#e8}
 
@@ -301,15 +301,15 @@ Hermes Agent силён: подтверждения, 7 видов термина
 | Роль | За | Довод | Опасение | Согласится, если |
 |---|---|---|---|---|
 | Разработчик 🤖 | LangGraph | `interrupt` и checkpoint на каждом шаге — меньше своего кода (Э3) | ломающие изменения LangChain | версия закреплена, LangGraph за своим интерфейсом |
-| Архитектор 🤖 | LangGraph | узлы G2 и checkpointer через Runner ложатся на I10, I12 | — | — |
+| Архитектор 🤖 | LangGraph | узлы G2 и checkpointer через Runner ложатся на [I10](../architecture/components/harness/integrations/I10.yaml), [I12](../architecture/components/harness/integrations/I12.yaml) | — | — |
 | DevOps 🤖 | нейтрально | обе библиотеки — Python-пакет в образе | размер образа | образ по техспеке, зависимости закреплены |
 | Безопасность 🤖 | нейтрально | секретов в sandbox нет при любом выборе (egress-прокси) | Hermes и Claude SDK тянут свои механизмы прав | Hermes и Claude SDK не выбраны |
 | Тестировщик 🤖 (оппонент) | OpenAI Agents SDK | цикл проще, тесты короче; подтверждение тула из коробки | у LangGraph сложнее отладка графа | сравнение на одинаковых эталонных задачах |
 
 | Спор | Разрешение |
 |---|---|
-| Оппонент: «SDK проще и тоже продолжает после паузы» | ✅ **внесено:** подзадача 1.3.9 — прототип на 5–10 эталонных задачах, AG1–AG5 для LangGraph и OpenAI Agents SDK; при равенстве и меньшем коде — пересмотр AD-2 |
-| Адвокат дьявола: «LangChain ломает API каждые полгода» | **условие:** версия 1.2.14 закреплена (AD-18), LangGraph за интерфейсом Harness |
+| Оппонент: «SDK проще и тоже продолжает после паузы» | ✅ **внесено:** подзадача 1.3.9 — прототип на 5–10 эталонных задачах, AG1–AG5 для LangGraph и OpenAI Agents SDK; при равенстве и меньшем коде — пересмотр [AD-2](../architecture/decisions/AD-2.yaml) |
+| Адвокат дьявола: «LangChain ломает API каждые полгода» | **условие:** версия 1.2.14 закреплена ([AD-18](../architecture/decisions/AD-18.yaml)), LangGraph за интерфейсом [Harness](../architecture/components/harness/README.md) |
 | Адвокат дьявола: «Hermes в 6 раз популярнее — может, он и есть платформа?» | **отклонено фактами Э7:** Hermes заменяет четыре компонента; функции берём по одной (Э6) |
 | Безопасность: «“умное” подтверждение пропустит опасное» | **условие:** не брать сейчас; в бэклоге — с оценкой ложных пропусков |
 
@@ -331,18 +331,18 @@ Hermes Agent силён: подтверждения, 7 видов термина
 | П8 указания | частично: вставка в состояние | частично | частично | закрывает | частично | частично | закрывает | с доработкой |
 | П9 библиотека в sandbox | закрывает | закрывает | закрывает | закрывает | частично: сессии | не закрывает: Node + CLI | не закрывает: свои сервисы | закрывает |
 
-- **Утверждение.** Оставляем LangGraph (AD-2) за своим интерфейсом Harness; статус Trial до прототипа.
+- **Утверждение.** Оставляем LangGraph ([AD-2](../architecture/decisions/AD-2.yaml)) за своим интерфейсом [Harness](../architecture/components/harness/README.md); статус Trial до прототипа.
 - **Основания.**
   - LangGraph закрывает 8 из 9 потребностей.
   - Состояние сохраняется после каждого шага — это П3, которой у OpenAI SDK на уровне шага не подтверждено.
   - Все стыки на И2, соседи не меняются (Э7).
 - **Связка.** Восстановление после сбоя и пауза в другом процессе — базовые для запусков, которые ждут человека до 24 ч. Остальные кандидаты либо требуют внешнего движка, либо заменяют компоненты платформы.
-- **Опровержение.** Вывод неверен, если прототип 1.3.9 покажет, что OpenAI Agents SDK проходит AG1–AG5 не хуже при заметно меньшем коде. Тогда AD-2 пересматривается.
+- **Опровержение.** Вывод неверен, если прототип 1.3.9 покажет, что OpenAI Agents SDK проходит AG1–AG5 не хуже при заметно меньшем коде. Тогда [AD-2](../architecture/decisions/AD-2.yaml) пересматривается.
 
 | Риск лидера | Что делаем |
 |---|---|
-| Ломающие изменения API LangChain | версия закреплена, свой интерфейс Harness |
-| Сложность отладки графа | события каждого узла в таймлайне (FR-24) |
+| Ломающие изменения API LangChain | версия закреплена, свой интерфейс [Harness](../architecture/components/harness/README.md) |
+| Сложность отладки графа | события каждого узла в таймлайне ([FR-24](../architecture/components/harness/prd.md)) |
 
 <span class="gate">G9</span> ✅ вывод следует из покрытия, встраивания и спора; есть опровержение.
 
@@ -352,12 +352,12 @@ Hermes Agent силён: подтверждения, 7 видов термина
 |---|---|---|
 | Прототип с evals AG1–AG5: LangGraph и OpenAI Agents SDK на 5–10 эталонных задачах | [задача 1.3](..\source\tasks\1.3-harness-core.md) (подзадача 1.3.9) | ✅ внесено |
 | Статус LangGraph: Trial до прототипа | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | ✅ внесено |
-| Альтернативы в решении AD-2: OpenAI SDK, PydanticAI, ADK, MAF, Hermes | [design AD-2](..\source\design\define-agent-platform\design.md) | ✅ внесено |
+| Альтернативы в решении [AD-2](../architecture/decisions/AD-2.yaml): OpenAI SDK, PydanticAI, ADK, MAF, Hermes | [design AD-2](..\source\design\define-agent-platform\design.md) | ✅ внесено |
 | «Умное» подтверждение (Hermes) | [BACKLOG](..\source\BACKLOG.md) | ✅ внесено в бэклог |
-| «Одобрить только этот вызов / до конца запуска» в `ApprovalDecision` | FR-112, I7 | ✅ внесено: сценарий в FR-112, поле `scope`, подзадача 1.5.6 |
-| Решение AD-2 и версия 1.2.14 | design AD-2, AD-18 | ✅ подтверждено, без изменений |
-| Стыки I7–I12 | спека agent-harness, [поток Harness](..\architecture\components\harness\docs\how.md) | — не требуется: протоколы не меняются |
-| Техспека Harness | [техспека](..\architecture\components\harness\docs\techspec.md) | — не требуется |
+| «Одобрить только этот вызов / до конца запуска» в [`ApprovalDecision`](../architecture/data/model-ApprovalDecision.yaml) | [FR-112](../architecture/components/guardrails/prd.md), [I7](../architecture/components/agent-runner/integrations/I7.yaml) | ✅ внесено: сценарий в [FR-112](../architecture/components/guardrails/prd.md), поле `scope`, подзадача 1.5.6 |
+| Решение [AD-2](../architecture/decisions/AD-2.yaml) и версия 1.2.14 | design [AD-2](../architecture/decisions/AD-2.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | ✅ подтверждено, без изменений |
+| Стыки [I7](../architecture/components/agent-runner/integrations/I7.yaml)–[I12](../architecture/components/harness/integrations/I12.yaml) | спека agent-harness, [поток Harness](..\architecture\components\harness\docs\how.md) | — не требуется: протоколы не меняются |
+| Техспека [Harness](../architecture/components/harness/README.md) | [техспека](..\architecture\components\harness\docs\techspec.md) | — не требуется |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.
 

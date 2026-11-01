@@ -6,12 +6,12 @@
 
 | # | Поток | Участники | Данные | Правило | I | Сценарий |
 |---|---|---|---|---|---|---|
-| 1 | Список тулов агенту | MCP-сервер → MCP-прокси Agent Runner → Harness | тулы, отфильтрованные allowlist запуска (AD-19) | R3 | I9 | С1 |
-| 2 | Вызов тула | Harness → MCP-прокси Agent Runner → MCP-сервер | `McpToolCall` | R2 | I9, I24 | С1 |
-| 3 | Проверка перед вызовом | Harness, затем MCP-прокси → Guardrails | `PolicyInput` G2 | — | I10 | С1 |
-| 4 | Работа с задачей | MCP itsaplan-core внутри api ICPlan | задача, комментарий, поля задачи | R3 | I24 | С1 |
+| 1 | Список тулов агенту | MCP-сервер → MCP-прокси [Agent Runner](../../agent-runner/README.md) → [Harness](../../harness/README.md) | тулы, отфильтрованные allowlist запуска ([AD-19](../../../decisions/AD-19.yaml)) | R3 | [I9](../../harness/integrations/I9.yaml) | С1 |
+| 2 | Вызов тула | [Harness](../../harness/README.md) → MCP-прокси [Agent Runner](../../agent-runner/README.md) → MCP-сервер | [`McpToolCall`](../../../data/model-McpToolCall.yaml) | R2 | [I9](../../harness/integrations/I9.yaml), [I24](../../agent-runner/integrations/I24.yaml) | С1 |
+| 3 | Проверка перед вызовом | [Harness](../../harness/README.md), затем MCP-прокси → [Guardrails](../../guardrails/README.md) | [`PolicyInput`](../../../data/model-PolicyInput.yaml) G2 | — | [I10](../../harness/integrations/I10.yaml) | С1 |
+| 4 | Работа с задачей | MCP itsaplan-core внутри api [ICPlan](../../icplan/README.md) | задача, комментарий, поля задачи | R3 | [I24](../../agent-runner/integrations/I24.yaml) | С1 |
 | 5 | Работа с кодом | MCP git → git-провайдер | ветка, PR | R3 | — | — |
-| 6 | Запись памяти | нативный тул Harness → Memory | `M3Record` | R4 | I11 | — |
+| 6 | Запись памяти | нативный тул [Harness](../../harness/README.md) → [Memory](../../memory/README.md) | [`M3Record`](../../../data/model-M3Record.yaml) | R4 | [I11](../../harness/integrations/I11.yaml) | — |
 | 7 | Внутренние вызовы платформы | сервис → сервис | REST, не MCP | R7 | — | — |
 
 #### С1. Вызов тула itsaplan-core

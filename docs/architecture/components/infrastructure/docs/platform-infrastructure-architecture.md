@@ -42,7 +42,7 @@
 | Traefik | Вход по HTTPS, TLS, маршруты | ⚠️ проверен локально (AI-агент 7.12) |
 | Service (ClusterIP) | Балансировка по репликам | ✅ средство k8s |
 | PgBouncer | Пул соединений Postgres | ⬜ не начато |
-| PostgreSQL 17 + pgvector | Данные ICPlan, платформы, LiteLLM | ⚠️ есть в compose; CloudNativePG — не начато |
+| PostgreSQL 17 + pgvector | Данные [ICPlan](../../icplan/README.md), платформы, LiteLLM | ⚠️ есть в compose; CloudNativePG — не начато |
 | RustFS | S3 для вложений и копий | ⚠️ есть в compose |
 | S3 вне узла | Резервные копии | ⬜ не начато |
 | NetworkPolicy | Изоляция зон | ⬜ не начато |

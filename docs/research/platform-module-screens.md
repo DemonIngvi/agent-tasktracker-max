@@ -1,12 +1,12 @@
 # R&D: Где администратор задаёт настройки Platform module
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **ICPlan (Control Plane UI), Platform module** · решение: [design AD-24](..\source\design\define-agent-platform\design.md) · вопрос: ОВ-control-plane-1, [Z-ICP-19](..\architecture\components\icplan\docs\findings.md)
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[ICPlan](../architecture/components/icplan/README.md) (Control Plane UI), [Platform module](../architecture/components/platform-module/README.md)** · решение: [design AD-24](..\source\design\define-agent-platform\design.md) · вопрос: ОВ-control-plane-1, [Z-ICP-19](..\architecture\components\icplan\docs\findings.md)
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
-У Platform module три уровня настроек: агент (автономия, бюджеты, профили, тулы с подтверждением, kill switch агента), проект (руководство, месячный бюджет, доступы к репозиториям и папкам, шаг подготовки) и весь экземпляр (профили среды и памяти, глобальный kill switch, журнал). Экранов для них в форке нет. Где их задаёт администратор?
+У [Platform module](../architecture/components/platform-module/README.md) три уровня настроек: агент (автономия, бюджеты, профили, тулы с подтверждением, kill switch агента), проект (руководство, месячный бюджет, доступы к репозиториям и папкам, шаг подготовки) и весь экземпляр (профили среды и памяти, глобальный kill switch, журнал). Экранов для них в форке нет. Где их задаёт администратор?
 
-<div class="rnd-a">Ответ: там, где живёт объект настройки. Настройки агента — раздел «Платформа» в карточке агента ICPlan. Настройки проекта — раздел «Платформа» в группе «ИИ-команда» проекта. Настройки экземпляра — раздел God mode через точку расширения форка `@/cloud`. Права — ресурс `ai_agents` форка, God mode — владелец экземпляра.</div>
+<div class="rnd-a">Ответ: там, где живёт объект настройки. Настройки агента — раздел «Платформа» в карточке агента [ICPlan](../architecture/components/icplan/README.md). Настройки проекта — раздел «Платформа» в группе «ИИ-команда» проекта. Настройки экземпляра — раздел God mode через точку расширения форка `@/cloud`. Права — ресурс `ai_agents` форка, God mode — владелец экземпляра.</div>
 
 <span class="rnd-badge adopt">Adopt</span> смешанная раскладка · 0 $ · данные 12.10.2026
 </div>
@@ -52,13 +52,13 @@ stack Документы: 9 ok, 0 part, 0 mute
 - раздел «Платформа» в карточке агента: компонент раздела, как другие разделы `TeamAiAgentFields.tsx`;
 - раздел проекта — записью `SETTINGS_SECTIONS` (группа `ai-team`, как «Расписания»);
 - God mode — через `godSections` в `@/cloud` (`CLOUD_UI_ENTRY`), без правки файлов форка;
-- права — ресурс `ai_agents` форка (FR-101).
+- права — ресурс `ai_agents` форка ([FR-101](../architecture/components/platform-module/prd.md)).
 </div>
 <div class="adapt" markdown>
 **Адаптируем**
 
-- карточка внешнего агента показывает поля Registry: модель (алиас LiteLLM), навыки, тулы — сейчас их видно только у внутреннего агента; MCP-серверы агента — не поле Registry, а ресурсы проекта Platform module (`project_resource` с `kind = mcp` и `access_policy`, AD-23);
-- точки расширения для карточки агента и настроек проекта — PR в upstream (AD-18), после него правок файлов форка нет.
+- карточка внешнего агента показывает поля Registry: модель (алиас LiteLLM), навыки, тулы — сейчас их видно только у внутреннего агента; MCP-серверы агента — не поле Registry, а ресурсы проекта [Platform module](../architecture/components/platform-module/README.md) (`project_resource` с `kind = mcp` и `access_policy`, [AD-23](../architecture/decisions/AD-23.yaml));
+- точки расширения для карточки агента и настроек проекта — PR в upstream ([AD-18](../architecture/decisions/AD-18.yaml)), после него правок файлов форка нет.
 </div>
 <div class="drop" markdown>
 **Не берём**
@@ -72,7 +72,7 @@ stack Документы: 9 ok, 0 part, 0 mute
 <div class="no" markdown>
 **Отсеяны до сравнения**
 
-- своя консоль Platform module — против «UI — экраны ICPlan» (spec control-plane, блок Control Plane UI).
+- своя консоль [Platform module](../architecture/components/platform-module/README.md) — против «UI — экраны [ICPlan](../architecture/components/icplan/README.md)» (spec control-plane, блок Control Plane UI).
 </div>
 <div class="risk" markdown>
 **Риски и пересмотр**
@@ -84,13 +84,13 @@ stack Документы: 9 ok, 0 part, 0 mute
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** Platform module — модуль форка ICPlan (AD-3), его UI — экраны ICPlan (spec control-plane, Purpose). Настройки хранятся в схеме `platform` (AD-22):
+**Ситуация.** [Platform module](../architecture/components/platform-module/README.md) — модуль форка [ICPlan](../architecture/components/icplan/README.md) ([AD-3](../architecture/decisions/AD-3.yaml)), его UI — экраны [ICPlan](../architecture/components/icplan/README.md) (spec control-plane, Purpose). Настройки хранятся в схеме `platform` ([AD-22](../architecture/decisions/AD-22.yaml)):
 
 - по агенту — `agent_settings` и версии;
 - по проекту — `project_platform`, `project_resource`, `access_policy`;
 - на весь экземпляр — `sandbox_profile`, `memory_profile`, `kill_switch` (`datamodel.PLATFORM_TABLES`).
 
-API описан (Platform module). Экран «Настройки платформы для агента» в блоке Control Plane UI записан как «не решено».
+API описан ([Platform module](../architecture/components/platform-module/README.md)). Экран «Настройки платформы для агента» в блоке Control Plane UI записан как «не решено».
 
 **Осложнение.** В форке три места настроек со своими правами:
 
@@ -98,11 +98,11 @@ API описан (Platform module). Экран «Настройки платфо
 - настройки проекта (`apps/web/src/utils/settingsSections.ts`, `features/settings/*`);
 - настройки команды (`TeamSection` в `utils/paths.ts`, `TeamSectionNav.tsx`).
 
-Ещё есть точка расширения `@/cloud` для рабочего пространства и God mode (`apps/web/src/ce`). Каждая правка файлов форка — риск конфликта при слиянии с upstream (AD-18).
+Ещё есть точка расширения `@/cloud` для рабочего пространства и God mode (`apps/web/src/ce`). Каждая правка файлов форка — риск конфликта при слиянии с upstream ([AD-18](../architecture/decisions/AD-18.yaml)).
 
-**Вопрос.** Какие экраны ICPlan отдать каждому уровню настроек Platform module?
+**Вопрос.** Какие экраны [ICPlan](../architecture/components/icplan/README.md) отдать каждому уровню настроек [Platform module](../architecture/components/platform-module/README.md)?
 
-**Решает:** архитектор с администратором (ОВ-control-plane-1). **Не решаем:** состав настроек (FR-95, FR-102), API модуля (каталог), дизайн полей.
+**Решает:** архитектор с администратором (ОВ-control-plane-1). **Не решаем:** состав настроек ([FR-95](../architecture/components/platform-module/prd.md), [FR-102](../architecture/components/platform-module/prd.md)), API модуля (каталог), дизайн полей.
 
 <span class="gate">G1</span> ✅ вопрос — выбор раскладки экранов; владелец и связь с ОВ-control-plane-1 названы.
 
@@ -110,11 +110,11 @@ API описан (Platform module). Экран «Настройки платфо
 
 | # | Потребность | Источник | Без неё |
 |---|---|---|---|
-| П1 | настройки агента — там, где администратор правит агента, вместе с полями Registry | FR-95 («видны в карточке агента в ICPlan»); US-PM-01, US-PM-02, US-PM-05 («агент → вкладка «Платформа»»); US-GRD-06 | агента настраивают в двух местах |
-| П2 | настройки проекта — в проекте, с правами проекта | US-PM-06, US-PM-08 («Настройки проекта → Платформа»); FR-102; FR-76 | руководство и доступы проекта правят из чужого контекста |
-| П3 | настройки экземпляра — профили, глобальный kill switch, журнал — без привязки к команде и проекту | `sandbox_profile`, `memory_profile` без команды и проекта; kill switch «агента и всей платформы» (spec guardrails); US-GRD-04, US-PM-07 | общие справочники правят из каждой команды |
-| П4 | менять — право управления агентами, смотреть — право чтения; без нового ресурса прав | FR-101 | новая строка в матрице ролей форка |
-| П5 | мало правок существующих файлов форка | AD-18 «слияние с upstream: отдельные модули, за флагами» | конфликты при обновлении форка |
+| П1 | настройки агента — там, где администратор правит агента, вместе с полями Registry | [FR-95](../architecture/components/platform-module/prd.md) («видны в карточке агента в [ICPlan](../architecture/components/icplan/README.md)»); [US-PM-01](../architecture/components/platform-module/stories/us-pm-01.yaml), [US-PM-02](../architecture/components/platform-module/stories/us-pm-02.yaml), [US-PM-05](../architecture/components/platform-module/stories/us-pm-05.yaml) («агент → вкладка «Платформа»»); [US-GRD-06](../architecture/components/guardrails/stories/us-grd-06.yaml) | агента настраивают в двух местах |
+| П2 | настройки проекта — в проекте, с правами проекта | [US-PM-06](../architecture/components/platform-module/stories/us-pm-06.yaml), [US-PM-08](../architecture/components/platform-module/stories/us-pm-08.yaml) («Настройки проекта → Платформа»); [FR-102](../architecture/components/platform-module/prd.md); [FR-76](../architecture/components/agent-runner/prd.md) | руководство и доступы проекта правят из чужого контекста |
+| П3 | настройки экземпляра — профили, глобальный kill switch, журнал — без привязки к команде и проекту | `sandbox_profile`, `memory_profile` без команды и проекта; kill switch «агента и всей платформы» (spec guardrails); [US-GRD-04](../architecture/components/guardrails/stories/us-grd-04.yaml), [US-PM-07](../architecture/components/platform-module/stories/us-pm-07.yaml) | общие справочники правят из каждой команды |
+| П4 | менять — право управления агентами, смотреть — право чтения; без нового ресурса прав | [FR-101](../architecture/components/platform-module/prd.md) | новая строка в матрице ролей форка |
+| П5 | мало правок существующих файлов форка | [AD-18](../architecture/decisions/AD-18.yaml) «слияние с upstream: отдельные модули, за флагами» | конфликты при обновлении форка |
 
 <span class="gate">G2</span> ✅ у потребностей есть источник и цена отсутствия.
 
@@ -128,7 +128,7 @@ API описан (Platform module). Экран «Настройки платфо
 | разделы команды | объединение `TeamSection` и меню; группа ИИ — по правам `integrations`, `ai_agents`, `agent_skills`, `agent_tools` | П3, П4 | `utils/paths.ts`, `TeamSectionNav.tsx` (Б, код) |
 | точка расширения `@/cloud` | сборка подменяет модуль `src/ce` (`CLOUD_UI_ENTRY`): свои разделы God mode (`godSections`) и рабочего пространства (`useWorkspaceSections`) с компонентом страницы | П3, П5 | `apps/web/next.config.ts`, `src/ce/*`, `utils/godSections.ts` (Б, код) |
 | God mode | администрирование экземпляра, только учётная запись владельца | П3 | `utils/godSections.ts` (Б, код) |
-| Platform module сейчас | только API и YAML; UI в первой итерации не делаем | — | design Non-Goals, API Platform module |
+| [Platform module](../architecture/components/platform-module/README.md) сейчас | только API и YAML; UI в первой итерации не делаем | — | design Non-Goals, API [Platform module](../architecture/components/platform-module/README.md) |
 
 **Вывод этапа.** У форка есть место для каждого уровня: карточка агента, раздел проекта, God mode. ==Без правки файлов расширяются только God mode и рабочее пространство==, а карточка и проект требуют правок.
 
@@ -136,7 +136,7 @@ API описан (Platform module). Экран «Настройки платфо
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
-Поиск — по коду web форка (`apps/web/src`), спекам control-plane и guardrails, историям Platform module, 12.10.2026.
+Поиск — по коду web форка (`apps/web/src`), спекам control-plane и guardrails, историям [Platform module](../architecture/components/platform-module/README.md), 12.10.2026.
 
 | Вариант | Ключевая функция |
 |---|---|
@@ -144,7 +144,7 @@ API описан (Platform module). Экран «Настройки платфо
 | A. Всё в карточке агента | раздел «Платформа» в `TeamAiAgentFields.tsx` |
 | B. Страница «Платформа» в настройках команды | новый `TeamSection` и пункт меню; внутри — агенты, проекты, профили |
 | C. Смешанно | агент — карточка; проект — раздел `ai-team`; экземпляр — God mode через `@/cloud` |
-| D. Своя консоль Platform module | отдельное веб-приложение |
+| D. Своя консоль [Platform module](../architecture/components/platform-module/README.md) | отдельное веб-приложение |
 | E. Разделы рабочего пространства | всё через `useWorkspaceSections` в `@/cloud`, без правок файлов форка |
 
 <span class="gate">G4</span> ✅ 6 кандидатов; «как сейчас» и «сделать самим» (D) в списке; источники — код форка, спеки, истории.
@@ -153,7 +153,7 @@ API описан (Platform module). Экран «Настройки платфо
 
 | Функция | Потребность | Почему ценна | Доказательство | Класс |
 |---|---|---|---|---|
-| настройки агента в карточке | П1 | один экран агента | FR-95, US-PM-01 | базовая |
+| настройки агента в карточке | П1 | один экран агента | [FR-95](../architecture/components/platform-module/prd.md), [US-PM-01](../architecture/components/platform-module/stories/us-pm-01.yaml) | базовая |
 | раздел проекта с правами проекта | П2, П4 | права проекта уже работают (`SETTINGS_SECTIONS.resource`) | `settingsSections.ts` (Б) | базовая |
 | раздел экземпляра без правок | П3, П5 | справочники экземпляра — в администрировании экземпляра; подмена модуля сборкой | `@/cloud` (Б) | линейная |
 | ресурс прав `ai_agents` | П4 | нет новой строки в матрице ролей | «Расписания» в `ai-team` (Б) | линейная |
@@ -169,7 +169,7 @@ API описан (Platform module). Экран «Настройки платфо
 | раздел `ai-team` проекта | брать | П2, права проекта |
 | God mode через `@/cloud` | брать | П3 без правок |
 | поля Registry у внешнего агента | адаптировать | сейчас только у внутреннего; нужны по [R&D определения агента](runner-agent-definition.md) |
-| точки расширения карточки и проекта | адаптировать | PR в upstream (AD-18); до принятия — правка двух файлов |
+| точки расширения карточки и проекта | адаптировать | PR в upstream ([AD-18](../architecture/decisions/AD-18.yaml)); до принятия — правка двух файлов |
 | своя консоль | не брать | против spec control-plane |
 
 **MUST:** П1 и П2 (настройки у своего объекта). **Критерии:** П3, П4, П5.
@@ -178,12 +178,12 @@ API описан (Platform module). Экран «Настройки платфо
 
 ## Э7. Отсев и встраивание {#e7}
 
-Отсеяна своя консоль (D): spec control-plane — «UI — экраны ICPlan»; блок Control Plane UI — «не пишем свою консоль».
+Отсеяна своя консоль (D): spec control-plane — «UI — экраны [ICPlan](../architecture/components/icplan/README.md)»; блок Control Plane UI — «не пишем свою консоль».
 
 | Кандидат | Экраны и интерфейсы | Права | Правки существующих файлов форка | Готовность |
 |---|---|---|---|---|
-| A. Карточка | I20 → `/platform/agents/:agentId/*`, `/platform/projects/:projectKey/*` из карточки агента | `ai_agents` | `TeamAiAgentFields.tsx` | И2: API описан, экрана нет |
-| B. Страница команды | I20 → все `/platform/*` с одной страницы | право команды | `paths.ts`, `TeamSectionNav.tsx`, сообщения | И2 |
+| A. Карточка | [I20](../architecture/components/icplan/integrations/I20.yaml) → `/platform/agents/:agentId/*`, `/platform/projects/:projectKey/*` из карточки агента | `ai_agents` | `TeamAiAgentFields.tsx` | И2: API описан, экрана нет |
+| B. Страница команды | [I20](../architecture/components/icplan/integrations/I20.yaml) → все `/platform/*` с одной страницы | право команды | `paths.ts`, `TeamSectionNav.tsx`, сообщения | И2 |
 | C. Смешанно | карточка → `/platform/agents/:agentId/*`; раздел проекта → `/platform/projects/:projectKey/*`; God mode → профили, kill switch, `/platform/audit` | карточка и проект — `ai_agents` (чтение и `edit`); God mode — владелец | `TeamAiAgentFields.tsx`, `settingsSections.ts`, сообщения `messages/*/sections.json`; новые файлы — компоненты и страница маршрута | И2 |
 | E. Рабочее пространство | все `/platform/*` из раздела рабочего пространства | владелец и администраторы рабочего пространства | нет | И2 |
 
@@ -193,9 +193,9 @@ API описан (Platform module). Экран «Настройки платфо
 | проект | Проект → ИИ-команда → «Платформа» | `project_platform`, `project_resource`, `access_policy` | `/platform/projects/:projectKey/guidance`, `/budget`, `/access` |
 | экземпляр | God mode → «Платформа» | `sandbox_profile`, `memory_profile`, `kill_switch` (`platform`) | `GET /platform/audit`; профилей и kill switch в каталоге нет |
 
-**Вывод этапа.** Все кандидаты ходят в один и тот же API Platform module (I20), различаются местом экрана и правами. Встраивание C не меняет ни одного I-кода. ==Нужны эндпоинты профилей, kill switch, ресурсов проекта и версий==, которых в каталоге нет.
+**Вывод этапа.** Все кандидаты ходят в один и тот же API [Platform module](../architecture/components/platform-module/README.md) ([I20](../architecture/components/icplan/integrations/I20.yaml)), различаются местом экрана и правами. Встраивание C не меняет ни одного I-кода. ==Нужны эндпоинты профилей, kill switch, ресурсов проекта и версий==, которых в каталоге нет.
 
-<span class="gate">G7</span> ✅ у каждого прошедшего есть строка встраивания; изменения у соседей (API Platform module) названы.
+<span class="gate">G7</span> ✅ у каждого прошедшего есть строка встраивания; изменения у соседей (API [Platform module](../architecture/components/platform-module/README.md)) названы.
 
 ## Э8. Спор ролей {#e8}
 
@@ -203,17 +203,17 @@ API описан (Platform module). Экран «Настройки платфо
 
 | Роль | За | Довод | Опасение | Согласится, если |
 |---|---|---|---|---|
-| Администратор 🤖 | C | агента правит в карточке, проект — в проекте (US-PM-01, US-PM-08) | ищет профили | профили — в God mode, ссылка из раздела агента |
+| Администратор 🤖 | C | агента правит в карточке, проект — в проекте ([US-PM-01](../architecture/components/platform-module/stories/us-pm-01.yaml), [US-PM-08](../architecture/components/platform-module/stories/us-pm-08.yaml)) | ищет профили | профили — в God mode, ссылка из раздела агента |
 | Сопровождающий форка 🤖 | C | правок — два файла и сообщения; экземпляр — через `@/cloud` | правка стека карточки | PR точки расширения в upstream |
 | Безопасность 🤖 | C | права проекта и `ai_agents` форка, нового ресурса нет | журнал только у владельца экземпляра | `GET /platform/audit` с правом чтения для Безопасности |
-| DevOps 🤖 (оппонент) | B | одна страница — проще найти | глобальный kill switch только у владельца | kill switch есть и в API для эксплуатации (US-GRD-04 «команда эксплуатации») |
+| DevOps 🤖 (оппонент) | B | одна страница — проще найти | глобальный kill switch только у владельца | kill switch есть и в API для эксплуатации ([US-GRD-04](../architecture/components/guardrails/stories/us-grd-04.yaml) «команда эксплуатации») |
 
 | Спор | Разрешение |
 |---|---|
 | Оппонент: «одна страница — один адрес» | **условие:** в разделе агента — ссылки на проект и God mode. На странице команды право проверяется на уровне команды (`teamPermission`), а не проекта, а настройки агента уходят из карточки — против П1, П2 |
-| DevOps: «глобальный kill switch у одного владельца» | **задача:** эндпоинт kill switch в API Platform module для эксплуатации; экран — в God mode |
+| DevOps: «глобальный kill switch у одного владельца» | **задача:** эндпоинт kill switch в API [Platform module](../architecture/components/platform-module/README.md) для эксплуатации; экран — в God mode |
 | Адвокат дьявола: «правка `TeamAiAgentFields.tsx` конфликтует с upstream» | **задача:** PR в upstream с точкой расширения разделов карточки и проекта через `@/cloud` (как `godSections`); до принятия — одна строка в стеке |
-| Адвокат дьявола: «внешний агент в карточке не показывает модель, навыки, тулы» | **требование:** карточка внешнего агента платформы показывает поля Registry (FR-54, AD-23) |
+| Адвокат дьявола: «внешний агент в карточке не показывает модель, навыки, тулы» | **требование:** карточка внешнего агента платформы показывает поля Registry ([FR-54](../architecture/components/platform-module/prd.md), [AD-23](../architecture/decisions/AD-23.yaml)) |
 
 <span class="gate">G8</span> ✅ у каждого спора есть разрешение.
 
@@ -227,7 +227,7 @@ API описан (Platform module). Экран «Настройки платфо
 | П4 права | частично: только API | закрывает | частично: право команды | закрывает | частично: только владелец и администраторы |
 | П5 правки форка | закрывает | частично: 1 файл | частично: 2 файла | с доработкой: 2 файла, до PR в upstream | закрывает |
 
-- **Утверждение.** Смешанная раскладка C (AD-24).
+- **Утверждение.** Смешанная раскладка C ([AD-24](../architecture/decisions/AD-24.yaml)).
 - **Основания.** У каждого уровня в форке уже есть место с подходящими правами: стек карточки, `SETTINGS_SECTIONS` с ресурсом прав, God mode через `@/cloud` (код форка).
 - **Связка.** Администратор находит настройку у её объекта, права форка работают без нового ресурса. Правок файлов форка две, а после PR в upstream не будет ни одной.
 - **Оговорка.** Пока владелец экземпляра — администратор платформы.
@@ -241,16 +241,16 @@ API описан (Platform module). Экран «Настройки платфо
 
 | Изменение | Документ | Статус |
 |---|---|---|
-| Решение AD-24: экраны Platform module по уровням, права `ai_agents` и владелец экземпляра | [design](..\source\design\define-agent-platform\design.md) | ✅ внесено |
-| ОВ-control-plane-1 закрыт ссылкой на AD-24 | `control-plane/open-questions.md` | ✅ внесено |
+| Решение [AD-24](../architecture/decisions/AD-24.yaml): экраны [Platform module](../architecture/components/platform-module/README.md) по уровням, права `ai_agents` и владелец экземпляра | [design](..\source\design\define-agent-platform\design.md) | ✅ внесено |
+| ОВ-control-plane-1 закрыт ссылкой на [AD-24](../architecture/decisions/AD-24.yaml) | `control-plane/open-questions.md` | ✅ внесено |
 | Экран «Настройки платформы для агента»: место «не решено» → три экрана C с путями кода | `html-view/subcomponents.py`, Control Plane UI `screens` | ✅ внесено |
-| Карточка внешнего агента: поля Registry (модель-алиас, навыки, тулы) — доработка форка; MCP — ресурсы проекта Platform module (AD-23) | `subcomponents.py` «Карточка агента»; FR-54 | ✅ внесено |
+| Карточка внешнего агента: поля Registry (модель-алиас, навыки, тулы) — доработка форка; MCP — ресурсы проекта [Platform module](../architecture/components/platform-module/README.md) ([AD-23](../architecture/decisions/AD-23.yaml)) | `subcomponents.py` «Карточка агента»; [FR-54](../architecture/components/platform-module/prd.md) | ✅ внесено |
 | Таблицы экранов из Э7 (`agent_settings_version`, `kill_switch`, `project_platform`, `project_resource`, `access_policy`, `sandbox_profile`, `memory_profile`) — в «Данные» Control Plane UI | `subcomponents.py` Control Plane UI `data` | ✅ внесено |
-| Эндпоинты: профили среды и памяти, kill switch (`agent:<id>`, `platform`), ресурсы проекта и шаг подготовки, история и откат настроек (FR-98) | API Platform module, `datamodel.ENDPOINT_IO` | ✅ внесено |
-| `GET /platform/audit`: право чтения для Безопасности (US-PM-07) | API Platform module | ✅ внесено |
-| Где в интерфейсе: US-PM-01, US-PM-06, US-PM-07, US-GRD-04 — по AD-24 | истории Platform module, истории guardrails | ✅ внесено |
+| Эндпоинты: профили среды и памяти, kill switch (`agent:<id>`, `platform`), ресурсы проекта и шаг подготовки, история и откат настроек ([FR-98](../architecture/components/platform-module/prd.md)) | API [Platform module](../architecture/components/platform-module/README.md), `datamodel.ENDPOINT_IO` | ✅ внесено |
+| `GET /platform/audit`: право чтения для Безопасности ([US-PM-07](../architecture/components/platform-module/stories/us-pm-07.yaml)) | API [Platform module](../architecture/components/platform-module/README.md) | ✅ внесено |
+| Где в интерфейсе: [US-PM-01](../architecture/components/platform-module/stories/us-pm-01.yaml), [US-PM-06](../architecture/components/platform-module/stories/us-pm-06.yaml), [US-PM-07](../architecture/components/platform-module/stories/us-pm-07.yaml), [US-GRD-04](../architecture/components/guardrails/stories/us-grd-04.yaml) — по [AD-24](../architecture/decisions/AD-24.yaml) | истории [Platform module](../architecture/components/platform-module/README.md), истории guardrails | ✅ внесено |
 | Задача 4.4: экраны C, PR точки расширения в upstream | [задача 4.4](..\source\tasks\4.4-platform-module.md) | ✅ внесено |
-| Z-ICP-19 → решено AD-24 | [замечания ICPlan](..\architecture\components\icplan\docs\findings.md) | ✅ внесено |
+| Z-ICP-19 → решено [AD-24](../architecture/decisions/AD-24.yaml) | [замечания ICPlan](..\architecture\components\icplan\docs\findings.md) | ✅ внесено |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.
 
@@ -259,7 +259,7 @@ API описан (Platform module). Экран «Настройки платфо
 Чтение — 12.10.2026; в скобках уровень доказательства.
 
 - Код web форка `локальный путь` (А, прочитан): `src/features/teams/components/ai-agents/AgentSheetForm.tsx`, `TeamAiAgentFields.tsx`; `src/utils/settingsSections.ts`, `paths.ts`, `godSections.ts`; `src/features/teams/components/TeamSectionNav.tsx`; `src/ce/*`; `next.config.ts`; `messages/*/sections.json`
-- [design](..\source\design\define-agent-platform\design.md): AD-3, AD-18, AD-22; Non-Goals
-- Спеки: control-plane FR-95, FR-101, FR-102; guardrails — kill switch
-- Истории: Platform module, guardrails, [персоны](..\source\personas.md)
+- [design](..\source\design\define-agent-platform\design.md): [AD-3](../architecture/decisions/AD-3.yaml), [AD-18](../architecture/decisions/AD-18.yaml), [AD-22](../architecture/decisions/AD-22.yaml); Non-Goals
+- Спеки: control-plane [FR-95](../architecture/components/platform-module/prd.md), [FR-101](../architecture/components/platform-module/prd.md), [FR-102](../architecture/components/platform-module/prd.md); guardrails — kill switch
+- Истории: [Platform module](../architecture/components/platform-module/README.md), guardrails, [персоны](..\source\personas.md)
 - `html-view/datamodel.py` `PLATFORM_TABLES` S2; `html-view/subcomponents.py` Control Plane UI

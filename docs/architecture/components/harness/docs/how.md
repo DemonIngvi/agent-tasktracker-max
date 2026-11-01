@@ -6,15 +6,15 @@
 
 | # | Поток | Участники | Данные | I | Сценарий |
 |---|---|---|---|---|---|
-| 1 | Задание | Agent Runner → Harness | `RunBundle` | I7 | С1 |
-| 2 | Сборка контекста: инструкция, навыки, M3, M2 | Harness → Memory | `M3Record`, итоги запусков | I11 | С1 |
-| 3 | Вызов модели | Harness → LLM Gateway | `ChatCompletionRequest` | I8 | С1 |
-| 4 | Проверка действия (G2) | Harness → Guardrails | `PolicyInput` → `PolicyDecision` | I10 | С1 |
-| 5 | Вызов тула | Harness → MCP-прокси Agent Runner → MCP-сервер | `McpToolCall` | I9 | С1 |
-| 6 | Пауза на подтверждение | Harness → Agent Runner → ICPlan | `RunEvent` (`CUSTOM` `approval_request`) | I7, I2 | С1 |
-| 7 | Сохранение шага | Harness → Agent Runner (checkpointer) | `Checkpoint` | I12 | С1 |
-| 8 | Шаги работы | Harness → Agent Runner | `RunEvent` | I7 | С1 |
-| 9 | Итог | Harness → Agent Runner | `RunResult` | I7 | С1 |
+| 1 | Задание | [Agent Runner](../../agent-runner/README.md) → [Harness](../README.md) | [`RunBundle`](../../../data/model-RunBundle.yaml) | [I7](../../agent-runner/integrations/I7.yaml) | С1 |
+| 2 | Сборка контекста: инструкция, навыки, M3, M2 | [Harness](../README.md) → [Memory](../../memory/README.md) | [`M3Record`](../../../data/model-M3Record.yaml), итоги запусков | [I11](../integrations/I11.yaml) | С1 |
+| 3 | Вызов модели | [Harness](../README.md) → LLM Gateway | [`ChatCompletionRequest`](../../../data/model-ChatCompletionRequest.yaml) | [I8](../integrations/I8.yaml) | С1 |
+| 4 | Проверка действия (G2) | [Harness](../README.md) → [Guardrails](../../guardrails/README.md) | [`PolicyInput`](../../../data/model-PolicyInput.yaml) → [`PolicyDecision`](../../../data/model-PolicyDecision.yaml) | [I10](../integrations/I10.yaml) | С1 |
+| 5 | Вызов тула | [Harness](../README.md) → MCP-прокси [Agent Runner](../../agent-runner/README.md) → MCP-сервер | [`McpToolCall`](../../../data/model-McpToolCall.yaml) | [I9](../integrations/I9.yaml) | С1 |
+| 6 | Пауза на подтверждение | [Harness](../README.md) → [Agent Runner](../../agent-runner/README.md) → [ICPlan](../../icplan/README.md) | [`RunEvent`](../../../data/model-RunEvent.yaml) (`CUSTOM` `approval_request`) | [I7](../../agent-runner/integrations/I7.yaml), [I2](../../agent-runner/integrations/I2.yaml) | С1 |
+| 7 | Сохранение шага | [Harness](../README.md) → [Agent Runner](../../agent-runner/README.md) (checkpointer) | [`Checkpoint`](../../../data/model-Checkpoint.yaml) | [I12](../integrations/I12.yaml) | С1 |
+| 8 | Шаги работы | [Harness](../README.md) → [Agent Runner](../../agent-runner/README.md) | [`RunEvent`](../../../data/model-RunEvent.yaml) | [I7](../../agent-runner/integrations/I7.yaml) | С1 |
+| 9 | Итог | [Harness](../README.md) → [Agent Runner](../../agent-runner/README.md) | [`RunResult`](../../../data/model-RunResult.yaml) | [I7](../../agent-runner/integrations/I7.yaml) | С1 |
 
 #### С1. Шаг цикла с вызовом тула
 
@@ -71,20 +71,20 @@ flowchart LR
 
 | # | Слой | Тип данных | Откуда | Где хранится | Кто меняет | Когда меняется | В кэше префикса |
 |---|---|---|---|---|---|---|---|
-| 1 | Системный промпт платформы: правила безопасности, формат итога, работа с тулами и памятью | промпт | образ Harness | git платформы (S8), версия `prompt.platform_version` | разработчик платформы | новым образом Harness | да |
-| 2 | Руководство проекта | промпт | Platform module | S2, `prompt.guidance` | администратор | со следующего запуска | да |
-| 3 | Инструкция и навыки агента (M5) | промпт | Registry ICPlan | S1, версия определения агента | администратор | со следующего запуска | да |
-| 4 | Описание тулов (схемы) и рабочего пространства | конфигурация | `RunBundle` (Runner), MCP `tools/list` | S1, политика доступа S2 | администратор | со следующего запуска | да |
-| 5 | Контекст памяти: переписка M1, итоги M2, состояние M3 | контекст памяти | Memory API | S1, S4 | ICPlan, Runner, агент ([потоки памяти](..\..\memory\docs\how.md)) | каждый запуск | нет |
-| 6 | Задание: задача, критерии приёмки, заметка возврата, итог прошлого шага | промпт | ICPlan (`Run`) | S1 | пользователь | каждый запуск | нет |
-| 7 | Указания пользователя во время работы | промпт | ICPlan → Runner (heartbeat) | S1 (M1) | пользователь | во время запуска | нет |
-| 8 | Рабочий контекст M0: ответы модели, вызовы и вывод тулов | ответы модели и тулов | Harness | только память запуска | Harness | каждый шаг | нет |
+| 1 | Системный промпт платформы: правила безопасности, формат итога, работа с тулами и памятью | промпт | образ [Harness](../README.md) | git платформы (S8), версия `prompt.platform_version` | разработчик платформы | новым образом [Harness](../README.md) | да |
+| 2 | Руководство проекта | промпт | [Platform module](../../platform-module/README.md) | S2, `prompt.guidance` | администратор | со следующего запуска | да |
+| 3 | Инструкция и навыки агента (M5) | промпт | Registry [ICPlan](../../icplan/README.md) | S1, версия определения агента | администратор | со следующего запуска | да |
+| 4 | Описание тулов (схемы) и рабочего пространства | конфигурация | [`RunBundle`](../../../data/model-RunBundle.yaml) (Runner), MCP `tools/list` | S1, политика доступа S2 | администратор | со следующего запуска | да |
+| 5 | Контекст памяти: переписка M1, итоги M2, состояние M3 | контекст памяти | [Memory](../../memory/README.md) API | S1, S4 | [ICPlan](../../icplan/README.md), Runner, агент ([потоки памяти](..\..\memory\docs\how.md)) | каждый запуск | нет |
+| 6 | Задание: задача, критерии приёмки, заметка возврата, итог прошлого шага | промпт | [ICPlan](../../icplan/README.md) ([`Run`](../../../data/model-Run.yaml)) | S1 | пользователь | каждый запуск | нет |
+| 7 | Указания пользователя во время работы | промпт | [ICPlan](../../icplan/README.md) → Runner (heartbeat) | S1 (M1) | пользователь | во время запуска | нет |
+| 8 | Рабочий контекст M0: ответы модели, вызовы и вывод тулов | ответы модели и тулов | [Harness](../README.md) | только память запуска | [Harness](../README.md) | каждый шаг | нет |
 
 Порядок задаёт приоритет: нижний слой не отменяет правила слоя 1 (защита от prompt injection в задаче и выводе тулов).
 
 ### Параметры запроса
 
-Откуда Harness берёт каждое поле запроса. Уровни, значения и границы параметров — в [interfaces.md спеки Harness](agent-harness-interfaces.md), поля запроса — в модели `ChatCompletionRequest`.
+Откуда [Harness](../README.md) берёт каждое поле запроса. Уровни, значения и границы параметров — в [interfaces.md спеки Harness](agent-harness-interfaces.md), поля запроса — в модели [`ChatCompletionRequest`](../../../data/model-ChatCompletionRequest.yaml).
 
 | Поле запроса (OpenAI-совместимое) | Откуда берётся |
 |---|---|
@@ -95,14 +95,14 @@ flowchart LR
 | `tools`, `tool_choice`, `parallel_tool_calls` | набор тулов агента, `model.tool_choice`, `model.parallel_tool_calls` |
 | `response_format` | `model.response_format` |
 | `stream`, `timeout` | всегда `true`; `request.timeout_s` |
-| `metadata` | `run_id`, `issue_key`, `agent` — атрибуция затрат (FR-136) |
+| `metadata` | `run_id`, `issue_key`, `agent` — атрибуция затрат ([FR-136](../../llm-gateway/prd.md)) |
 | ключ (`Authorization`) | virtual key агента |
 
 Неподдерживаемые моделью параметры LiteLLM отбрасывает (`drop_params: true`); токены размышлений входят в бюджет запуска; текст размышлений не пишется в события, кроме `events.level: всё`.
 
 ### Пример
 
-Запрос `ChatCompletionRequest` со слоями промпта (поля сверяются с моделью при сборке):
+Запрос [`ChatCompletionRequest`](../../../data/model-ChatCompletionRequest.yaml) со слоями промпта (поля сверяются с моделью при сборке):
 
 ```json
 { "model": "team-default",

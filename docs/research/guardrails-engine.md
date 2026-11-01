@@ -1,14 +1,14 @@
 # R&D: Движок правил guardrails
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Guardrails** · решение: [design AD-6, AD-18](..\source\design\define-agent-platform\design.md) · спека: guardrails
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Guardrails](../architecture/components/guardrails/README.md)** · решение: [design AD-6, AD-18](..\source\design\define-agent-platform\design.md) · спека: guardrails
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
-Где живут правила «что агенту можно» — допуск запуска (G1) и действия в цикле (G2): отдельно от кода, с тестами, аудитом и одинаково для Runner на Go и Harness на Python?
+Где живут правила «что агенту можно» — допуск запуска (G1) и действия в цикле (G2): отдельно от кода, с тестами, аудитом и одинаково для Runner на Go и [Harness](../architecture/components/harness/README.md) на Python?
 
-<div class="rnd-a">Ответ: OPA (Rego) — одно место решений для G1 и G2 по HTTP, правила в git с `opa test`, данные из Platform module. Детекторы содержания из LlamaFirewall — кандидаты для G4, не замена OPA.</div>
+<div class="rnd-a">Ответ: OPA (Rego) — одно место решений для G1 и G2 по HTTP, правила в git с `opa test`, данные из [Platform module](../architecture/components/platform-module/README.md). Детекторы содержания из LlamaFirewall — кандидаты для G4, не замена OPA.</div>
 
-<span class="rnd-badge adopt">Adopt</span> OPA v1.21.1 (AD-18) · Apache-2.0, CNCF graduated · p95 ≤ 20 мс с кэшем 60 с · данные 11.10.2026
+<span class="rnd-badge adopt">Adopt</span> OPA v1.21.1 ([AD-18](../architecture/decisions/AD-18.yaml)) · Apache-2.0, CNCF graduated · p95 ≤ 20 мс с кэшем 60 с · данные 11.10.2026
 </div>
 
 ```deck
@@ -50,12 +50,12 @@ stack Документы: 4 ok, 0 part, 4 mute
 <div markdown>
 **1. Один движок для двух языков**
 
-G1 проверяет Runner на Go, G2 — Harness на Python. OPA отвечает обоим по HTTP с одним набором правил. У Cedar официальная библиотека есть для Rust, Java и Go (cedar-go), а для Python — нет. Правила G2 пришлось бы исполнять иначе ([Э7](#e7)).
+G1 проверяет Runner на Go, G2 — [Harness](../architecture/components/harness/README.md) на Python. OPA отвечает обоим по HTTP с одним набором правил. У Cedar официальная библиотека есть для Rust, Java и Go (cedar-go), а для Python — нет. Правила G2 пришлось бы исполнять иначе ([Э7](#e7)).
 </div>
 <div markdown>
 **2. Логика в git, данные в UI**
 
-Rego-правила лежат в git, проверяются `opa test` и собираются в бандл. Списки тулов, лимиты и уровень автономии администратор меняет в Platform module, и они приходят в OPA как данные (I16). Безопасность ревьюит логику, администратор не трогает код ([Э3](#e3)).
+Rego-правила лежат в git, проверяются `opa test` и собираются в бандл. Списки тулов, лимиты и уровень автономии администратор меняет в [Platform module](../architecture/components/platform-module/README.md), и они приходят в OPA как данные ([I16](../architecture/components/platform-module/integrations/I16.yaml)). Безопасность ревьюит логику, администратор не трогает код ([Э3](#e3)).
 </div>
 <div markdown>
 **3. Содержание — отдельный слой**
@@ -70,7 +70,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 
 - решения G1 и G2 по HTTP;
 - Rego в git с `opa test`;
-- бандлы с данными из Platform module;
+- бандлы с данными из [Platform module](../architecture/components/platform-module/README.md);
 - журнал решений для аудита;
 - кэш решения на запуск (60 с).
 </div>
@@ -79,7 +79,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 
 - детектор инъекций PromptGuard 2 (22M) → кандидат G4 в LiteLLM;
 - аудит трассы на подмену цели (AlignmentCheck) → кандидат для разбора запусков;
-- схема и валидация политик (Cedar) → схема данных правил в Platform module.
+- схема и валидация политик (Cedar) → схема данных правил в [Platform module](../architecture/components/platform-module/README.md).
 </div>
 <div class="drop" markdown>
 **Не берём**
@@ -94,7 +94,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 <div class="no" markdown>
 **Отсеяны до сравнения**
 
-- **NeMo Guardrails, Guardrails AI** — проверяют содержание ответа модели, а не решения по действиям; относятся к G4.
+- **NeMo [Guardrails](../architecture/components/guardrails/README.md), [Guardrails](../architecture/components/guardrails/README.md) AI** — проверяют содержание ответа модели, а не решения по действиям; относятся к G4.
 - **Invariant** — нет активности с 12.01.2026.
 </div>
 <div class="risk" markdown>
@@ -113,7 +113,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 <div markdown>**Э4 Альтернативы**9 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I5, I10, I16 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I5](../architecture/components/agent-runner/integrations/I5.yaml), [I10](../architecture/components/harness/integrations/I10.yaml), [I16](../architecture/components/platform-module/integrations/I16.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**6 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**8 <span class="gate">G10</span></div>
@@ -125,7 +125,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** Guardrails проверяют агента в четырёх точках: G1 (допуск запуска, Runner), G2 (действие в цикле, Harness), G3 (изоляция и сеть), G4 (содержание запросов к модели, LiteLLM).
+**Ситуация.** [Guardrails](../architecture/components/guardrails/README.md) проверяют агента в четырёх точках: G1 (допуск запуска, Runner), G2 (действие в цикле, [Harness](../architecture/components/harness/README.md)), G3 (изоляция и сеть), G4 (содержание запросов к модели, LiteLLM).
 
 **Осложнение.** G1 и G2 исполняются в разных языках (Go и Python), правила меняются чаще кода, а безопасность хочет тесты и аудит каждого решения.
 
@@ -133,20 +133,20 @@ OPA решает «можно ли вызвать тул с такими арг�
 
 **Решает:** владелец продукта с ролью «Безопасность». **Не решаем:** G3 ([изоляция](sandbox-isolation.md)), защиту от зацикливания и бюджеты ([защита от разгона](runaway-protection.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-6, AD-18.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | одно место правил для G1 и G2 | FR-110, FR-116 | правила в двух языках расходятся |
-| П2 | правила меняются без релиза кода | FR-110 | каждое правило — релиз Runner и Harness |
-| П3 | тесты на правила | FR-110 | правило ломает работу агентов незаметно |
-| П4 | данные правил (тулы, лимиты, автономия) правит администратор | FR-117, `tools_allow`, `autonomy_level` | безопасность правит списки за администратора |
-| П5 | аудит каждого решения | FR-125 | нельзя разобрать, почему агенту отказали |
-| П6 | быстро: p95 ≤ 20 мс | AD-18, NFR-8 | каждый шаг цикла замедляется |
-| П7 | поведение при недоступности движка | FR-129, `on_engine_error` | отказ движка = всё разрешено или всё стоит |
-| П8 | включение и выключение точек | FR-115 | нельзя отключить проверку для отладки |
+| П1 | одно место правил для G1 и G2 | [FR-110](../architecture/components/guardrails/prd.md), [FR-116](../architecture/components/guardrails/prd.md) | правила в двух языках расходятся |
+| П2 | правила меняются без релиза кода | [FR-110](../architecture/components/guardrails/prd.md) | каждое правило — релиз Runner и [Harness](../architecture/components/harness/README.md) |
+| П3 | тесты на правила | [FR-110](../architecture/components/guardrails/prd.md) | правило ломает работу агентов незаметно |
+| П4 | данные правил (тулы, лимиты, автономия) правит администратор | [FR-117](../architecture/components/guardrails/prd.md), `tools_allow`, `autonomy_level` | безопасность правит списки за администратора |
+| П5 | аудит каждого решения | [FR-125](../architecture/components/guardrails/prd.md) | нельзя разобрать, почему агенту отказали |
+| П6 | быстро: p95 ≤ 20 мс | [AD-18](../architecture/decisions/AD-18.yaml), NFR-8 | каждый шаг цикла замедляется |
+| П7 | поведение при недоступности движка | [FR-129](../architecture/components/guardrails/prd.md), `on_engine_error` | отказ движка = всё разрешено или всё стоит |
+| П8 | включение и выключение точек | [FR-115](../architecture/components/guardrails/prd.md) | нельзя отключить проверку для отладки |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования и решения.
 
@@ -164,7 +164,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 
 **Вывод этапа.** OPA закрывает все потребности функциями движка; режим отказа и включение точек — наш код вокруг (`on_engine_error`, `gN.enabled`).
 
-<span class="gate">G3</span> ✅ функции из документации OPA (Б) и AD-6 (А).
+<span class="gate">G3</span> ✅ функции из документации OPA (Б) и [AD-6](../architecture/decisions/AD-6.yaml) (А).
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
@@ -176,12 +176,12 @@ OPA решает «можно ли вызвать тул с такими арг�
 | **Casbin** (Apache-2.0, 20 441★, v3.11.0) | модели ACL / RBAC / ABAC; библиотеки для многих языков, в том числе Go и Python; политики в БД | библиотека в процессе | Б |
 | **OpenFGA** (Apache-2.0, 5 946★, v1.22.0) | права на основе отношений (Zanzibar) | граф отношений | Б |
 | **LlamaFirewall** (Meta, PurpleLlama, 4 425★) | PromptGuard 2 — классификатор инъекций (86M и 22M параметров); AlignmentCheck — аудит трассы агента на подмену цели; CodeShield; в AgentDojo доля успешных атак 1,7% против 17,6% без защиты | детекторы содержания | Б |
-| **NeMo Guardrails** (NVIDIA, 7 273★, v0.24.1) | диалоговые рельсы на Colang, проверки входа и выхода модели | — | Б |
-| **Guardrails AI** (Apache-2.0, 7 505★, v0.11.0) | валидаторы ответа модели | — | Б |
+| **NeMo [Guardrails](../architecture/components/guardrails/README.md)** (NVIDIA, 7 273★, v0.24.1) | диалоговые рельсы на Colang, проверки входа и выхода модели | — | Б |
+| **[Guardrails](../architecture/components/guardrails/README.md) AI** (Apache-2.0, 7 505★, v0.11.0) | валидаторы ответа модели | — | Б |
 | **Invariant** (Apache-2.0, 468★) | правила по трассе вызовов агента; активность до 12.01.2026 | правила по трассе | Б |
-| **Проверки в коде** | условия в Runner и Harness | — | — |
+| **Проверки в коде** | условия в Runner и [Harness](../architecture/components/harness/README.md) | — | — |
 
-**Вывод этапа.** Движки политик (OPA, Cedar, Casbin, OpenFGA) решают «можно ли». Агентные инструменты (LlamaFirewall, NeMo, Guardrails AI) проверяют **содержание** — это другой слой, G4 и аудит.
+**Вывод этапа.** Движки политик (OPA, Cedar, Casbin, OpenFGA) решают «можно ли». Агентные инструменты (LlamaFirewall, NeMo, [Guardrails](../architecture/components/guardrails/README.md) AI) проверяют **содержание** — это другой слой, G4 и аудит.
 
 <span class="gate">G4</span> ✅ 9 кандидатов, включая «сделать самим»; источники трёх видов; дата есть.
 
@@ -193,7 +193,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 | Правила как код в git с тестами | П2, П3 | ревью и регрессия правил | `opa test` (Б); анализатор Cedar (Б) | базовая |
 | Данные отдельно от логики | П4 | администратор меняет списки без кода | бандлы OPA (Б); политики Casbin в БД (Б) | базовая |
 | Журнал решений | П5 | разбор отказов | OPA decision logs (Б) | базовая |
-| Решение за миллисекунды | П6 | цикл не замедляется | OPA в памяти (Б); AD-18: p95 ≤ 20 мс с кэшем (А) | линейная |
+| Решение за миллисекунды | П6 | цикл не замедляется | OPA в памяти (Б); [AD-18](../architecture/decisions/AD-18.yaml): p95 ≤ 20 мс с кэшем (А) | линейная |
 | Схема и формальная проверка политик | П3 | ошибки политик ловятся до запуска | Cedar (Б) | привлекательная |
 | Детектор инъекций | — | ловит атаку в тексте, которую правило не видит | PromptGuard 2, AgentDojo: 1,7% против 17,6% (Б) | привлекательная (G4) |
 | Аудит трассы на подмену цели | П5 | видна подмена цели агента | AlignmentCheck (Б, экспериментально) | привлекательная |
@@ -208,8 +208,8 @@ OPA решает «можно ли вызвать тул с такими арг�
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| REST, бандлы, `opa test`, журнал, кэш | оставить | OPA v1.21.1, `opa.cache_ttl_s` 60 | AD-6, AD-18 |
-| Схема данных правил (Cedar) | адаптировать | JSON-схема данных бандла в Platform module, проверка при сохранении | FR-110 (уже: валидация при сохранении) |
+| REST, бандлы, `opa test`, журнал, кэш | оставить | OPA v1.21.1, `opa.cache_ttl_s` 60 | [AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml) |
+| Схема данных правил (Cedar) | адаптировать | JSON-схема данных бандла в [Platform module](../architecture/components/platform-module/README.md), проверка при сохранении | [FR-110](../architecture/components/guardrails/prd.md) (уже: валидация при сохранении) |
 | PromptGuard 2 | не брать сейчас | кандидат детектора инъекций G4 в LiteLLM | [BACKLOG](..\source\BACKLOG.md) |
 | AlignmentCheck | не брать сейчас | экспериментально; кандидат для разбора запусков | [BACKLOG](..\source\BACKLOG.md) |
 | Права на основе отношений, диалоговые рельсы | не брать | безразличные | — |
@@ -239,7 +239,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 | Casbin | да: библиотеки | частично: модель + политики, тестов правил нет | да | проходит |
 | OpenFGA | да: HTTP | да | частично: отношения | проходит |
 | Проверки в коде | да | **нет** | да | ✗ |
-| NeMo Guardrails, Guardrails AI | частично | да | **нет**: содержание | ✗ (→ G4) |
+| NeMo [Guardrails](../architecture/components/guardrails/README.md), [Guardrails](../architecture/components/guardrails/README.md) AI | частично | да | **нет**: содержание | ✗ (→ G4) |
 | LlamaFirewall | частично: Python | да | **нет**: содержание | ✗ (→ G4) |
 | Invariant | частично | да | да | ✗: нет активности с 12.01.2026 |
 
@@ -255,9 +255,9 @@ OPA решает «можно ли вызвать тул с такими арг�
 
 | Стык | OPA | Cedar | Casbin | OpenFGA |
 |---|---|---|---|---|
-| I5 G1 из Go | И2: REST, описан в AD-18 | И2: cedar-go в процессе | И2: Go-библиотека | И2: REST |
-| I10 G2 из Python | И2: REST | И1: нет официальной библиотеки | И2: pycasbin | И2: REST |
-| I16 бандл: логика + данные | И2: бандлы | И1: свой механизм загрузки | И1: адаптер БД | И1: модель + кортежи |
+| [I5](../architecture/components/agent-runner/integrations/I5.yaml) G1 из Go | И2: REST, описан в [AD-18](../architecture/decisions/AD-18.yaml) | И2: cedar-go в процессе | И2: Go-библиотека | И2: REST |
+| [I10](../architecture/components/harness/integrations/I10.yaml) G2 из Python | И2: REST | И1: нет официальной библиотеки | И2: pycasbin | И2: REST |
+| [I16](../architecture/components/platform-module/integrations/I16.yaml) бандл: логика + данные | И2: бандлы | И1: свой механизм загрузки | И1: адаптер БД | И1: модель + кортежи |
 | Аудит решений | И2: decision logs | И1: писать самим | И1 | И2 |
 
 **Изменения у соседей:**
@@ -265,9 +265,9 @@ OPA решает «можно ли вызвать тул с такими арг�
 | Кандидат | Что меняется |
 |---|---|
 | OPA | ничего |
-| Cedar | Harness: исполнение Cedar из Python (через Rust-обвязку или сервис); Platform module: формат политик |
-| Casbin | Runner и Harness: библиотека в двух языках, согласование версий; правила с бюджетами и автономией не ложатся на модель ACL |
-| OpenFGA | Platform module: модель отношений вместо правил |
+| Cedar | [Harness](../architecture/components/harness/README.md): исполнение Cedar из Python (через Rust-обвязку или сервис); [Platform module](../architecture/components/platform-module/README.md): формат политик |
+| Casbin | Runner и [Harness](../architecture/components/harness/README.md): библиотека в двух языках, согласование версий; правила с бюджетами и автономией не ложатся на модель ACL |
+| OpenFGA | [Platform module](../architecture/components/platform-module/README.md): модель отношений вместо правил |
 
 **Вывод этапа.** ==OPA встаёт одним сервисом для двух языков без изменений у соседей.== Cedar и Casbin — это библиотеки внутри двух процессов, и правила пришлось бы держать согласованными в Go и Python.
 
@@ -282,15 +282,15 @@ OPA решает «можно ли вызвать тул с такими арг�
 | Безопасность 🤖 | OPA | правила в git с тестами, журнал решений | ошибка в правиле разрешит лишнее | тест на каждое правило, `on_engine_error: deny` |
 | Тестировщик 🤖 | OPA | `opa test` в CI | — | — |
 | Администратор 🤖 | OPA | данные правил в UI, логика не нужна | — | — |
-| Архитектор 🤖 | OPA | один сервис для I5 и I10 | — | — |
-| DevOps 🤖 | нейтрально | OPA лёгкий, но это ещё один сервис | задержка на каждом шаге | кэш 60 с, p95 ≤ 20 мс (AD-18) |
+| Архитектор 🤖 | OPA | один сервис для [I5](../architecture/components/agent-runner/integrations/I5.yaml) и [I10](../architecture/components/harness/integrations/I10.yaml) | — | — |
+| DevOps 🤖 | нейтрально | OPA лёгкий, но это ещё один сервис | задержка на каждом шаге | кэш 60 с, p95 ≤ 20 мс ([AD-18](../architecture/decisions/AD-18.yaml)) |
 | Разработчик 🤖 (оппонент) | Cedar | Cedar читается проще Rego, есть схема | Rego сложен для новичков | шаблоны правил и тесты |
 
 | Спор | Разрешение |
 |---|---|
-| Разработчик: «Rego сложный» | **условие:** шаблоны правил G1 и G2 с тестами — в задаче guardrails; схема данных правил проверяется в Platform module |
+| Разработчик: «Rego сложный» | **условие:** шаблоны правил G1 и G2 с тестами — в задаче guardrails; схема данных правил проверяется в [Platform module](../architecture/components/platform-module/README.md) |
 | Адвокат дьявола: «OPA видит только аргументы — инъекцию в тексте не поймает» | ✅ **внесено в бэклог:** детектор инъекций PromptGuard 2 для G4 |
-| DevOps: «задержка на каждом шаге» | **условие:** кэш решения на запуск 60 с (AD-18) |
+| DevOps: «задержка на каждом шаге» | **условие:** кэш решения на запуск 60 с ([AD-18](../architecture/decisions/AD-18.yaml)) |
 
 **Вывод этапа.** Спор о читаемости Rego снят шаблонами и тестами. Спор о границе OPA — выделением слоя детекторов содержания для G4.
 
@@ -309,7 +309,7 @@ OPA решает «можно ли вызвать тул с такими арг�
 | П7 отказ движка | с доработкой: `on_engine_error` | закрывает: в процессе | закрывает | с доработкой | закрывает |
 | П8 включение точек | закрывает | закрывает | закрывает | закрывает | не закрывает |
 
-- **Утверждение.** OPA для G1 и G2 (AD-6, AD-18).
+- **Утверждение.** OPA для G1 и G2 ([AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml)).
 - **Основания.** Закрывает 7 из 8 потребностей одним сервисом для двух языков, без изменений у соседей.
 - **Связка.** Cedar сильнее схемой политик, но без официальной Python-библиотеки G2 пришлось бы исполнять иначе, чем G1. Это противоречит П1.
 - **Опровержение.** Вывод неверен, если появится официальная Python-библиотека Cedar, а правила останутся чисто ролевыми, без условий по аргументам и бюджетам.
@@ -323,9 +323,9 @@ OPA решает «можно ли вызвать тул с такими арг�
 | Факт о Cedar: официальная Go-реализация есть (cedar-go) | этот R&D | ✅ исправлено |
 | Детекторы PromptGuard 2 (G4) и AlignmentCheck (разбор запусков) | [BACKLOG](..\source\BACKLOG.md) | ✅ внесено в бэклог |
 | LlamaFirewall — Assess | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | ✅ внесено |
-| Детектор инъекций как вариант G4 | FR-114 | — не требуется: FR-114 задаёт хуки G4, детектор выбирается при включении G4 (бэклог) |
-| Решения AD-6, AD-18 (OPA v1.21.1, p95 ≤ 20 мс, кэш 60 с) | design | ✅ подтверждено, без изменений |
-| Стыки I5, I10, I16, S11 | спека guardrails | — не требуется |
+| Детектор инъекций как вариант G4 | [FR-114](../architecture/components/guardrails/prd.md) | — не требуется: [FR-114](../architecture/components/guardrails/prd.md) задаёт хуки G4, детектор выбирается при включении G4 (бэклог) |
+| Решения [AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml) (OPA v1.21.1, p95 ≤ 20 мс, кэш 60 с) | design | ✅ подтверждено, без изменений |
+| Стыки [I5](../architecture/components/agent-runner/integrations/I5.yaml), [I10](../architecture/components/harness/integrations/I10.yaml), [I16](../architecture/components/platform-module/integrations/I16.yaml), S11 | спека guardrails | — не требуется |
 | Поток guardrails | [поток](..\architecture\components\guardrails\docs\how.md) | — не требуется |
 | Техспека guardrails | [техспека](..\architecture\components\guardrails\docs\techspec.md) | — не требуется |
 
@@ -340,8 +340,8 @@ GitHub API на 11.10.2026.
 |---|---|---|---|---|
 | Casbin | Apache-2.0 | 20 441 | v3.11.0 | 09.10.2026 |
 | OPA | Apache-2.0 | 12 342 | v1.21.1 | 10.10.2026 |
-| Guardrails AI | Apache-2.0 | 7 505 | v0.11.0 | 09.10.2026 |
-| NeMo Guardrails | другая (NOASSERTION) | 7 273 | v0.24.1 | 10.10.2026 |
+| [Guardrails](../architecture/components/guardrails/README.md) AI | Apache-2.0 | 7 505 | v0.11.0 | 09.10.2026 |
+| NeMo [Guardrails](../architecture/components/guardrails/README.md) | другая (NOASSERTION) | 7 273 | v0.24.1 | 10.10.2026 |
 | OpenFGA | Apache-2.0 | 5 946 | v1.22.0 | 07.10.2026 |
 | PurpleLlama (LlamaFirewall) | другая (NOASSERTION) | 4 425 | — | 29.09.2026 |
 | Cedar / cedar-go | Apache-2.0 | 1 776 / 239 | cli 4.13.0 / v1.8.0 | 09.10.2026 / 15.07.2026 |

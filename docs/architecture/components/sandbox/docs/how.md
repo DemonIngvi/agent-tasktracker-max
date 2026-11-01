@@ -6,16 +6,16 @@
 
 | # | Поток | Участники | Данные | I | Сценарий |
 |---|---|---|---|---|---|
-| 1 | Пул держит N готовых контейнеров на профиль | Sandbox → Docker | профиль | — | С1 |
-| 2 | Runner забирает контейнер | Agent Runner → Sandbox (пул) | `SandboxClaim` | I6 | С1 |
-| 3 | Клон разрешённых репозиториев в `/workspace` | контейнер → git (credential helper, git-прокси) | `RepoGrant` | I6 | С1 |
-| 4 | Весь исходящий трафик | контейнер → egress-прокси → allowlist | HTTP(S) | I17 | С1 |
-| 5 | Подстановка секретов | egress-прокси → внешний API | заголовки авторизации | I17 | — |
-| 6 | Код наружу | контейнер → git | ветка `agent/<KEY>`, PR | I6 | С1 |
-| 7 | Уничтожение и долив пула | Agent Runner → Sandbox | `sandboxId` | I6 | С1 |
-| 8 | Шаг подготовки (AD-19): кэш по хешу lock-файлов или установка | Agent Runner → контейнер подготовки → `setup.registries` | `setup.script`, `/workspace/.deps` | I6 | — |
-| 9 | Доустановка во время работы | Harness → тул `install_dependencies` → Agent Runner | lock-файлы | — | — |
-| 10 | Вызовы MCP (из sandbox напрямую — нет) | Harness → MCP-прокси Agent Runner | `McpToolCall` | I9 | — |
+| 1 | Пул держит N готовых контейнеров на профиль | [Sandbox](../README.md) → Docker | профиль | — | С1 |
+| 2 | Runner забирает контейнер | [Agent Runner](../../agent-runner/README.md) → [Sandbox](../README.md) (пул) | [`SandboxClaim`](../../../data/model-SandboxClaim.yaml) | [I6](../../agent-runner/integrations/I6.yaml) | С1 |
+| 3 | Клон разрешённых репозиториев в `/workspace` | контейнер → git (credential helper, git-прокси) | [`RepoGrant`](../../../data/model-RepoGrant.yaml) | [I6](../../agent-runner/integrations/I6.yaml) | С1 |
+| 4 | Весь исходящий трафик | контейнер → egress-прокси → allowlist | HTTP(S) | [I17](../integrations/I17.yaml) | С1 |
+| 5 | Подстановка секретов | egress-прокси → внешний API | заголовки авторизации | [I17](../integrations/I17.yaml) | — |
+| 6 | Код наружу | контейнер → git | ветка `agent/<KEY>`, PR | [I6](../../agent-runner/integrations/I6.yaml) | С1 |
+| 7 | Уничтожение и долив пула | [Agent Runner](../../agent-runner/README.md) → [Sandbox](../README.md) | `sandboxId` | [I6](../../agent-runner/integrations/I6.yaml) | С1 |
+| 8 | Шаг подготовки ([AD-19](../../../decisions/AD-19.yaml)): кэш по хешу lock-файлов или установка | [Agent Runner](../../agent-runner/README.md) → контейнер подготовки → `setup.registries` | `setup.script`, `/workspace/.deps` | [I6](../../agent-runner/integrations/I6.yaml) | — |
+| 9 | Доустановка во время работы | [Harness](../../harness/README.md) → тул `install_dependencies` → [Agent Runner](../../agent-runner/README.md) | lock-файлы | — | — |
+| 10 | Вызовы MCP (из sandbox напрямую — нет) | [Harness](../../harness/README.md) → MCP-прокси [Agent Runner](../../agent-runner/README.md) | [`McpToolCall`](../../../data/model-McpToolCall.yaml) | [I9](../../harness/integrations/I9.yaml) | — |
 
 #### С1. Жизнь контейнера запуска
 

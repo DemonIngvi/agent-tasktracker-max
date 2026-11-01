@@ -1,6 +1,6 @@
 # R&D: Поиск по знаниям (RAG)
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Memory, MCP / Tools** · решение: [design AD-13](..\source\design\define-agent-platform\design.md) · спека: agent-memory (FR-41)
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Memory](../architecture/components/memory/README.md), [MCP / Tools](../architecture/components/mcp-tools/README.md)** · решение: [design AD-13](..\source\design\define-agent-platform\design.md) · спека: agent-memory ([FR-41](../architecture/components/memory/prd.md))
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
@@ -55,7 +55,7 @@ stack Документы: 2 ok, 0 part, 4 mute
 <div markdown>
 **3. Когда понадобится — в той же Postgres и с гибридом**
 
-pgvector уже в стандартном образе CNPG (AD-18), там же будут факты M4. Точность даёт не выбор векторной БД, а приём: контекст во фрагменте, поиск по словам вместе со смыслом и переранжирование. По данным Anthropic это −49%…−67% промахов ([Э6](#e6)).
+pgvector уже в стандартном образе CNPG ([AD-18](../architecture/decisions/AD-18.yaml)), там же будут факты M4. Точность даёт не выбор векторной БД, а приём: контекст во фрагменте, поиск по словам вместе со смыслом и переранжирование. По данным Anthropic это −49%…−67% промахов ([Э6](#e6)).
 </div>
 </div>
 
@@ -104,7 +104,7 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 <div markdown>**Э4 Альтернативы**9 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I9, I11, I22 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I9](../architecture/components/harness/integrations/I9.yaml), [I11](../architecture/components/harness/integrations/I11.yaml), [I22](../architecture/integrations/I22.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**4 роли <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**6 <span class="gate">G10</span></div>
@@ -124,17 +124,17 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 
 **Решает:** владелец продукта. **Не решаем:** память агента ([память](memory-model.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-13.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-13](../architecture/decisions/AD-13.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | агент читает документы проекта | FR-36 (M6), FR-182 | агент без требований и решений |
+| П1 | агент читает документы проекта | [FR-36](../architecture/components/memory/prd.md) (M6), [FR-182](../architecture/components/mcp-tools/prd.md) | агент без требований и решений |
 | П2 | агент находит нужное в коде | истории агентов-разработчиков | агент не знает, где менять |
-| П3 | доступ только к базам своего проекта | FR-37 | утечка между проектами |
-| П4 | без нового сервиса на MVP | AD-13, AD-15 | ещё одна БД |
-| П5 | поиск по смыслу в больших корпусах после MVP | AD-13, FR-41 | агент не видит нужное в большом корпусе |
+| П3 | доступ только к базам своего проекта | [FR-37](../architecture/components/memory/prd.md) | утечка между проектами |
+| П4 | без нового сервиса на MVP | [AD-13](../architecture/decisions/AD-13.yaml), [AD-15](../architecture/decisions/AD-15.yaml) | ещё одна БД |
+| П5 | поиск по смыслу в больших корпусах после MVP | [AD-13](../architecture/decisions/AD-13.yaml), [FR-41](../architecture/components/memory/prd.md) | агент не видит нужное в большом корпусе |
 | П6 | точность поиска | — | агент получает нерелевантные куски |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования и решения.
@@ -143,13 +143,13 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 
 | # | Функция | Что делает | Потребность |
 |---|---|---|---|
-| F1 | `get_document` (MCP ICPlan) | документ по ссылке | П1, П3 |
+| F1 | `get_document` (MCP [ICPlan](../architecture/components/icplan/README.md)) | документ по ссылке | П1, П3 |
 | F2 | Поиск по файлам в `/workspace/repo` | grep, чтение | П2 |
 | F3 | Каталог проекта | ссылки на ресурсы | П1, П3 |
 
 **Вывод этапа.** Закрывает П1–П4; П5 и П6 — после MVP.
 
-<span class="gate">G3</span> ✅ функции из спек и AD-13 (А).
+<span class="gate">G3</span> ✅ функции из спек и [AD-13](../architecture/decisions/AD-13.yaml) (А).
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
@@ -177,7 +177,7 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 |---|---|---|---|---|
 | Документ по ссылке | П1 | без индекса и сервиса | `get_document` (А) | базовая на MVP |
 | Поиск по файлам для кода | П2 | всегда актуален, точен | Claude Code, Copilot (Б); у кода малый выигрыш контекстного поиска (В) | базовая |
-| Без нового сервиса | П4 | одна БД | pgvector в образе CNPG (Б, AD-18) | базовая |
+| Без нового сервиса | П4 | одна БД | pgvector в образе CNPG (Б, [AD-18](../architecture/decisions/AD-18.yaml)) | базовая |
 | Гибрид: слова + смысл | П6 | −49% промахов с контекстом | Anthropic (В) | линейная |
 | Контекст во фрагменте | П6 | −35% промахов | Anthropic (В) | линейная |
 | Переранжирование | П6 | −67% в сумме | Anthropic (В) | привлекательная |
@@ -191,8 +191,8 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| `get_document`, поиск по файлам | оставить | MVP | FR-182, FR-29 |
-| pgvector | брать после MVP | в той же Postgres | AD-13, FR-41 |
+| `get_document`, поиск по файлам | оставить | MVP | [FR-182](../architecture/components/mcp-tools/prd.md), [FR-29](../architecture/components/harness/prd.md) |
+| pgvector | брать после MVP | в той же Postgres | [AD-13](../architecture/decisions/AD-13.yaml), [FR-41](../architecture/components/memory/prd.md) |
 | Гибрид, контекст, переранжирование | адаптировать после MVP | полнотекстовый поиск Postgres + pgvector; контекст документа во фрагменте; переранжирование 150 → 20 | [BACKLOG](..\source\BACKLOG.md) (строка RAG) |
 | ParadeDB | не брать сейчас | AGPL-расширение; оценить, если полнотекстового поиска Postgres не хватит | — |
 | Отдельная векторная БД | не брать | П4 | — |
@@ -201,7 +201,7 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 
 | Критерий | Цепочка | Как проверяем |
 |---|---|---|
-| **M1** своё размещение | AD-15 | без облака |
+| **M1** своё размещение | [AD-15](../architecture/decisions/AD-15.yaml) | без облака |
 | **M2** доступ по проекту | П3 → базовая | фильтр по проекту |
 | **M3** без нового сервиса на MVP | П4 → базовая | что ставить |
 | **К1** точность | П6 | гибрид, контекст |
@@ -226,9 +226,9 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
   * — после MVP: новый тул, поток индексации и сервис эмбеддингов
 ```
 
-**Изменения у соседей (после MVP):** Memory API (поиск), MCP / Tools (тул `search_knowledge`), инфраструктура (сервис эмбеддингов), потоки данных (индексация M6).
+**Изменения у соседей (после MVP):** [Memory](../architecture/components/memory/README.md) API (поиск), [MCP / Tools](../architecture/components/mcp-tools/README.md) (тул `search_knowledge`), инфраструктура (сервис эмбеддингов), потоки данных (индексация M6).
 
-**Вывод этапа.** ==На MVP нет новых стыков; после MVP RAG ложится в ту же Postgres и Memory API.==
+**Вывод этапа.** ==На MVP нет новых стыков; после MVP RAG ложится в ту же Postgres и [Memory](../architecture/components/memory/README.md) API.==
 
 <span class="gate">G7</span> ✅ отсев; встраивание; изменения у соседей.
 
@@ -259,7 +259,7 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 | П5 большие корпуса | не закрывает | закрывает | закрывает |
 | П6 точность | частично | закрывает: гибрид и контекст | закрывает |
 
-- **Утверждение.** На MVP без RAG; после MVP — pgvector с гибридным поиском и контекстными фрагментами (AD-13).
+- **Утверждение.** На MVP без RAG; после MVP — pgvector с гибридным поиском и контекстными фрагментами ([AD-13](../architecture/decisions/AD-13.yaml)).
 - **Основания.** На MVP закрыты П1–П4 без индекса; после MVP pgvector закрывает П5 и П6 без нового сервиса.
 - **Связка.** Точность определяется приёмом поиска, а не выбором БД, а объём у нас скромный.
 - **Опровержение.** Вывод неверен, если корпус вырастет за миллион векторов или понадобится сложная фильтрация. Тогда — Qdrant.
@@ -271,10 +271,10 @@ pgvector уже в стандартном образе CNPG (AD-18), там же
 | Изменение | Документ | Статус |
 |---|---|---|
 | Гибридный поиск, контекстные фрагменты, переранжирование для RAG после MVP | [BACKLOG](..\source\BACKLOG.md) (строка RAG) | ✅ внесено в бэклог |
-| Решение AD-13 | design | ✅ подтверждено, без изменений |
+| Решение [AD-13](../architecture/decisions/AD-13.yaml) | design | ✅ подтверждено, без изменений |
 | M4 и RAG — одна Postgres | [R&D памяти](memory-model.md) | — не требуется: согласовано |
-| `get_document` | FR-182 | — не требуется |
-| Стыки I9, I11, I22 | спеки | — не требуется до переноса RAG в работу |
+| `get_document` | [FR-182](../architecture/components/mcp-tools/prd.md) | — не требуется |
+| Стыки [I9](../architecture/components/harness/integrations/I9.yaml), [I11](../architecture/components/harness/integrations/I11.yaml), [I22](../architecture/integrations/I22.yaml) | спеки | — не требуется до переноса RAG в работу |
 | text-embeddings-inference | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | — не требуется: уже Assess |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.

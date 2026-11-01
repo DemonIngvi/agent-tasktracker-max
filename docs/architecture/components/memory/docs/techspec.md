@@ -2,13 +2,13 @@
 
 ← компонент · методология
 
-**Что разворачивается:** Memory API: чтение M1–M3, запись M3 с проверками, очистка по срокам.
+**Что разворачивается:** [Memory](../README.md) API: чтение M1–M3, запись M3 с проверками, очистка по срокам.
 
 ## Образы
 
 | Образ | База | Что внутри | Как собирается | Откуда берём | Тег | Пользователь | Порты | Проверка готовности |
 |---|---|---|---|---|---|---|---|---|
-| memory-api | `python:3.12-slim` | Memory API (FastAPI), задачи очистки | `memory/Dockerfile`, `uv.lock` | `ghcr.io/demoningvi/memory-api` | semver платформы | uid 10001 | 8085 | `GET /ready` (БД доступна) |
+| memory-api | `python:3.12-slim` | [Memory](../README.md) API (FastAPI), задачи очистки | `memory/Dockerfile`, `uv.lock` | `ghcr.io/demoningvi/memory-api` | semver платформы | uid 10001 | 8085 | `GET /ready` (БД доступна) |
 
 ## Запуск
 
@@ -22,7 +22,7 @@
 
 | Переменная | Зачем | Откуда |
 |---|---|---|
-| `DATABASE_URL` | база `itsaplan`, роль `memory` — владелец схемы `memory`; чтение `agent_run`, `agent_chat_message`, `issue_activity` по `GRANT` (AD-22, AD-25) | Secret `memory-db` |
+| `DATABASE_URL` | база `itsaplan`, роль `memory` — владелец схемы `memory`; чтение `agent_run`, `agent_chat_message`, `issue_activity` по `GRANT` ([AD-22](../../../decisions/AD-22.yaml), [AD-25](../../../decisions/AD-25.yaml)) | Secret `memory-db` |
 | `MASK_PATTERNS` | шаблоны маскирования | ConfigMap (из observability) |
 
 ## Сборка и поставка
@@ -35,9 +35,9 @@
 
 ## Обновление и откат
 
-Данные Memory — таблица `memory_m3` в схеме `memory` БД `itsaplan` (роль `memory`, S4, AD-22); позже `m4_fact` для M4. Строки `agent_run`, `agent_chat_message`, `issue_activity` принадлежат ICPlan: Memory читает их по `GRANT` и не удаляет (AD-25). Точка восстановления — базовые копии и WAL Postgres в S3 вне узла.
+Данные [Memory](../README.md) — таблица `memory_m3` в схеме `memory` БД `itsaplan` (роль `memory`, S4, [AD-22](../../../decisions/AD-22.yaml)); позже `m4_fact` для M4. Строки `agent_run`, `agent_chat_message`, `issue_activity` принадлежат [ICPlan](../../icplan/README.md): [Memory](../README.md) читает их по `GRANT` и не удаляет ([AD-25](../../../decisions/AD-25.yaml)). Точка восстановления — базовые копии и WAL Postgres в S3 вне узла.
 
-1. Порядок: сначала миграции схемы `memory`, затем новый образ `memory-api`; читать данные Memory может только роль `memory`, поэтому Secret `memory-db` должен быть на месте до запуска нового образа.
+1. Порядок: сначала миграции схемы `memory`, затем новый образ `memory-api`; читать данные [Memory](../README.md) может только роль `memory`, поэтому Secret `memory-db` должен быть на месте до запуска нового образа.
 2. Миграции только добавляют таблицы и колонки: прежняя версия `memory-api` работает со схемой после миграции.
 3. Откат — прежний тег и digest образа `memory-api`; миграции назад не откатываются, добавленные таблицы и колонки остаются неиспользуемыми. Записи M3 при откате образа сохраняются (версии записи не удаляются).
 4. Задание CronJob `memory-retention` на время обновления можно оставить: неуспешный запуск не удаляет записи и повторяется (FMEA «Очистка M3 не прошла»).

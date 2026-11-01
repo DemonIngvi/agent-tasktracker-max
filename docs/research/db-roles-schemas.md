@@ -1,12 +1,12 @@
 # R&D: Базы, схемы и роли БД сервисов
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Инфраструктура** · решение: [design AD-22](..\source\design\define-agent-platform\design.md) · основа: [R&D: хранилища данных](data-stores.md)
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Инфраструктура](../architecture/components/infrastructure/README.md)** · решение: [design AD-22](..\source\design\define-agent-platform\design.md) · основа: [R&D: хранилища данных](data-stores.md)
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
-В схеме `platform` базы `itsaplan` пишут три процесса — api ICPlan (Platform module, Observability), Agent Runner и Memory API, у каждого свои миграции. Правило «роль на схему» ([AD-18](data-stores.md)) даёт им одну общую роль, а Memory должна видеть только свои таблицы. Как разложить схемы и роли?
+В схеме `platform` базы `itsaplan` пишут три процесса — api [ICPlan](../architecture/components/icplan/README.md) ([Platform module](../architecture/components/platform-module/README.md), [Observability](../architecture/components/observability/README.md)), [Agent Runner](../architecture/components/agent-runner/README.md) и [Memory](../architecture/components/memory/README.md) API, у каждого свои миграции. Правило «роль на схему» ([AD-18](data-stores.md)) даёт им одну общую роль, а [Memory](../architecture/components/memory/README.md) должна видеть только свои таблицы. Как разложить схемы и роли?
 
-<div class="rnd-a">Ответ: схема на сервис-владельца в той же базе `itsaplan`: `platform` — api ICPlan, `runner` и `harness_ckpt` — Agent Runner, `memory` — Memory API; роль сервиса — владелец своей схемы, чужие таблицы — только явным `GRANT SELECT`. LiteLLM — своя база `litellm` в том же кластере.</div>
+<div class="rnd-a">Ответ: схема на сервис-владельца в той же базе `itsaplan`: `platform` — api [ICPlan](../architecture/components/icplan/README.md), `runner` и `harness_ckpt` — [Agent Runner](../architecture/components/agent-runner/README.md), `memory` — [Memory](../architecture/components/memory/README.md) API; роль сервиса — владелец своей схемы, чужие таблицы — только явным `GRANT SELECT`. LiteLLM — своя база `litellm` в том же кластере.</div>
 
 <span class="rnd-badge adopt">Adopt</span> схема на сервис (PostgreSQL 17, CloudNativePG managed roles) · 0 $ · данные 12.10.2026
 </div>
@@ -33,7 +33,7 @@ stack Документы: 6 ok, 0 part, 0 mute
 <div class="take" markdown>
 **Берём**
 
-- одна база `itsaplan` для ICPlan и платформы, схема на сервис-владельца;
+- одна база `itsaplan` для [ICPlan](../architecture/components/icplan/README.md) и платформы, схема на сервис-владельца;
 - роль сервиса = владелец своей схемы и своих миграций;
 - чтение чужого — явным `GRANT SELECT` на конкретные таблицы;
 - роли декларативно — managed roles CloudNativePG.
@@ -42,13 +42,13 @@ stack Документы: 6 ok, 0 part, 0 mute
 **Адаптируем**
 
 - таблицы `scheduler_slot`, `setup_cache` — из `platform` в `runner`; `memory_m3`, `m4_fact` — в `memory`;
-- Observability встроен в api ICPlan — пишет под ролью api в `platform`;
+- [Observability](../architecture/components/observability/README.md) встроен в api [ICPlan](../architecture/components/icplan/README.md) — пишет под ролью api в `platform`;
 - чтение журнала затрат LiteLLM — отдельное подключение к `litellm` ролью только на чтение.
 </div>
 <div class="drop" markdown>
 **Не берём**
 
-- одну роль на общую схему `platform` — Memory видела бы бюджеты и доступы;
+- одну роль на общую схему `platform` — [Memory](../architecture/components/memory/README.md) видела бы бюджеты и доступы;
 - базу на сервис — теряются внешние ключи на `agent_run` и `issue`.
 </div>
 </div>
@@ -57,21 +57,21 @@ stack Документы: 6 ok, 0 part, 0 mute
 <div class="no" markdown>
 **Отсеяны до сравнения**
 
-- отдельный кластер на сервис — противоречит AD-18 (один экземпляр на MVP).
+- отдельный кластер на сервис — противоречит [AD-18](../architecture/decisions/AD-18.yaml) (один экземпляр на MVP).
 </div>
 <div class="risk" markdown>
 **Риски и пересмотр**
 
-- api ICPlan — один процесс и одна роль на `public` и `platform`: Platform module и Observability не разделены правами; разделение — только при выносе в свой сервис;
+- api [ICPlan](../architecture/components/icplan/README.md) — один процесс и одна роль на `public` и `platform`: [Platform module](../architecture/components/platform-module/README.md) и [Observability](../architecture/components/observability/README.md) не разделены правами; разделение — только при выносе в свой сервис;
 - `GRANT` на чужие таблицы ведутся руками в миграциях — проверка `db_check` сверяет их с моделью данных.
 </div>
 </div>
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** AD-18 (R&D [хранилища данных](data-stores.md)): один экземпляр PostgreSQL 17 под CloudNativePG, базы `itsaplan` (схемы `public`, `platform`, `harness_ckpt`) и `litellm`, роль на схему. В `platform` таблицы трёх процессов: api ICPlan (`agent_settings`…, `run_event`), Agent Runner (`scheduler_slot`, `setup_cache`), Memory API (`memory_m3`, `m4_fact`); у каждого свои миграции и своя таблица версий (`datamodel.MIGRATE`). Deploy Memory требует «роль только на свои таблицы» — с общей ролью это невыполнимо.
+**Ситуация.** [AD-18](../architecture/decisions/AD-18.yaml) (R&D [хранилища данных](data-stores.md)): один экземпляр PostgreSQL 17 под CloudNativePG, базы `itsaplan` (схемы `public`, `platform`, `harness_ckpt`) и `litellm`, роль на схему. В `platform` таблицы трёх процессов: api [ICPlan](../architecture/components/icplan/README.md) (`agent_settings`…, `run_event`), [Agent Runner](../architecture/components/agent-runner/README.md) (`scheduler_slot`, `setup_cache`), [Memory](../architecture/components/memory/README.md) API (`memory_m3`, `m4_fact`); у каждого свои миграции и своя таблица версий (`datamodel.MIGRATE`). Deploy [Memory](../architecture/components/memory/README.md) требует «роль только на свои таблицы» — с общей ролью это невыполнимо.
 
-**Решает:** архитектор с DevOps и безопасностью. **Не решаем:** СУБД и оператор (AD-18), бэкап (FR-165).
+**Решает:** архитектор с DevOps и безопасностью. **Не решаем:** СУБД и оператор ([AD-18](../architecture/decisions/AD-18.yaml)), бэкап ([FR-165](../architecture/components/infrastructure/prd.md)).
 
 <span class="gate">G1</span> ✅ вопрос, граница и кто решает названы.
 
@@ -79,10 +79,10 @@ stack Документы: 6 ok, 0 part, 0 mute
 
 | # | Потребность | Источник | Без неё |
 |---|---|---|---|
-| П1 | сервис пишет и читает только своё, чужое — явно | R&D хранилищ П5, Deploy Memory | Memory видит бюджеты и доступы |
-| П2 | у каждого сервиса свои миграции и таблица версий | `MIGRATE`, AD-3 | миграции одного ломают другого |
+| П1 | сервис пишет и читает только своё, чужое — явно | R&D хранилищ П5, Deploy [Memory](../architecture/components/memory/README.md) | [Memory](../architecture/components/memory/README.md) видит бюджеты и доступы |
+| П2 | у каждого сервиса свои миграции и таблица версий | `MIGRATE`, [AD-3](../architecture/decisions/AD-3.yaml) | миграции одного ломают другого |
 | П3 | внешние ключи на `agent_run`, `issue` (M2, M3, checkpoint) | `PLATFORM_TABLES` | целостность — в коде, не в БД |
-| П4 | один кластер, один бэкап | AD-18 | второй контур бэкапов |
+| П4 | один кластер, один бэкап | [AD-18](../architecture/decisions/AD-18.yaml) | второй контур бэкапов |
 | П5 | роли и права описаны декларативно | R&D хранилищ F5 | права расходятся с документами |
 
 <span class="gate">G2</span> ✅ у потребностей есть источник и цена отсутствия.
@@ -119,22 +119,22 @@ stack Документы: 6 ok, 0 part, 0 mute
 
 ## Э6. Перенос и критерии {#e6}
 
-Перенос из «как сейчас»: таблицы Runner и Memory переезжают в свои схемы до первой миграции (таблиц ещё нет — это проект схемы), FK на `public.agent_run` и `public.issue` — с `GRANT REFERENCES`. Критерии: П1–П5 закрыты; число ролей ≤ 4; один бэкап.
+Перенос из «как сейчас»: таблицы Runner и [Memory](../architecture/components/memory/README.md) переезжают в свои схемы до первой миграции (таблиц ещё нет — это проект схемы), FK на `public.agent_run` и `public.issue` — с `GRANT REFERENCES`. Критерии: П1–П5 закрыты; число ролей ≤ 4; один бэкап.
 
 <span class="gate">G6</span> ✅ критерии проверяемы.
 
 ## Э7. Отсев и встраивание {#e7}
 
-Отсеян отдельный кластер на сервис (против AD-18). Встраивание выбранного:
+Отсеян отдельный кластер на сервис (против [AD-18](../architecture/decisions/AD-18.yaml)). Встраивание выбранного:
 
 | Схема | База | Владелец (роль) | Таблицы | Чтение чужого |
 |---|---|---|---|---|
-| `public` | `itsaplan` | api ICPlan (`itsaplan`) | таблицы форка, процесс | — |
-| `platform` | `itsaplan` | api ICPlan (`itsaplan`): Platform module, Observability | настройки, профили, доступы, `run_event` | — |
-| `runner` | `itsaplan` | Agent Runner (`runner`) | `scheduler_slot`, `setup_cache` | — |
-| `harness_ckpt` | `itsaplan` | Agent Runner (`runner`) | `run_checkpoint` | `REFERENCES` на `public.agent_run` |
-| `memory` | `itsaplan` | Memory API (`memory`) | `memory_m3`, `m4_fact` | `SELECT` на `public.agent_run`, `public.agent_chat_message`; `REFERENCES` на `public.issue` |
-| `public` | `litellm` | LiteLLM (`litellm`) | ключи, бюджеты, журнал затрат | api ICPlan — роль `litellm_read`, `SELECT` на журнал затрат |
+| `public` | `itsaplan` | api [ICPlan](../architecture/components/icplan/README.md) (`itsaplan`) | таблицы форка, процесс | — |
+| `platform` | `itsaplan` | api [ICPlan](../architecture/components/icplan/README.md) (`itsaplan`): [Platform module](../architecture/components/platform-module/README.md), [Observability](../architecture/components/observability/README.md) | настройки, профили, доступы, `run_event` | — |
+| `runner` | `itsaplan` | [Agent Runner](../architecture/components/agent-runner/README.md) (`runner`) | `scheduler_slot`, `setup_cache` | — |
+| `harness_ckpt` | `itsaplan` | [Agent Runner](../architecture/components/agent-runner/README.md) (`runner`) | `run_checkpoint` | `REFERENCES` на `public.agent_run` |
+| `memory` | `itsaplan` | [Memory](../architecture/components/memory/README.md) API (`memory`) | `memory_m3`, `m4_fact` | `SELECT` на `public.agent_run`, `public.agent_chat_message`; `REFERENCES` на `public.issue` |
+| `public` | `litellm` | LiteLLM (`litellm`) | ключи, бюджеты, журнал затрат | api [ICPlan](../architecture/components/icplan/README.md) — роль `litellm_read`, `SELECT` на журнал затрат |
 
 <span class="gate">G7</span> ✅ выбранное встраивается: каждая таблица в схеме, у схемы владелец.
 
@@ -152,7 +152,7 @@ stack Документы: 6 ok, 0 part, 0 mute
 | Спор | Разрешение |
 |---|---|
 | DevOps: «больше ролей и Secret'ов» | **условие:** роли декларативно в `Cluster.spec.managed.roles`, пароли — Secret оператора |
-| Адвокат дьявола: «api ICPlan всё равно пишет и в `public`, и в `platform` одной ролью» | **принято как риск:** один процесс — одна роль; разделение — при выносе Platform module в свой сервис |
+| Адвокат дьявола: «api [ICPlan](../architecture/components/icplan/README.md) всё равно пишет и в `public`, и в `platform` одной ролью» | **принято как риск:** один процесс — одна роль; разделение — при выносе [Platform module](../architecture/components/platform-module/README.md) в свой сервис |
 
 <span class="gate">G8</span> ✅ у каждого спора есть разрешение.
 
@@ -166,8 +166,8 @@ stack Документы: 6 ok, 0 part, 0 mute
 | П4 один кластер | закрывает | закрывает | закрывает | частично: базы в одном кластере, но связи через API |
 | П5 декларативно | не закрывает: права шире нужного | частично: `GRANT` на каждую таблицу | закрывает | закрывает |
 
-- **Утверждение.** Схема на сервис-владельца в базе `itsaplan`; LiteLLM — своя база (AD-22).
-- **Основания.** Единственный вариант, закрывающий П1–П5; сохраняет «роль на схему» AD-18.
+- **Утверждение.** Схема на сервис-владельца в базе `itsaplan`; LiteLLM — своя база ([AD-22](../architecture/decisions/AD-22.yaml)).
+- **Основания.** Единственный вариант, закрывающий П1–П5; сохраняет «роль на схему» [AD-18](../architecture/decisions/AD-18.yaml).
 - **Когда неверно.** Если сервису понадобится писать в чужую схему — это признак ошибки границы компонента: сначала решение, потом `GRANT`.
 
 <span class="gate">G9</span> ✅ вывод следует из покрытия и спора; есть условие пересмотра.
@@ -176,10 +176,10 @@ stack Документы: 6 ok, 0 part, 0 mute
 
 | Изменение | Документ | Статус |
 |---|---|---|
-| Решение AD-22: схема на сервис, роли, `GRANT` | [design](..\source\design\define-agent-platform\design.md) | ✅ внесено |
-| Уровни «база» и «схема» в модели данных: `DATABASES`; таблицы Runner → `runner`, Memory → `memory` | `html-view/datamodel.py`, вкладки «Данные» | ✅ внесено |
+| Решение [AD-22](../architecture/decisions/AD-22.yaml): схема на сервис, роли, `GRANT` | [design](..\source\design\define-agent-platform\design.md) | ✅ внесено |
+| Уровни «база» и «схема» в модели данных: `DATABASES`; таблицы Runner → `runner`, [Memory](../architecture/components/memory/README.md) → `memory` | `html-view/datamodel.py`, вкладки «Данные» | ✅ внесено |
 | Раздел «Базы данных» на «Данных» Инфраструктуры, строка «Где лежит» у компонентов | вкладки «Данные» | ✅ внесено |
-| `DATABASE_URL`: база и роль каждого сервиса | Deploy ICPlan, Agent Runner, Memory, LLM Gateway | ✅ внесено |
+| `DATABASE_URL`: база и роль каждого сервиса | Deploy [ICPlan](../architecture/components/icplan/README.md), [Agent Runner](../architecture/components/agent-runner/README.md), [Memory](../architecture/components/memory/README.md), LLM Gateway | ✅ внесено |
 | Хранилища S3, S4: схемы `runner`, `memory` | `interfaces.md` спек agent-runner, agent-memory | ✅ внесено |
 | Схема развёртывания: базы в `itsaplan-data` | главная | ✅ внесено |
 
@@ -192,4 +192,4 @@ stack Документы: 6 ok, 0 part, 0 mute
 - [PostgreSQL 17: схемы](https://www.postgresql.org/docs/17/ddl-schemas.html) (А) · [права](https://www.postgresql.org/docs/17/ddl-priv.html) (А)
 - [CloudNativePG: декларативные роли](https://cloudnative-pg.io/documentation/current/declarative_role_management/) (Б) · [декларативные базы](https://cloudnative-pg.io/documentation/current/declarative_database_management/) (Б)
 - [microservices.io: database per service](https://microservices.io/patterns/data/database-per-service.html) (Б)
-- [R&D: хранилища данных](data-stores.md) — AD-18
+- [R&D: хранилища данных](data-stores.md) — [AD-18](../architecture/decisions/AD-18.yaml)

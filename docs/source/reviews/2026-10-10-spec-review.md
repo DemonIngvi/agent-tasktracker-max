@@ -23,7 +23,7 @@
 | X3 | все | Техлид | Отказы | Почти нет сценариев «что-то пошло не так» и «чего-то не хватает в системе» | ✅ требование «Поведение при отказах зависимостей» + таблица FMEA в каждой спеке |
 | X4 | все | Архитектор | Конфигурация | Не описано, где хранится каждый параметр и что главнее при конфликте | ✅ уровни L0–L3, правило приоритета и потолка, таблица параметров с хранилищем |
 | X5 | platform-infrastructure | Архитектор | Данные | Нет инвентаризации БД и хранилищ, владельцев, бэкапа | ✅ S1–S11 в `interfaces.md`; ❓ бэкап Postgres и объектного хранилища не реализован — риск потери данных |
-| X6 | icplan-integration | Архитектор | Протоколы | Не описаны протоколы обмена, аутентификация, таймауты, повторы, идемпотентность | ✅ I1–I20 в `interfaces.md`; ❓ I1–I3 — протокол раннера ICPlan не сверен с кодом, поля — гипотеза (задача 2.1) |
+| X6 | icplan-integration | Архитектор | Протоколы | Не описаны протоколы обмена, аутентификация, таймауты, повторы, идемпотентность | ✅ [I1](../../architecture/components/agent-runner/integrations/I1.yaml)–[I20](../../architecture/components/icplan/integrations/I20.yaml) в `interfaces.md`; ❓ [I1](../../architecture/components/agent-runner/integrations/I1.yaml)–[I3](../../architecture/components/agent-runner/integrations/I3.yaml) — протокол раннера [ICPlan](../../architecture/components/icplan/README.md) не сверен с кодом, поля — гипотеза (задача 2.1) |
 | X7 | guardrails | Техлид | Тестируемость | Пороги по умолчанию (30 шагов, 5 $, 200 мс OPA) не обоснованы измерениями | ❓ калибровка на mock и первых реальных запусках |
 | X8 | guardrails | Архитектор | Безопасность | Межсервисная аутентификация внутри платформы — «внутренняя сеть», mTLS отложен | 📌 решить: принимаем риск для MVP или mTLS сразу |
 | X9 | — (правила) | Аналитик | Методология | 100% по формуле не доказывает достаточность | ✅ формула переработана по ISO/IEC/IEEE 29148 и FMEA, см. критерии |
@@ -35,29 +35,29 @@
 | ID | Спека | Роль | Вопрос / замечание | Статус |
 |---|---|---|---|---|
 | Р1-01 | agent-runner | Техлид | Что если Runner упал, держа слоты и аренду запуска? | ✅ FMEA: аренда истекает, слоты освобождаются |
-| Р1-02 | agent-runner | Архитектор | Runner ↔ Harness: HTTP + NDJSON или gRPC (design AD-3 допускал оба)? | 📌 выбрать протокол I7 |
-| Р1-03 | agent-runner | Аналитик | Как ведёт себя очередь при `sequential`, если один запуск ждёт approve сутки? | ✅ требование «Слоты при ожидании подтверждения» (US-RUN-04) |
+| Р1-02 | agent-runner | Архитектор | Runner ↔ [Harness](../../architecture/components/harness/README.md): HTTP + NDJSON или gRPC (design [AD-3](../../architecture/decisions/AD-3.yaml) допускал оба)? | 📌 выбрать протокол [I7](../../architecture/components/agent-runner/integrations/I7.yaml) |
+| Р1-03 | agent-runner | Аналитик | Как ведёт себя очередь при `sequential`, если один запуск ждёт approve сутки? | ✅ требование «Слоты при ожидании подтверждения» ([US-RUN-04](../../architecture/components/agent-runner/stories/us-run-04.yaml)) |
 | Р1-04 | agent-sandbox | Архитектор | Docker-сокет у Runner даёт ему root-доступ к хосту | ❓ rootless Docker / отдельный узел |
-| Р1-05 | agent-sandbox | Техлид | Как задание попадает в уже запущенный контейнер тёплого пула | ✅ I7 (HTTP внутри сети sandbox); детали — задача 4.1 |
-| Р1-06 | agent-harness | Архитектор | Harness в sandbox ходит в Postgres за checkpoint (I12) — прямой доступ к БД из недоверенной среды | 📌 альтернатива: checkpoint через API Runner/Memory; решить до 1.5 |
+| Р1-05 | agent-sandbox | Техлид | Как задание попадает в уже запущенный контейнер тёплого пула | ✅ [I7](../../architecture/components/agent-runner/integrations/I7.yaml) (HTTP внутри сети sandbox); детали — задача 4.1 |
+| Р1-06 | agent-harness | Архитектор | [Harness](../../architecture/components/harness/README.md) в sandbox ходит в Postgres за checkpoint ([I12](../../architecture/components/harness/integrations/I12.yaml)) — прямой доступ к БД из недоверенной среды | 📌 альтернатива: checkpoint через API Runner/Memory; решить до 1.5 |
 | Р1-07 | agent-harness | Техлид | Что при падении checkpointer во время паузы на approve | ✅ FMEA: опасные действия отклоняются |
-| Р1-08 | agent-harness | Аналитик | Quality gate: кто пишет критерии приёмки и в каком формате | ❓ формат поля в задаче ICPlan |
+| Р1-08 | agent-harness | Аналитик | Quality gate: кто пишет критерии приёмки и в каком формате | ❓ формат поля в задаче [ICPlan](../../architecture/components/icplan/README.md) |
 | Р1-09 | agent-memory | Аналитик | M4 — требование без задачи | ✅ в RTM — решение «не в MVP» (бэклог) |
-| Р1-10 | agent-memory | Архитектор | Права на память проверяет Memory API, а M1/M2 пишет ICPlan/Runner напрямую — две точки контроля | ❓ свести запись M2 к Memory API или явно разрешить |
-| Р1-11 | agent-registry | Аналитик | Спека говорит о типах `prompt`, `guardrail_rule` в Registry, а AD-9 кладёт часть в Platform module | ❓ согласовать границу Registry и Platform module |
+| Р1-10 | agent-memory | Архитектор | Права на память проверяет [Memory](../../architecture/components/memory/README.md) API, а M1/M2 пишет [ICPlan](../../architecture/components/icplan/README.md)/Runner напрямую — две точки контроля | ❓ свести запись M2 к [Memory](../../architecture/components/memory/README.md) API или явно разрешить |
+| Р1-11 | agent-registry | Аналитик | Спека говорит о типах `prompt`, `guardrail_rule` в Registry, а [AD-9](../../architecture/decisions/AD-9.yaml) кладёт часть в [Platform module](../../architecture/components/platform-module/README.md) | ❓ согласовать границу Registry и [Platform module](../../architecture/components/platform-module/README.md) |
 | Р1-12 | control-plane | Архитектор | Рассинхронизация S2 ↔ S6 (LiteLLM) ↔ S11 (OPA): кто источник правды | ✅ источник — S2; сверка и предупреждение |
 | Р1-13 | guardrails | Техлид | 200 мс на решение OPA на каждый тул — латентность на длинных запусках | ❓ замерить; кэш решений на запуск |
-| Р1-14 | guardrails | Аналитик | Уровень автономии R0–R5: где задаётся и кто меняет | ✅ через Platform module (L1); ❓ добавить параметр в таблицу конфигурации |
+| Р1-14 | guardrails | Аналитик | Уровень автономии R0–R5: где задаётся и кто меняет | ✅ через [Platform module](../../architecture/components/platform-module/README.md) (L1); ❓ добавить параметр в таблицу конфигурации |
 | Р1-15 | llm-gateway | Архитектор | LiteLLM — единая точка отказа; одна БД на общем Postgres | ❓ реплики LiteLLM; общий Postgres — единая точка отказа |
 | Р1-16 | llm-gateway | Техлид | Закреплённая версия LiteLLM отстаёт на ~27 релизов | ❓ задача 1.1: пересмотреть |
-| Р1-17 | observability | Аналитик | Маскирование секретов в событиях — по какому правилу | ✅ требование «Маскирование» (US-OBS-03); ❓ список шаблонов — задача 3.3 |
+| Р1-17 | observability | Аналитик | Маскирование секретов в событиях — по какому правилу | ✅ требование «Маскирование» ([US-OBS-03](../../architecture/components/observability/stories/us-obs-03.yaml)); ❓ список шаблонов — задача 3.3 |
 | Р1-18 | tool-integration | Аналитик | «Административные тулы» — требование без задачи | ✅ в RTM — решение «не в MVP» (бэклог) |
-| Р1-19 | icplan-integration | Техлид | Аренда запуска (однократная выдача) — есть ли в протоколе ICPlan | ❓ проверить в 2.1; если нет — доработка ICPlan |
-| Р1-20 | icplan-integration | Архитектор | AGPL-3.0: доработки ICPlan обязаны быть открыты пользователям | 📌 принять или пересмотреть |
+| Р1-19 | icplan-integration | Техлид | Аренда запуска (однократная выдача) — есть ли в протоколе [ICPlan](../../architecture/components/icplan/README.md) | ❓ проверить в 2.1; если нет — доработка [ICPlan](../../architecture/components/icplan/README.md) |
+| Р1-20 | icplan-integration | Архитектор | AGPL-3.0: доработки [ICPlan](../../architecture/components/icplan/README.md) обязаны быть открыты пользователям | 📌 принять или пересмотреть |
 | Р1-21 | icplan-agent-autopickup | Аналитик | Цикл: агент переводит задачу в статус, правило которого снова его запускает | ✅ FMEA: защита от дублей + лимит; ❓ значение лимита |
-| Р1-22 | icplan-integration | Аналитик | Пользователь не узнаёт, что агент ждёт решения | ✅ требование «Уведомление о решении пользователя» (US-ICP-03) |
+| Р1-22 | icplan-integration | Аналитик | Пользователь не узнаёт, что агент ждёт решения | ✅ требование «Уведомление о решении пользователя» ([US-ICP-03](../../architecture/components/icplan/stories/us-icp-03.yaml)) |
 
 ## Итог
 
 - Закрыто правкой: трассировка по требованиям, конфигурация и хранилища, протоколы, отказы.
-- Открыто (❓): 15 пунктов, на решение пользователя (📌): 4 — mTLS, протокол Runner↔Harness, доступ Harness к БД checkpoint, AGPL.
+- Открыто (❓): 15 пунктов, на решение пользователя (📌): 4 — mTLS, протокол Runner↔[Harness](../../architecture/components/harness/README.md), доступ [Harness](../../architecture/components/harness/README.md) к БД checkpoint, AGPL.

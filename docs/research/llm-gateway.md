@@ -1,6 +1,6 @@
 # R&D: Шлюз к моделям (LLM Gateway)
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **LiteLLM gateway** · решение: [design AD-5, AD-18](..\source\design\define-agent-platform\design.md) · спека: llm-gateway
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[LiteLLM gateway](../architecture/components/llm-gateway/README.md)** · решение: [design AD-5, AD-18](..\source\design\define-agent-platform\design.md) · спека: llm-gateway
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
@@ -8,7 +8,7 @@
 
 <div class="rnd-a">Ответ: LiteLLM Proxy v1.104.2 — один OpenAI-совместимый шлюз с алиасами, virtual key на агента, бюджетами и журналом затрат; mock-LLM за тем же алиасом. Bifrost — запасной вариант, если LiteLLM не выдержит нагрузочный тест.</div>
 
-<span class="rnd-badge adopt">Adopt</span> LiteLLM v1.104.2 (AD-18) · ядро MIT · 0 $ self-host · данные 11.10.2026
+<span class="rnd-badge adopt">Adopt</span> LiteLLM v1.104.2 ([AD-18](../architecture/decisions/AD-18.yaml)) · ядро MIT · 0 $ self-host · данные 11.10.2026
 </div>
 
 ```deck
@@ -55,7 +55,7 @@ stack Документы: 4 ok, 0 part, 4 mute
 <div markdown>
 **2. На LiteLLM уже завязаны три соседа**
 
-Platform module выдаёт ключи через admin API (I15), Control plane передаёт бюджеты, Observability читает затраты из БД `litellm` (S6). Другой шлюз означает переделку трёх компонентов ([Э7](#e7)).
+[Platform module](../architecture/components/platform-module/README.md) выдаёт ключи через admin API ([I15](../architecture/components/platform-module/integrations/I15.yaml)), Control plane передаёт бюджеты, [Observability](../architecture/components/observability/README.md) читает затраты из БД `litellm` (S6). Другой шлюз означает переделку трёх компонентов ([Э7](#e7)).
 </div>
 <div markdown>
 **3. Риск — производительность, и он проверяется**
@@ -77,7 +77,7 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 <div class="adapt" markdown>
 **Адаптируем**
 
-- бюджеты с периодом сброса (Bifrost) → уже есть: агент на сутки, проект на месяц (FR-120);
+- бюджеты с периодом сброса (Bifrost) → уже есть: агент на сутки, проект на месяц ([FR-120](../architecture/components/guardrails/prd.md));
 - разный вес токенов: кэш, размышления (Envoy QuotaPolicy) → учёт стоимости по модели в LiteLLM уже есть.
 </div>
 <div class="drop" markdown>
@@ -113,7 +113,7 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 <div markdown>**Э4 Альтернативы**10 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I8, I13–I15 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I8](../architecture/components/harness/integrations/I8.yaml), [I13](../architecture/components/llm-gateway/integrations/I13.yaml)–[I15](../architecture/components/platform-module/integrations/I15.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**6 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**8 <span class="gate">G10</span></div>
@@ -133,19 +133,19 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 
 **Решает:** владелец продукта. **Не решаем:** проверки G4 в шлюзе ([guardrails](guardrails-engine.md)), наблюдаемость ([observability](observability.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-5, AD-18.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-5](../architecture/decisions/AD-5.yaml), [AD-18](../architecture/decisions/AD-18.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | смена модели без изменения агента (алиасы) | FR-134 | модель зашита в определение агента |
-| П2 | ключ, бюджет и лимит на агента | FR-138, control-plane | один агент тратит бюджет всех |
-| П3 | учёт токенов и $ по запуску и задаче | FR-135, FR-136, FR-150 | нет сводки затрат |
-| П4 | mock-модель тем же адресом | FR-137 | разработка требует ключей и денег |
-| П5 | несколько провайдеров и fallback | FR-139, FR-140 | сбой провайдера останавливает агентов |
-| П6 | ключ провайдера только в шлюзе | AD-7, I8 (ключ подставляет egress-прокси) | ключ в sandbox |
-| П7 | своё размещение, функции в открытом издании | AD-15 | платная зависимость или облако |
+| П1 | смена модели без изменения агента (алиасы) | [FR-134](../architecture/components/llm-gateway/prd.md) | модель зашита в определение агента |
+| П2 | ключ, бюджет и лимит на агента | [FR-138](../architecture/components/llm-gateway/prd.md), control-plane | один агент тратит бюджет всех |
+| П3 | учёт токенов и $ по запуску и задаче | [FR-135](../architecture/components/llm-gateway/prd.md), [FR-136](../architecture/components/llm-gateway/prd.md), [FR-150](../architecture/components/observability/prd.md) | нет сводки затрат |
+| П4 | mock-модель тем же адресом | [FR-137](../architecture/components/llm-gateway/prd.md) | разработка требует ключей и денег |
+| П5 | несколько провайдеров и fallback | [FR-139](../architecture/components/llm-gateway/prd.md), [FR-140](../architecture/components/llm-gateway/prd.md) | сбой провайдера останавливает агентов |
+| П6 | ключ провайдера только в шлюзе | [AD-7](../architecture/decisions/AD-7.yaml), [I8](../architecture/components/harness/integrations/I8.yaml) (ключ подставляет egress-прокси) | ключ в sandbox |
+| П7 | своё размещение, функции в открытом издании | [AD-15](../architecture/decisions/AD-15.yaml) | платная зависимость или облако |
 | П8 | выдержать профиль: до 1 RPS, ~55 тыс. токенов в минуту | NFR-9 | агенты ждут шлюз |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования и решения.
@@ -160,12 +160,12 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 | F4 | Журнал затрат (spend logs) | токены, $ и `metadata` каждого запроса в БД `litellm` | П3 |
 | F5 | Fallback и маршрутизация | резервная модель, повторы | П5 |
 | F6 | Admin API (`/key/generate`, `/key/update`) | выдача и изменение ключей | П2 |
-| F7 | 100+ провайдеров, OpenAI-совместимый API | один формат для Harness | П5 |
+| F7 | 100+ провайдеров, OpenAI-совместимый API | один формат для [Harness](../architecture/components/harness/README.md) | П5 |
 | F8 | Хуки guardrails | место для G4 | — |
 
 **Вывод этапа.** LiteLLM закрывает все потребности функциями ядра. Открытый вопрос — производительность (П8).
 
-<span class="gate">G3</span> ✅ функции из документации LiteLLM (Б) и AD-5 (А).
+<span class="gate">G3</span> ✅ функции из документации LiteLLM (Б) и [AD-5](../architecture/decisions/AD-5.yaml) (А).
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
@@ -180,7 +180,7 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 | **TensorZero** (Apache-2.0, 11 709★) | шлюз на Rust, A/B-варианты, наблюдаемость; **архивирован 11.06.2026** | A/B-варианты | Б |
 | **Helicone gateway** (GPL-3.0, 638★) | шлюз на Rust; нет активности с 21.11.2025 | — | Б |
 | **OpenRouter, Portkey cloud** | облачный шлюз | — | Б |
-| **Прямые вызовы** (как в ICPlan) | Harness ходит к провайдеру | — | А |
+| **Прямые вызовы** (как в [ICPlan](../architecture/components/icplan/README.md)) | [Harness](../architecture/components/harness/README.md) ходит к провайдеру | — | А |
 
 **Вывод этапа.** Ближе всех к LiteLLM — Bifrost: ключи и бюджеты в открытом издании, плюс бюджет с периодом. Envoy силён в квотах токенов, но требует Redis и Gateway API. Два кандидата неактивны.
 
@@ -190,13 +190,13 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 
 | Функция | Потребность | Почему ценна | Доказательство | Класс |
 |---|---|---|---|---|
-| OpenAI-совместимый API и алиасы | П1 | Harness не знает провайдера | у всех шлюзов (Б) | базовая |
+| OpenAI-совместимый API и алиасы | П1 | [Harness](../architecture/components/harness/README.md) не знает провайдера | у всех шлюзов (Б) | базовая |
 | Ключ на агента с бюджетом | П2 | бюджет одного агента не съедает остальных | LiteLLM, Bifrost (Б, В) | базовая |
 | Журнал затрат с метаданными | П3 | затраты по запуску и задаче | LiteLLM spend logs (Б) | базовая |
 | Ключ провайдера только в шлюзе | П6 | sandbox без секретов | у всех шлюзов (Б) | базовая |
 | Функции в открытом издании | П7 | без платной зависимости | LiteLLM ядро MIT (Б); Kong, Portkey — частично платно (Б) | базовая |
 | Fallback | П5 | сбой провайдера не останавливает | LiteLLM, Portkey, Bifrost (Б) | линейная |
-| Бюджет с периодом сброса | П2 | недельный и месячный контроль | Bifrost (В); у нас — FR-120 (А) | привлекательная, уже есть |
+| Бюджет с периодом сброса | П2 | недельный и месячный контроль | Bifrost (В); у нас — [FR-120](../architecture/components/guardrails/prd.md) (А) | привлекательная, уже есть |
 | Вес токенов кэша и размышлений | П3 | точнее стоимость | Envoy (Б); LiteLLM считает стоимость по модели (Б) | линейная, уже есть |
 | Низкие накладные расходы (Go, Rust) | П8 | меньше задержка и память | Bifrost, TensorZero (В) | линейная |
 | A/B-варианты моделей | — | сравнение моделей на трафике | TensorZero (Б), архивирован | привлекательная |
@@ -209,8 +209,8 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| Алиасы, ключи, бюджеты, журнал, fallback, mock | оставить | LiteLLM v1.104.2 | AD-5, AD-18 |
-| Бюджет с периодом (Bifrost) | оставить | иерархия бюджетов уже задаёт сутки (агент) и месяц (проект) | FR-120 |
+| Алиасы, ключи, бюджеты, журнал, fallback, mock | оставить | LiteLLM v1.104.2 | [AD-5](../architecture/decisions/AD-5.yaml), [AD-18](../architecture/decisions/AD-18.yaml) |
+| Бюджет с периодом (Bifrost) | оставить | иерархия бюджетов уже задаёт сутки (агент) и месяц (проект) | [FR-120](../architecture/components/guardrails/prd.md) |
 | Вес токенов (Envoy) | оставить | стоимость по модели в LiteLLM | — |
 | A/B-варианты (TensorZero) | не брать сейчас | в бэклог вместе с evals | [BACKLOG](..\source\BACKLOG.md) |
 | Облачные шлюзы | не брать | П6, П7 | — |
@@ -223,7 +223,7 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 | **M2** ключ и бюджет на агента в открытом издании | П2, П7 → базовая | издание, документация |
 | **M3** проект жив | — | не архивирован, активность за 6 месяцев |
 | **К1** учёт затрат по запуску | П3 | метаданные в журнале |
-| **К2** изменения у соседей | — | I14, I15, сводка затрат |
+| **К2** изменения у соседей | — | [I14](../architecture/components/llm-gateway/integrations/I14.yaml), [I15](../architecture/components/platform-module/integrations/I15.yaml), сводка затрат |
 | **К3** накладные расходы | П8 | p95 на профиле |
 | **К4** провайдеры и fallback | П5 | список, резерв |
 
@@ -257,18 +257,18 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 
 | Стык | LiteLLM | Bifrost | Envoy AI Gateway | Kong |
 |---|---|---|---|---|
-| I8 OpenAI API от Harness | И4: в AD-18, проверено в 1.1 | И2 | И2 | И2 |
-| I13 провайдеры, mock | И2 | И2 | И2 | И2 |
-| I14 своя БД (S6) | И2: Postgres, `pgbouncer=true` (AD-18) | И1: своё хранилище конфигурации и логов | И1: Redis для квот | И1: БД Kong |
-| I15 admin API ключей | И2: `/key/generate`, `/key/update` | И1: свой API ключей | И0: ключей нет — объекты K8s | И1: Admin API Kong |
-| Затраты для Observability | И2: журнал в S6 | И1: свой формат | И1: метрики | И1 |
+| [I8](../architecture/components/harness/integrations/I8.yaml) OpenAI API от [Harness](../architecture/components/harness/README.md) | И4: в [AD-18](../architecture/decisions/AD-18.yaml), проверено в 1.1 | И2 | И2 | И2 |
+| [I13](../architecture/components/llm-gateway/integrations/I13.yaml) провайдеры, mock | И2 | И2 | И2 | И2 |
+| [I14](../architecture/components/llm-gateway/integrations/I14.yaml) своя БД (S6) | И2: Postgres, `pgbouncer=true` ([AD-18](../architecture/decisions/AD-18.yaml)) | И1: своё хранилище конфигурации и логов | И1: Redis для квот | И1: БД Kong |
+| [I15](../architecture/components/platform-module/integrations/I15.yaml) admin API ключей | И2: `/key/generate`, `/key/update` | И1: свой API ключей | И0: ключей нет — объекты K8s | И1: Admin API Kong |
+| Затраты для [Observability](../architecture/components/observability/README.md) | И2: журнал в S6 | И1: свой формат | И1: метрики | И1 |
 
 **Изменения у соседей:**
 
 | Кандидат | Что меняется |
 |---|---|
 | LiteLLM | ничего |
-| Bifrost | Platform module (I15 — другой API ключей), Control plane (передача бюджетов), Observability (источник затрат), техспека и FMEA шлюза |
+| Bifrost | [Platform module](../architecture/components/platform-module/README.md) ([I15](../architecture/components/platform-module/integrations/I15.yaml) — другой API ключей), Control plane (передача бюджетов), [Observability](../architecture/components/observability/README.md) (источник затрат), техспека и FMEA шлюза |
 | Envoy AI Gateway | то же + Redis и Kubernetes Gateway API на этапах 1–3 |
 | Kong, Portkey | то же + платные функции для бюджетов |
 
@@ -282,7 +282,7 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 
 | Роль | За | Довод | Опасение | Согласится, если |
 |---|---|---|---|---|
-| Архитектор 🤖 | LiteLLM | I14, I15 и сводка затрат уже на LiteLLM (Э7) | — | — |
+| Архитектор 🤖 | LiteLLM | [I14](../architecture/components/llm-gateway/integrations/I14.yaml), [I15](../architecture/components/platform-module/integrations/I15.yaml) и сводка затрат уже на LiteLLM (Э7) | — | — |
 | Владелец продукта 🤖 | LiteLLM | ключи и бюджеты в открытом ядре | функции уйдут в enterprise | условие пересмотра |
 | Безопасность 🤖 | LiteLLM | ключ провайдера только в шлюзе; virtual key подставляет прокси | цепочка поставки Python-пакетов | образ закреплён по digest, обновления по TECHNOLOGIES |
 | Разработчик 🤖 | нейтрально | алиасы и mock есть у обоих | — | — |
@@ -293,7 +293,7 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 |---|---|
 | DevOps: «Python-шлюз медленный» | ✅ **внесено:** в задаче 4.8 замер накладных расходов шлюза на профиле; **условие:** > 50 мс p95 → пилот Bifrost |
 | Адвокат дьявола: «enterprise-лицензия заберёт функции» | **условие:** используем только ядро; уход нужной функции в enterprise → пересмотр |
-| Владелец продукта: «нужен недельный и месячный бюджет» | **не требуется:** бюджет агента на сутки и проекта на месяц уже в FR-120 |
+| Владелец продукта: «нужен недельный и месячный бюджет» | **не требуется:** бюджет агента на сутки и проекта на месяц уже в [FR-120](../architecture/components/guardrails/prd.md) |
 
 **Вывод этапа.** Главный спор — производительность. Он решается фактом — нагрузочным тестом с порогом пересмотра.
 
@@ -312,7 +312,7 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 | П7 открытое издание | закрывает | закрывает | закрывает | частично | не закрывает |
 | П8 профиль нагрузки | закрывает: профиль скромный; проверка 4.8 | закрывает | закрывает | закрывает | закрывает |
 
-- **Утверждение.** LiteLLM Proxy v1.104.2 (AD-5, AD-18).
+- **Утверждение.** LiteLLM Proxy v1.104.2 ([AD-5](../architecture/decisions/AD-5.yaml), [AD-18](../architecture/decisions/AD-18.yaml)).
 - **Основания.** Закрывает все 8 потребностей в открытом ядре; стыки с тремя соседями уже описаны.
 - **Связка.** Плюсы Bifrost (Go, бюджет с периодом) не перекрывают переделку выдачи ключей, бюджетов и сводки затрат.
 - **Опровержение.** Вывод неверен, если в тесте 4.8 накладные расходы шлюза > 50 мс p95 на профиле или нужная функция уйдёт в enterprise. Тогда — пилот Bifrost.
@@ -326,10 +326,10 @@ LiteLLM на Python тяжелее шлюзов на Go и Rust. Наш проф
 | Замер накладных расходов шлюза на профиле (порог 50 мс p95) | [задача 4.8](..\source\tasks\4.8-load-test.md) | ✅ внесено |
 | Bifrost — Assess; TensorZero — архивирован | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | ✅ внесено |
 | A/B-варианты моделей и промптов | [BACKLOG](..\source\BACKLOG.md) | ✅ внесено в бэклог |
-| Версия: прежний R&D указывал v1.77.3, закреплена v1.104.2 | этот R&D, AD-18 | ✅ исправлено |
-| Бюджет с периодом сброса (`budget.period`) | control-plane, FR-138 | — не требуется: FR-120 задаёт запуск, сутки агента и месяц проекта |
-| Решения AD-5, AD-18 | design | ✅ подтверждено, без изменений |
-| Стыки I8, I13–I15 | спека llm-gateway | — не требуется |
+| Версия: прежний R&D указывал v1.77.3, закреплена v1.104.2 | этот R&D, [AD-18](../architecture/decisions/AD-18.yaml) | ✅ исправлено |
+| Бюджет с периодом сброса (`budget.period`) | control-plane, [FR-138](../architecture/components/llm-gateway/prd.md) | — не требуется: [FR-120](../architecture/components/guardrails/prd.md) задаёт запуск, сутки агента и месяц проекта |
+| Решения [AD-5](../architecture/decisions/AD-5.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | design | ✅ подтверждено, без изменений |
+| Стыки [I8](../architecture/components/harness/integrations/I8.yaml), [I13](../architecture/components/llm-gateway/integrations/I13.yaml)–[I15](../architecture/components/platform-module/integrations/I15.yaml) | спека llm-gateway | — не требуется |
 | Техспека LiteLLM | [техспека](..\architecture\components\llm-gateway\docs\techspec.md) | — не требуется |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.

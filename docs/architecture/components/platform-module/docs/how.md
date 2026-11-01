@@ -6,12 +6,12 @@
 
 | # | Поток | Участники | Данные | I | Сценарий |
 |---|---|---|---|---|---|
-| 1 | Администратор меняет настройки агента | Control Plane UI → Platform module | `AgentSettings` | I20 | С1 |
-| 2 | Новая версия определения агента | Platform module → БД | `AgentDefinition` + версия | — | С1 |
-| 3 | Runner читает профиль и бюджет перед запуском | Agent Runner → Platform module | `AgentSettings` | I4 | С1 |
-| 4 | Алиасы и бюджеты в LLM Gateway | Platform module → LLM Gateway | `VirtualKey` | I15 | С1 |
-| 5 | Данные правил для OPA | Platform module → Guardrails | `OpaBundleData` | I16 | С1 |
-| 6 | Экспорт / импорт агента | Администратор ↔ Platform module | YAML `AgentDefinition` | I20 | — |
+| 1 | Администратор меняет настройки агента | Control Plane UI → [Platform module](../README.md) | [`AgentSettings`](../../../data/model-AgentSettings.yaml) | [I20](../../icplan/integrations/I20.yaml) | С1 |
+| 2 | Новая версия определения агента | [Platform module](../README.md) → БД | [`AgentDefinition`](../../../data/model-AgentDefinition.yaml) + версия | — | С1 |
+| 3 | Runner читает профиль и бюджет перед запуском | [Agent Runner](../../agent-runner/README.md) → [Platform module](../README.md) | [`AgentSettings`](../../../data/model-AgentSettings.yaml) | [I4](../../agent-runner/integrations/I4.yaml) | С1 |
+| 4 | Алиасы и бюджеты в LLM Gateway | [Platform module](../README.md) → LLM Gateway | [`VirtualKey`](../../../data/model-VirtualKey.yaml) | [I15](../integrations/I15.yaml) | С1 |
+| 5 | Данные правил для OPA | [Platform module](../README.md) → [Guardrails](../../guardrails/README.md) | [`OpaBundleData`](../../../data/model-OpaBundleData.yaml) | [I16](../integrations/I16.yaml) | С1 |
+| 6 | Экспорт / импорт агента | Администратор ↔ [Platform module](../README.md) | YAML [`AgentDefinition`](../../../data/model-AgentDefinition.yaml) | [I20](../../icplan/integrations/I20.yaml) | — |
 
 #### С1. Настройки агента: от администратора до запуска
 

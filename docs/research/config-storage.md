@@ -1,14 +1,14 @@
 # R&D: Где хранятся определения и настройки агентов
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Platform module** · решение: [design AD-9, AD-18](..\source\design\define-agent-platform\design.md) · спеки: agent-registry, control-plane
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Platform module](../architecture/components/platform-module/README.md)** · решение: [design AD-9, AD-18](..\source\design\define-agent-platform\design.md) · спеки: agent-registry, control-plane
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
-Где источник правды для определений агентов и их настроек: в БД ICPlan, в git или в отдельном сервисе — так, чтобы администратор менял их без git, а изменения можно было ревьюить, откатывать и переносить между окружениями?
+Где источник правды для определений агентов и их настроек: в БД [ICPlan](../architecture/components/icplan/README.md), в git или в отдельном сервисе — так, чтобы администратор менял их без git, а изменения можно было ревьюить, откатывать и переносить между окружениями?
 
-<div class="rnd-a">Ответ: БД ICPlan — источник правды, у определения есть версии, экспорт и импорт в YAML `agent/v1`. Правила Rego остаются в git. У аналогов (Claude Code, Copilot) берём идею «агент как файл в репозитории» — как импорт, а не второй источник правды.</div>
+<div class="rnd-a">Ответ: БД [ICPlan](../architecture/components/icplan/README.md) — источник правды, у определения есть версии, экспорт и импорт в YAML `agent/v1`. Правила Rego остаются в git. У аналогов (Claude Code, Copilot) берём идею «агент как файл в репозитории» — как импорт, а не второй источник правды.</div>
 
-<span class="rnd-badge adopt">Adopt</span> БД ICPlan + YAML · Platform module в форке ICPlan · 0 $ · данные 11.10.2026
+<span class="rnd-badge adopt">Adopt</span> БД [ICPlan](../architecture/components/icplan/README.md) + YAML · [Platform module](../architecture/components/platform-module/README.md) в форке [ICPlan](../architecture/components/icplan/README.md) · 0 $ · данные 11.10.2026
 </div>
 
 ```deck
@@ -42,18 +42,18 @@ stack Документы: 3 ok, 0 part, 4 mute
 - ✅ подтверждено: «тулы по умолчанию — нет» вместо «наследовать все»
 ```
 
-**Почему БД ICPlan.** Три вывода:
+**Почему БД [ICPlan](../architecture/components/icplan/README.md).** Три вывода:
 
 <div class="rnd-grid" markdown>
 <div markdown>
 **1. Меняет администратор, а не разработчик**
 
-Агентов, их тулы и проекты настраивает администратор в интерфейсе ICPlan (истории US-ICP). Git требует PR и конвейер применения, отдельный сервис — второй интерфейс. Версии и откат есть в БД (FR-55), ревью и перенос — через YAML ([Э9](#e9)).
+Агентов, их тулы и проекты настраивает администратор в интерфейсе [ICPlan](../architecture/components/icplan/README.md) (истории US-ICP). Git требует PR и конвейер применения, отдельный сервис — второй интерфейс. Версии и откат есть в БД ([FR-55](../architecture/components/platform-module/prd.md)), ревью и перенос — через YAML ([Э9](#e9)).
 </div>
 <div markdown>
 **2. Один источник правды**
 
-Если агенты живут и в БД, и в git, они расходятся при первой правке в интерфейсе. AD-9 запрещает два источника: YAML — это экспорт и импорт, а не синхронизация. Правила Rego — код, они в git с тестами ([Э7](#e7)).
+Если агенты живут и в БД, и в git, они расходятся при первой правке в интерфейсе. [AD-9](../architecture/decisions/AD-9.yaml) запрещает два источника: YAML — это экспорт и импорт, а не синхронизация. Правила Rego — код, они в git с тестами ([Э7](#e7)).
 </div>
 <div markdown>
 **3. Агент-файл в репозитории — как импорт**
@@ -66,7 +66,7 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 <div class="take" markdown>
 **Берём**
 
-- БД ICPlan (S1, S2) как источник правды;
+- БД [ICPlan](../architecture/components/icplan/README.md) (S1, S2) как источник правды;
 - версии определения;
 - экспорт и импорт YAML `agent/v1`;
 - Rego в git с тестами.
@@ -91,12 +91,12 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 <div class="no" markdown>
 **Отсеяны до сравнения**
 
-- **Синхронизация git ↔ БД** — два источника правды (AD-9).
+- **Синхронизация git ↔ БД** — два источника правды ([AD-9](../architecture/decisions/AD-9.yaml)).
 </div>
 <div class="risk" markdown>
 **Риски и пересмотр**
 
-- Ошибочная правка в интерфейсе — версии и откат (FR-55), журнал изменений.
+- Ошибочная правка в интерфейсе — версии и откат ([FR-55](../architecture/components/platform-module/prd.md)), журнал изменений.
 - Пересмотр: агентов начнут создавать разработчики в репозиториях чаще, чем администраторы в интерфейсе.
 </div>
 </div>
@@ -104,11 +104,11 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 <div class="rnd-chain" markdown>
 <div markdown>**Э1 Вопрос**<span class="gate">G1</span></div>
 <div markdown>**Э2 Потребности**7 <span class="gate">G2</span></div>
-<div markdown>**Э3 БД ICPlan**5 функций <span class="gate">G3</span></div>
+<div markdown>**Э3 БД [ICPlan](../architecture/components/icplan/README.md)**5 функций <span class="gate">G3</span></div>
 <div markdown>**Э4 Альтернативы**6 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I4, I16, I20 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I4](../architecture/components/agent-runner/integrations/I4.yaml), [I16](../architecture/components/platform-module/integrations/I16.yaml), [I20](../architecture/components/icplan/integrations/I20.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**5 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**7 <span class="gate">G10</span></div>
@@ -120,27 +120,27 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** Определение агента — модель, инструкция, тулы, навыки, MCP-серверы, проекты. Настройки — лимиты, бюджеты, профили. Их читают Runner (I4) и Harness (через `RunBundle`).
+**Ситуация.** Определение агента — модель, инструкция, тулы, навыки, MCP-серверы, проекты. Настройки — лимиты, бюджеты, профили. Их читают Runner ([I4](../architecture/components/agent-runner/integrations/I4.yaml)) и [Harness](../architecture/components/harness/README.md) (через [`RunBundle`](../architecture/data/model-RunBundle.yaml)).
 
-**Осложнение.** Проект AI-агент хранил всё в git (Config Repo); ICPlan хранит агентов в своей БД. Аналоги (Claude Code, Copilot) держат агентов файлами в репозитории.
+**Осложнение.** Проект AI-агент хранил всё в git (Config Repo); [ICPlan](../architecture/components/icplan/README.md) хранит агентов в своей БД. Аналоги (Claude Code, Copilot) держат агентов файлами в репозитории.
 
 **Вопрос.** Где источник правды определений и настроек?
 
 **Решает:** владелец продукта. **Не решаем:** уровни параметров L0–L3 (задача 2.8), правила Rego ([guardrails](guardrails-engine.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-9, AD-18.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-9](../architecture/decisions/AD-9.yaml), [AD-18](../architecture/decisions/AD-18.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | администратор меняет агента в интерфейсе ICPlan | US-ICP (администратор), FR-54 | правка агента требует разработчика |
-| П2 | версии и откат | FR-55 | ошибочную правку не вернуть |
-| П3 | один источник правды | FR-56, AD-9 | БД и файлы расходятся |
-| П4 | ревью и перенос между окружениями | FR-56 | нельзя показать изменение и перенести в prod |
-| П5 | проверка связей (модель, тулы, навыки) при сохранении | FR-57 | агент ссылается на несуществующий тул |
-| П6 | запуск идёт по версии на момент старта | `agent.version`, FR-98 | правка ломает идущий запуск |
-| П7 | без нового сервиса | AD-15 | ещё одна система |
+| П1 | администратор меняет агента в интерфейсе [ICPlan](../architecture/components/icplan/README.md) | US-ICP (администратор), [FR-54](../architecture/components/platform-module/prd.md) | правка агента требует разработчика |
+| П2 | версии и откат | [FR-55](../architecture/components/platform-module/prd.md) | ошибочную правку не вернуть |
+| П3 | один источник правды | [FR-56](../architecture/components/platform-module/prd.md), [AD-9](../architecture/decisions/AD-9.yaml) | БД и файлы расходятся |
+| П4 | ревью и перенос между окружениями | [FR-56](../architecture/components/platform-module/prd.md) | нельзя показать изменение и перенести в prod |
+| П5 | проверка связей (модель, тулы, навыки) при сохранении | [FR-57](../architecture/components/platform-module/prd.md) | агент ссылается на несуществующий тул |
+| П6 | запуск идёт по версии на момент старта | `agent.version`, [FR-98](../architecture/components/platform-module/prd.md) | правка ломает идущий запуск |
+| П7 | без нового сервиса | [AD-15](../architecture/decisions/AD-15.yaml) | ещё одна система |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования и решения.
 
@@ -148,15 +148,15 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 
 | # | Функция | Что делает | Потребность |
 |---|---|---|---|
-| F1 | Агенты в БД ICPlan (S1) и настройки Platform module (S2) | правка в интерфейсе | П1, П7 |
+| F1 | Агенты в БД [ICPlan](../architecture/components/icplan/README.md) (S1) и настройки [Platform module](../architecture/components/platform-module/README.md) (S2) | правка в интерфейсе | П1, П7 |
 | F2 | Версии определения | каждая правка — новая версия, откат | П2, П6 |
 | F3 | Экспорт и импорт YAML `agent/v1` | ревью и перенос | П4 |
 | F4 | Валидация при сохранении | связи с каталогом | П5 |
 | F5 | Rego в git | правила — код с тестами | — |
 
-**Вывод этапа.** Опорное решение закрывает все потребности функциями ICPlan и Platform module.
+**Вывод этапа.** Опорное решение закрывает все потребности функциями [ICPlan](../architecture/components/icplan/README.md) и [Platform module](../architecture/components/platform-module/README.md).
 
-<span class="gate">G3</span> ✅ функции из спек и AD-9 (А).
+<span class="gate">G3</span> ✅ функции из спек и [AD-9](../architecture/decisions/AD-9.yaml) (А).
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
@@ -179,15 +179,15 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 
 | Функция | Потребность | Почему ценна | Доказательство | Класс |
 |---|---|---|---|---|
-| Правка в интерфейсе | П1 | администратор не зависит от разработчика | истории ICPlan (А); Linear, Jira — агенты настраиваются админом в интерфейсе (Б) | базовая |
-| Один источник правды | П3 | нет расхождений | AD-9 (А) | базовая |
-| Версии и откат | П2, П6 | правка не ломает запуск | FR-55 (А); история git (Б) | базовая |
+| Правка в интерфейсе | П1 | администратор не зависит от разработчика | истории [ICPlan](../architecture/components/icplan/README.md) (А); Linear, Jira — агенты настраиваются админом в интерфейсе (Б) | базовая |
+| Один источник правды | П3 | нет расхождений | [AD-9](../architecture/decisions/AD-9.yaml) (А) | базовая |
+| Версии и откат | П2, П6 | правка не ломает запуск | [FR-55](../architecture/components/platform-module/prd.md) (А); история git (Б) | базовая |
 | Ревью через PR | П4 | изменения видны до применения | git (Б) | линейная: у нас — экспорт YAML и diff |
 | Агент рядом с кодом | — | разработчик держит агента в репозитории | Claude Code, Copilot (Б, В) | привлекательная |
 | Переносимый формат | П4 | агент переносится в другие системы | Agent File (Б, альфа) | привлекательная |
-| «Без списка тулов — все тулы» | — | — | противоречит наименьшим правам (FR-177) | обратная |
+| «Без списка тулов — все тулы» | — | — | противоречит наименьшим правам ([FR-177](../architecture/components/mcp-tools/prd.md)) | обратная |
 
-**Вывод этапа.** Базовые функции у БД ICPlan есть. Агент-файл в репозитории — привлекательная функция для разработчиков, если не создаёт второй источник правды.
+**Вывод этапа.** Базовые функции у БД [ICPlan](../architecture/components/icplan/README.md) есть. Агент-файл в репозитории — привлекательная функция для разработчиков, если не создаёт второй источник правды.
 
 <span class="gate">G5</span> ✅ у функций есть доказательство уровня Б и выше (Copilot — В, берём как идею).
 
@@ -195,7 +195,7 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| БД, версии, YAML, валидация | оставить | AD-9 | FR-53 – FR-57 |
+| БД, версии, YAML, валидация | оставить | [AD-9](../architecture/decisions/AD-9.yaml) | [FR-53](../architecture/components/platform-module/prd.md) – [FR-57](../architecture/components/platform-module/prd.md) |
 | Агент-файл в репозитории | адаптировать | импорт по запросу из файла Markdown + YAML в версию агента; БД остаётся источником правды | [BACKLOG](..\source\BACKLOG.md) |
 | Переносимый формат | не брать сейчас | сверка полей `agent/v1` с Agent File при выходе версии 1.0 | [BACKLOG](..\source\BACKLOG.md) |
 | «Без списка — все тулы» | не брать | по умолчанию тулов нет | `agent.tools` (уже) |
@@ -220,7 +220,7 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 
 | Кандидат | M1 один источник | M2 без git | M3 версии | Итог |
 |---|---|---|---|---|
-| БД ICPlan + YAML | да | да | да | проходит |
+| БД [ICPlan](../architecture/components/icplan/README.md) + YAML | да | да | да | проходит |
 | Git (Config Repo) | да | **нет** | да | ✗ |
 | Агент-файл в репозитории как источник | да | **нет** | да | ✗ (→ импорт) |
 | Отдельный Platform API | да | да | да | проходит |
@@ -237,16 +237,16 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
   * — импорт по запросу, бэклог
 ```
 
-| Стык | БД ICPlan | Отдельный Platform API |
+| Стык | БД [ICPlan](../architecture/components/icplan/README.md) | Отдельный Platform API |
 |---|---|---|
-| I20 интерфейс администратора | И4: ICPlan | И1: свой интерфейс |
-| I4 Runner читает настройки | И2: Platform module в api ICPlan | И1: новый сервис |
-| I16 данные правил в OPA | И2 | И1 |
+| [I20](../architecture/components/icplan/integrations/I20.yaml) интерфейс администратора | И4: [ICPlan](../architecture/components/icplan/README.md) | И1: свой интерфейс |
+| [I4](../architecture/components/agent-runner/integrations/I4.yaml) Runner читает настройки | И2: [Platform module](../architecture/components/platform-module/README.md) в api [ICPlan](../architecture/components/icplan/README.md) | И1: новый сервис |
+| [I16](../architecture/components/platform-module/integrations/I16.yaml) данные правил в OPA | И2 | И1 |
 | S1 / S2 | И4 / И2 | И1: своя БД |
 
-**Изменения у соседей:** у БД ICPlan — нет; у отдельного API — Runner (I4), ICPlan UI (ссылки на агентов), OPA (I16), инфраструктура.
+**Изменения у соседей:** у БД [ICPlan](../architecture/components/icplan/README.md) — нет; у отдельного API — Runner ([I4](../architecture/components/agent-runner/integrations/I4.yaml)), [ICPlan](../architecture/components/icplan/README.md) UI (ссылки на агентов), OPA ([I16](../architecture/components/platform-module/integrations/I16.yaml)), инфраструктура.
 
-**Вывод этапа.** ==БД ICPlan уже стоит в схеме; любой другой вариант добавляет второй интерфейс или второй источник правды.==
+**Вывод этапа.** ==БД [ICPlan](../architecture/components/icplan/README.md) уже стоит в схеме; любой другой вариант добавляет второй интерфейс или второй источник правды.==
 
 <span class="gate">G7</span> ✅ отсев; готовность стыков; изменения у соседей.
 
@@ -256,8 +256,8 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 
 | Роль | За | Довод | Опасение | Согласится, если |
 |---|---|---|---|---|
-| Администратор 🤖 | БД ICPlan | правлю там, где работаю | — | — |
-| Архитектор 🤖 | БД ICPlan | один источник правды (AD-9) | — | — |
+| Администратор 🤖 | БД [ICPlan](../architecture/components/icplan/README.md) | правлю там, где работаю | — | — |
+| Архитектор 🤖 | БД [ICPlan](../architecture/components/icplan/README.md) | один источник правды ([AD-9](../architecture/decisions/AD-9.yaml)) | — | — |
 | DevOps 🤖 | нейтрально | бэкап БД покрывает агентов | перенос между окружениями | экспорт и импорт YAML |
 | Безопасность 🤖 | нейтрально | журнал изменений есть | — | — |
 | Разработчик 🤖 (оппонент) | git | ревью через PR, агент рядом с кодом | правки в интерфейсе без ревью | diff версий в интерфейсе; импорт из файла |
@@ -265,7 +265,7 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 | Спор | Разрешение |
 |---|---|
 | Разработчик: «хочу агента в репозитории» | ✅ **внесено в бэклог:** импорт определения из файла в репозитории |
-| Адвокат дьявола: «правка в интерфейсе без ревью сломает агента» | **условие:** версии и откат (FR-55), изменения со следующего запуска (FR-98) |
+| Адвокат дьявола: «правка в интерфейсе без ревью сломает агента» | **условие:** версии и откат ([FR-55](../architecture/components/platform-module/prd.md)), изменения со следующего запуска ([FR-98](../architecture/components/platform-module/prd.md)) |
 
 **Вывод этапа.** Спор разрешён импортом из файла: разработчик держит агента рядом с кодом, источник правды остаётся один.
 
@@ -273,7 +273,7 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 
 ## Э9. Выбор {#e9}
 
-| Потребность | БД ICPlan + YAML | Git | Отдельный API | Агент-файл как источник |
+| Потребность | БД [ICPlan](../architecture/components/icplan/README.md) + YAML | Git | Отдельный API | Агент-файл как источник |
 |---|---|---|---|---|
 | П1 правка в интерфейсе | закрывает | не закрывает | частично: другой интерфейс | не закрывает |
 | П2 версии | закрывает | закрывает | закрывает | закрывает |
@@ -283,7 +283,7 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 | П6 версия запуска | закрывает | закрывает | закрывает | частично |
 | П7 без нового сервиса | закрывает | не закрывает: конвейер | не закрывает | закрывает |
 
-- **Утверждение.** БД ICPlan — источник правды, версии, YAML (AD-9).
+- **Утверждение.** БД [ICPlan](../architecture/components/icplan/README.md) — источник правды, версии, YAML ([AD-9](../architecture/decisions/AD-9.yaml)).
 - **Основания.** Закрывает все 7 потребностей; стоит в схеме без изменений у соседей.
 - **Связка.** Определения меняют администраторы; удобство разработчиков закрывается импортом из файла без второго источника правды.
 - **Опровержение.** Вывод неверен, если агентов начнут создавать в основном разработчики в репозиториях. Тогда — git как источник и интерфейс только для просмотра.
@@ -296,10 +296,10 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 |---|---|---|
 | Импорт определения агента из файла Markdown + YAML в репозитории; сверка с Agent File | [BACKLOG](..\source\BACKLOG.md) | ✅ внесено в бэклог |
 | «Тулы по умолчанию — нет», а не «все» | `agent.tools` в [interfaces agent-registry](..\architecture\components\platform-module\docs\agent-registry-interfaces.md) | ✅ подтверждено, без изменений |
-| Решения AD-9, AD-18 | design | ✅ подтверждено, без изменений |
-| Стыки I4, I16, I20 | спеки agent-registry, control-plane | — не требуется |
-| Поток Platform module | [поток](..\architecture\components\platform-module\docs\how.md) | — не требуется |
-| Техспека Platform module | [техспека](..\architecture\components\platform-module\docs\techspec.md) | — не требуется |
+| Решения [AD-9](../architecture/decisions/AD-9.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | design | ✅ подтверждено, без изменений |
+| Стыки [I4](../architecture/components/agent-runner/integrations/I4.yaml), [I16](../architecture/components/platform-module/integrations/I16.yaml), [I20](../architecture/components/icplan/integrations/I20.yaml) | спеки agent-registry, control-plane | — не требуется |
+| Поток [Platform module](../architecture/components/platform-module/README.md) | [поток](..\architecture\components\platform-module\docs\how.md) | — не требуется |
+| Техспека [Platform module](../architecture/components/platform-module/README.md) | [техспека](..\architecture\components\platform-module\docs\techspec.md) | — не требуется |
 | Формат YAML `agent/v1` | [задача 1.2](..\source\tasks\1.2-agent-definition-yaml.md) | — не требуется |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.
@@ -311,4 +311,4 @@ Claude Code и Copilot хранят агентов файлами Markdown с YA
 - Claude Code: [субагенты](https://docs.claude.com/en/docs/claude-code/sub-agents) (Б)
 - GitHub Copilot: [о пользовательских агентах](https://docs.github.com/en/enterprise-cloud@latest/copilot/concepts/agents/cloud-agent/about-custom-agents) (Б), [примеры awesome-copilot](https://mintlify.com/github/awesome-copilot/cookbook/examples/custom-agents) (В)
 - [Agent File (Letta)](https://github.com/letta-ai/agent-file) (Б)
-- Наши: [AD-9, AD-18](..\source\design\define-agent-platform\design.md), FR-53 – FR-58 (А)
+- Наши: [AD-9, AD-18](..\source\design\define-agent-platform\design.md), [FR-53](../architecture/components/platform-module/prd.md) – [FR-58](../architecture/components/platform-module/prd.md) (А)

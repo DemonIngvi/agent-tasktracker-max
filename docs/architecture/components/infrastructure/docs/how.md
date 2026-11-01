@@ -6,12 +6,12 @@
 
 | # | Поток | Участники | Данные | I | Сценарий |
 |---|---|---|---|---|---|
-| 1 | Вход пользователя | Браузер → Traefik → `web` / `api` | HTML / JSON | I21 | С1 |
-| 2 | MCP агентов | MCP-прокси Agent Runner → `api /mcp` | JSON-RPC | I24 | — |
-| 3 | Запросы к БД | сервисы → PgBouncer → PostgreSQL | SQL | I22 | С1 |
-| 4 | Вложения и артефакты | Agent Runner, ICPlan → RustFS | файлы | I19 | С1 |
+| 1 | Вход пользователя | Браузер → Traefik → `web` / `api` | HTML / JSON | [I21](../../../integrations/I21.yaml) | С1 |
+| 2 | MCP агентов | MCP-прокси [Agent Runner](../../agent-runner/README.md) → `api /mcp` | JSON-RPC | [I24](../../agent-runner/integrations/I24.yaml) | — |
+| 3 | Запросы к БД | сервисы → PgBouncer → PostgreSQL | SQL | [I22](../../../integrations/I22.yaml) | С1 |
+| 4 | Вложения и артефакты | [Agent Runner](../../agent-runner/README.md), [ICPlan](../../icplan/README.md) → RustFS | файлы | [I19](../../agent-runner/integrations/I19.yaml) | С1 |
 | 5 | Резервные копии | CloudNativePG → S3 вне узла | базовые копии + WAL | — | — |
-| 6 | Создание запусков (этап 4) | Agent Runner → Kubernetes API | манифест Pod | I23 | — |
+| 6 | Создание запусков (этап 4) | [Agent Runner](../../agent-runner/README.md) → Kubernetes API | манифест Pod | [I23](../../agent-runner/integrations/I23.yaml) | — |
 | 7 | Развёртывание | Администратор → Helm → Kubernetes API | чарты, values, Secret | — | — |
 
 #### С1. Запрос пользователя к ICPlan

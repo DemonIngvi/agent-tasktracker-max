@@ -4,7 +4,7 @@
 
 | Исследование | Изменение | Статус | Ссылка |
 |---|---|---|---|
-| [Цепочки агентов](..\research\agent-chain.md) | AD-27 / AD-28: граф процесса, причины возврата, лимиты, режимы обучения, снимки и ограничения | ✅ внесено | [AD-27 / AD-28](design\define-agent-platform\design.md) |
+| [Цепочки агентов](..\research\agent-chain.md) | [AD-27](../architecture/decisions/AD-27.yaml) / [AD-28](../architecture/decisions/AD-28.yaml): граф процесса, причины возврата, лимиты, режимы обучения, снимки и ограничения | ✅ внесено | [AD-27 / AD-28](design\define-agent-platform\design.md) |
 | [Разработка, деплой и мониторинг](..\research\dev-deploy-monitoring.md) | AD-29: три уровня контроля токенов, CI-процесс, среды, версии и kill switch | ✅ внесено | [AD-29](design\define-agent-platform\design.md) |
 | [Модель памяти](..\research\memory-model.md) | память M1–M3, M4 после MVP, источники и TTL | ✅ внесено | agent-memory |
 | [Хранение конфигурации](..\research\config-storage.md) | версии настроек, экспорт/импорт, роли и профили | ✅ внесено | agent-registry |
@@ -17,6 +17,6 @@
 
 ## Статус по текущему состоянию
 
-- AD-27 и AD-28 внесены в [design.md](design\define-agent-platform\design.md).
+- [AD-27](../architecture/decisions/AD-27.yaml) и [AD-28](../architecture/decisions/AD-28.yaml) внесены в [design.md](design\define-agent-platform\design.md).
 - Изменения отражены в [BACKLOG.md](BACKLOG.md), [ROADMAP.md](ROADMAP.md) и связанных задачах.
 - Все ссылки в документах должны вести на реальные разделы и якоря в существующих файлах.

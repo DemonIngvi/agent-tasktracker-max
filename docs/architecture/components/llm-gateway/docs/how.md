@@ -6,13 +6,13 @@
 
 | # | Поток | Участники | Данные | I | Сценарий |
 |---|---|---|---|---|---|
-| 1 | Запрос к модели по алиасу | Harness → LLM Gateway | `ChatCompletionRequest`, virtual key агента | I8 | С1 |
+| 1 | Запрос к модели по алиасу | [Harness](../../harness/README.md) → LLM Gateway | [`ChatCompletionRequest`](../../../data/model-ChatCompletionRequest.yaml), virtual key агента | [I8](../../harness/integrations/I8.yaml) | С1 |
 | 2 | Проверка бюджета и rate limit | LLM Gateway → LLM Gateway | ключ, лимиты | — | С1 |
 | 3 | Проверки G4 | хуки LLM Gateway | вход и ответ | — | С1 |
-| 4 | Маршрут к модели | LLM Gateway → провайдер / mock | запрос провайдера | I13 | С1 |
-| 5 | Резервная модель при сбое | LLM Gateway → резервный провайдер | тот же запрос | I13 | С1 |
-| 6 | Учёт затрат | LLM Gateway → БД `litellm` → Observability | токены, $, `run_id` | I14 | С1 |
-| 7 | Выдача virtual key и бюджетов | Platform module → LLM Gateway | `VirtualKey` | I15 | — |
+| 4 | Маршрут к модели | LLM Gateway → провайдер / mock | запрос провайдера | [I13](../integrations/I13.yaml) | С1 |
+| 5 | Резервная модель при сбое | LLM Gateway → резервный провайдер | тот же запрос | [I13](../integrations/I13.yaml) | С1 |
+| 6 | Учёт затрат | LLM Gateway → БД `litellm` → [Observability](../../observability/README.md) | токены, $, `run_id` | [I14](../integrations/I14.yaml) | С1 |
+| 7 | Выдача virtual key и бюджетов | [Platform module](../../platform-module/README.md) → LLM Gateway | [`VirtualKey`](../../../data/model-VirtualKey.yaml) | [I15](../../platform-module/integrations/I15.yaml) | — |
 
 #### С1. Вызов модели
 

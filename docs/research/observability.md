@@ -1,12 +1,12 @@
 # R&D: Наблюдаемость агентов
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Observability** · решение: [design AD-12](..\source\design\define-agent-platform\design.md) · спека: observability
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Observability](../architecture/components/observability/README.md)** · решение: [design AD-12](..\source\design\define-agent-platform\design.md) · спека: observability
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
 Как пользователь видит шаги агента в задаче, администратор — затраты и статистику, а разработчик — разбор запуска, не добавляя на MVP новых сервисов?
 
-<div class="rnd-a">Ответ: таблица событий запуска в Postgres ICPlan и таймлайн в задаче; затраты — из журнала LiteLLM. Имена событий сопоставлены с OpenTelemetry GenAI, чтобы после MVP выгрузить их в Langfuse или Phoenix без переделки.</div>
+<div class="rnd-a">Ответ: таблица событий запуска в Postgres [ICPlan](../architecture/components/icplan/README.md) и таймлайн в задаче; затраты — из журнала LiteLLM. Имена событий сопоставлены с OpenTelemetry GenAI, чтобы после MVP выгрузить их в Langfuse или Phoenix без переделки.</div>
 
 <span class="rnd-badge adopt">Adopt</span> таблица `run_event` · <span class="rnd-badge assess">Assess</span> Langfuse, Phoenix, Opik · <span class="rnd-badge hold">Hold</span> метрики Prometheus · данные 11.10.2026
 </div>
@@ -49,7 +49,7 @@ stack Документы: 4 ok, 0 part, 4 mute
 <div markdown>
 **1. Главный зритель — пользователь задачи**
 
-Пользователь смотрит на шаги агента **в задаче ICPlan**, а не в отдельном интерфейсе. Таблица событий в той же БД даёт таймлайн без интеграции. LLM-платформы показывают трассу в своём интерфейсе ([Э9](#e9)).
+Пользователь смотрит на шаги агента **в задаче [ICPlan](../architecture/components/icplan/README.md)**, а не в отдельном интерфейсе. Таблица событий в той же БД даёт таймлайн без интеграции. LLM-платформы показывают трассу в своём интерфейсе ([Э9](#e9)).
 </div>
 <div markdown>
 **2. Разбор промптов — после MVP, но без переделки**
@@ -59,7 +59,7 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 <div markdown>
 **3. Затраты — из одного источника**
 
-Токены и $ считает LiteLLM (журнал затрат в S6). Сводка по задаче, агенту и модели читает его, а не пересчитывает. Если LiteLLM недоступен, сводка показывается без затрат с пометкой (FR-152) ([Э7](#e7)).
+Токены и $ считает LiteLLM (журнал затрат в S6). Сводка по задаче, агенту и модели читает его, а не пересчитывает. Если LiteLLM недоступен, сводка показывается без затрат с пометкой ([FR-152](../architecture/components/observability/prd.md)) ([Э7](#e7)).
 </div>
 </div>
 
@@ -76,7 +76,7 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 <div class="adapt" markdown>
 **Адаптируем**
 
-- имена спанов и атрибутов OTel GenAI → соответствие типов `RunEvent`;
+- имена спанов и атрибутов OTel GenAI → соответствие типов [`RunEvent`](../architecture/data/model-RunEvent.yaml);
 - оценка запуска (scores, Langfuse) → вердикт пользователя «принято / не выполнено» уже есть в M2;
 - датасеты для evals (Phoenix, Opik) → эталонные задачи прототипа 1.3.9.
 </div>
@@ -111,7 +111,7 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 <div markdown>**Э4 Альтернативы**9 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I2, I14, I20 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I2](../architecture/components/agent-runner/integrations/I2.yaml), [I14](../architecture/components/llm-gateway/integrations/I14.yaml), [I20](../architecture/components/icplan/integrations/I20.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**6 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**8 <span class="gate">G10</span></div>
@@ -123,7 +123,7 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** Runner получает от Harness поток событий (I7) и передаёт их в ICPlan (I2). Пользователю нужен таймлайн в задаче, администратору — затраты и статистика, разработчику — разбор запуска.
+**Ситуация.** Runner получает от [Harness](../architecture/components/harness/README.md) поток событий ([I7](../architecture/components/agent-runner/integrations/I7.yaml)) и передаёт их в [ICPlan](../architecture/components/icplan/README.md) ([I2](../architecture/components/agent-runner/integrations/I2.yaml)). Пользователю нужен таймлайн в задаче, администратору — затраты и статистика, разработчику — разбор запуска.
 
 **Осложнение.** Готовые LLM-платформы (Langfuse, Phoenix, Opik) удобны для разбора, но показывают трассу в своём интерфейсе и требуют своих хранилищ.
 
@@ -131,20 +131,20 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 **Решает:** владелец продукта. **Не решаем:** метрики инфраструктуры (бэклог).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-12.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-12](../architecture/decisions/AD-12.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | шаги агента в задаче по мере работы | FR-147, US-ICP-02 | пользователь не видит, что делает агент |
-| П2 | события каждого запуска с трассировкой к задаче и версии агента | FR-146, FR-148 | нельзя разобрать запуск |
-| П3 | маскирование секретов и персональных данных до записи | FR-149 | секреты в журнале |
-| П4 | затраты по запуску, задаче, агенту, модели | FR-150 | нет контроля расходов |
-| П5 | сводка и статистика агентов | FR-152, US-ICP-12, US-ICP-28 | нельзя оценить агентов |
-| П6 | срок хранения | FR-151 | таблица растёт без предела |
-| П7 | без новых сервисов на MVP | AD-12, AD-15 | ClickHouse и Redis в эксплуатации |
-| П8 | разбор промптов и evals после MVP | AD-12, прототип 1.3.9 | нельзя улучшать агентов по данным |
+| П1 | шаги агента в задаче по мере работы | [FR-147](../architecture/components/observability/prd.md), [US-ICP-02](../architecture/components/icplan/stories/us-icp-02.yaml) | пользователь не видит, что делает агент |
+| П2 | события каждого запуска с трассировкой к задаче и версии агента | [FR-146](../architecture/components/observability/prd.md), [FR-148](../architecture/components/observability/prd.md) | нельзя разобрать запуск |
+| П3 | маскирование секретов и персональных данных до записи | [FR-149](../architecture/components/observability/prd.md) | секреты в журнале |
+| П4 | затраты по запуску, задаче, агенту, модели | [FR-150](../architecture/components/observability/prd.md) | нет контроля расходов |
+| П5 | сводка и статистика агентов | [FR-152](../architecture/components/observability/prd.md), [US-ICP-12](../architecture/components/icplan/stories/us-icp-12.yaml), [US-ICP-28](../architecture/components/icplan/stories/us-icp-28.yaml) | нельзя оценить агентов |
+| П6 | срок хранения | [FR-151](../architecture/components/observability/prd.md) | таблица растёт без предела |
+| П7 | без новых сервисов на MVP | [AD-12](../architecture/decisions/AD-12.yaml), [AD-15](../architecture/decisions/AD-15.yaml) | ClickHouse и Redis в эксплуатации |
+| П8 | разбор промптов и evals после MVP | [AD-12](../architecture/decisions/AD-12.yaml), прототип 1.3.9 | нельзя улучшать агентов по данным |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования и решения.
 
@@ -154,7 +154,7 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 |---|---|---|---|
 | F1 | `run_event` в схеме `platform` | событие: запуск, `seq`, тип, время, данные | П2 |
 | F2 | Типы событий | `run_started`, `llm_call`, `tool_call`, `tool_result`, `needs_approval`, `question`, `memory_write`, `guardrail_decision`, `run_finished` | П1, П2 |
-| F3 | Таймлайн в задаче | API ICPlan отдаёт события UI (I20) | П1 |
+| F3 | Таймлайн в задаче | API [ICPlan](../architecture/components/icplan/README.md) отдаёт события UI ([I20](../architecture/components/icplan/integrations/I20.yaml)) | П1 |
 | F4 | Маскирование перед записью | поля секретов и шаблоны | П3 |
 | F5 | Затраты из журнала LiteLLM | `metadata.run_id` → запуск, задача, агент | П4, П5 |
 | F6 | `retention_days` 90, `events.level` | срок и детализация | П6 |
@@ -186,11 +186,11 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 | Функция | Потребность | Почему ценна | Доказательство | Класс |
 |---|---|---|---|---|
-| Таймлайн в задаче | П1 | пользователь не уходит из ICPlan | истории ICPlan; журнал сессии у Copilot, Linear ([потоки аналогов](us-analogs-agent-tracker.md), Б) | базовая |
+| Таймлайн в задаче | П1 | пользователь не уходит из [ICPlan](../architecture/components/icplan/README.md) | истории [ICPlan](../architecture/components/icplan/README.md); журнал сессии у Copilot, Linear ([потоки аналогов](us-analogs-agent-tracker.md), Б) | базовая |
 | События с трассировкой | П2 | разбор запуска | у всех платформ (Б) | базовая |
-| Маскирование до записи | П3 | секрет не попадает в журнал | FR-149 (А); маскирование в Langfuse (Б) | базовая |
+| Маскирование до записи | П3 | секрет не попадает в журнал | [FR-149](../architecture/components/observability/prd.md) (А); маскирование в Langfuse (Б) | базовая |
 | Затраты по запуску | П4 | контроль расходов | LiteLLM spend logs (Б) | базовая |
-| Без новых сервисов | П7 | одна эксплуатация | AD-12 (А) | базовая на MVP |
+| Без новых сервисов | П7 | одна эксплуатация | [AD-12](../architecture/decisions/AD-12.yaml) (А) | базовая на MVP |
 | Стандарт имён OTel GenAI | П8 | переход на платформу без переписывания | semconv (Б); статус Development (В) | линейная |
 | Промпты с версиями, evals, датасеты | П8 | улучшение агентов по данным | Langfuse, Phoenix, Opik (Б) | линейная (после MVP) |
 | Оценка запуска (score) | П5 | качество агента | Langfuse scores (Б); у нас — вердикт пользователя (А) | линейная, уже есть |
@@ -204,9 +204,9 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| Таблица, таймлайн, маскирование, затраты, срок | оставить | AD-12 | FR-146 – FR-151 |
-| Имена OTel GenAI | адаптировать | соответствие типов `RunEvent` спанам и атрибутам | каталог API |
-| Вердикт пользователя как оценка | оставить | M2: «принято / не выполнено» | FR-200 |
+| Таблица, таймлайн, маскирование, затраты, срок | оставить | [AD-12](../architecture/decisions/AD-12.yaml) | [FR-146](../architecture/components/observability/prd.md) – [FR-151](../architecture/components/observability/prd.md) |
+| Имена OTel GenAI | адаптировать | соответствие типов [`RunEvent`](../architecture/data/model-RunEvent.yaml) спанам и атрибутам | каталог API |
+| Вердикт пользователя как оценка | оставить | M2: «принято / не выполнено» | [FR-200](../architecture/components/icplan/prd.md) |
 | Датасеты и evals | адаптировать | эталонные задачи прототипа 1.3.9 — первый датасет | [задача 1.3](..\source\tasks\1.3-harness-core.md) |
 | Экспорт в Langfuse или Phoenix | не брать сейчас | после MVP — прототип выбора платформы | [BACKLOG](..\source\BACKLOG.md) |
 | Метрики, LangSmith | не брать | Э5 | — |
@@ -215,8 +215,8 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 | Критерий | Цепочка | Как проверяем |
 |---|---|---|
-| **M1** своё размещение | AD-15 | без облака |
-| **M2** таймлайн в задаче ICPlan | П1 → базовая | события доступны API ICPlan |
+| **M1** своё размещение | [AD-15](../architecture/decisions/AD-15.yaml) | без облака |
+| **M2** таймлайн в задаче [ICPlan](../architecture/components/icplan/README.md) | П1 → базовая | события доступны API [ICPlan](../architecture/components/icplan/README.md) |
 | **M3** маскирование до записи | П3 → базовая | где маскируется |
 | **К1** новые сервисы | П7 | что ставить |
 | **К2** разбор и evals | П8 | промпты, оценки, датасеты |
@@ -228,7 +228,7 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 ### Отсев по MUST
 
-| Кандидат | M1 у нас | M2 таймлайн в ICPlan | M3 маскирование | Итог |
+| Кандидат | M1 у нас | M2 таймлайн в [ICPlan](../architecture/components/icplan/README.md) | M3 маскирование | Итог |
 |---|---|---|---|---|
 | Таблица событий | да | да | да | проходит |
 | Langfuse | да | частично: через API Langfuse | да | проходит |
@@ -249,18 +249,18 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 | Стык | Таблица | Langfuse | Phoenix |
 |---|---|---|---|
-| I2 события → ICPlan | И2: описан, `seq` | И1: второй получатель или экспорт | И1 |
-| I20 таймлайн в UI | И2 | И1: данные в Langfuse | И1 |
-| I14 затраты LiteLLM | И2: чтение S6 | И2: callback LiteLLM → Langfuse | И1 |
-| Хранилище | И2: S3 в Postgres ICPlan | И1: ClickHouse, Redis, S3 | И1: Postgres |
+| [I2](../architecture/components/agent-runner/integrations/I2.yaml) события → [ICPlan](../architecture/components/icplan/README.md) | И2: описан, `seq` | И1: второй получатель или экспорт | И1 |
+| [I20](../architecture/components/icplan/integrations/I20.yaml) таймлайн в UI | И2 | И1: данные в Langfuse | И1 |
+| [I14](../architecture/components/llm-gateway/integrations/I14.yaml) затраты LiteLLM | И2: чтение S6 | И2: callback LiteLLM → Langfuse | И1 |
+| Хранилище | И2: S3 в Postgres [ICPlan](../architecture/components/icplan/README.md) | И1: ClickHouse, Redis, S3 | И1: Postgres |
 
 **Изменения у соседей:**
 
 | Кандидат | Что меняется |
 |---|---|
 | Таблица | ничего |
-| Langfuse | инфраструктура (ClickHouse, Redis, S3), техспека, бэкапы; ICPlan — таймлайн из Langfuse или дублирование событий |
-| Phoenix | инфраструктура (сервис), ICPlan — то же |
+| Langfuse | инфраструктура (ClickHouse, Redis, S3), техспека, бэкапы; [ICPlan](../architecture/components/icplan/README.md) — таймлайн из Langfuse или дублирование событий |
+| Phoenix | инфраструктура (сервис), [ICPlan](../architecture/components/icplan/README.md) — то же |
 
 **Вывод этапа.** ==Таблица встаёт без изменений у соседей; LLM-платформа на MVP — это новые хранилища и второй источник событий для таймлайна.==
 
@@ -275,13 +275,13 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 | Пользователь 🤖 | таблица | шаги видны в задаче | — | — |
 | DevOps 🤖 | таблица | без ClickHouse и Redis на MVP | — | — |
 | Безопасность 🤖 | таблица | маскирование до записи под нашим контролем | — | — |
-| Администратор 🤖 | нейтрально | затраты и статистика есть в обоих | — | сводка FR-152 |
+| Администратор 🤖 | нейтрально | затраты и статистика есть в обоих | — | сводка [FR-152](../architecture/components/observability/prd.md) |
 | Тестировщик 🤖 | таблица | события проверяются тестами Runner | — | — |
 | Разработчик 🤖 (оппонент) | Langfuse | разбор промптов, версии, evals | после MVP переделывать формат | соответствие OTel GenAI сейчас |
 
 | Спор | Разрешение |
 |---|---|
-| Разработчик: «потом переписывать события» | ✅ **внесено:** соответствие `RunEvent` → OTel GenAI в каталоге API |
+| Разработчик: «потом переписывать события» | ✅ **внесено:** соответствие [`RunEvent`](../architecture/data/model-RunEvent.yaml) → OTel GenAI в каталоге API |
 | Адвокат дьявола: «без evals не понять, что агент стал хуже» | **условие:** вердикты пользователя (M2) и эталонные задачи 1.3.9; платформа — после MVP |
 | DevOps: «а таблица событий не разрастётся?» | **условие:** срок 90 дней и очистка по сроку; при `events.level: всё` (решение владельца) ~250 МБ/день ≈ 22 ГБ — помещается; при нехватке диска — снижать до «тулы + итоги» |
 
@@ -302,7 +302,7 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 | П7 без новых сервисов | закрывает | не закрывает | не закрывает | не закрывает |
 | П8 разбор и evals | частично: по уровню событий | закрывает | закрывает | закрывает |
 
-- **Утверждение.** Таблица событий в ICPlan (AD-12); LLM-платформа — после MVP через экспорт OTel GenAI.
+- **Утверждение.** Таблица событий в [ICPlan](../architecture/components/icplan/README.md) ([AD-12](../architecture/decisions/AD-12.yaml)); LLM-платформа — после MVP через экспорт OTel GenAI.
 - **Основания.** Закрывает всё, что видят пользователь и администратор, без новых сервисов; разбор промптов закрыт частично.
 - **Связка.** Главный зритель событий — пользователь в задаче; платформа разбора нужна разработчикам, и её можно подключить позже, если имена событий совпадают со стандартом.
 - **Опровержение.** Вывод неверен, если разбор промптов понадобится на каждом запуске до конца MVP. Тогда — Phoenix на Postgres как более лёгкий вариант.
@@ -313,14 +313,14 @@ Langfuse и Phoenix сильнее в разборе промптов и evals. 
 
 | Изменение | Документ | Статус |
 |---|---|---|
-| Соответствие типов `RunEvent` спанам OTel GenAI | каталог API | ✅ внесено |
+| Соответствие типов [`RunEvent`](../architecture/data/model-RunEvent.yaml) спанам OTel GenAI | каталог API | ✅ внесено |
 | Phoenix, Opik — Assess | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | ✅ внесено |
 | Эталонные задачи 1.3.9 — первый датасет evals | [задача 1.3](..\source\tasks\1.3-harness-core.md) | ✅ учтено (подзадача 1.3.9 из R&D фреймворка) |
 | Экспорт событий в OTel и выбор платформы после MVP | [BACKLOG](..\source\BACKLOG.md) (строка Langfuse) | ✅ внесено в бэклог |
-| Требование экспорта в OTel | FR-146 | — не требуется до MVP: соответствие — в каталоге API, экспорт — в бэклоге |
-| Решение AD-12 | design | ✅ подтверждено, без изменений |
-| `events.level` по умолчанию «всё» — решение владельца продукта вместо рекомендованного «тулы + итоги» | [interfaces observability](..\architecture\components\observability\docs\observability-interfaces.md), AD-18, [типы данных](..\source\data-types.md), [профиль нагрузки](load-profile.md) | ✅ внесено: умолчание, объём ~250 МБ/день, сценарий маскирования промптов в FR-149 |
-| Стыки I2, I14, I20 | спека observability | — не требуется |
+| Требование экспорта в OTel | [FR-146](../architecture/components/observability/prd.md) | — не требуется до MVP: соответствие — в каталоге API, экспорт — в бэклоге |
+| Решение [AD-12](../architecture/decisions/AD-12.yaml) | design | ✅ подтверждено, без изменений |
+| `events.level` по умолчанию «всё» — решение владельца продукта вместо рекомендованного «тулы + итоги» | [interfaces observability](..\architecture\components\observability\docs\observability-interfaces.md), [AD-18](../architecture/decisions/AD-18.yaml), [типы данных](..\source\data-types.md), [профиль нагрузки](load-profile.md) | ✅ внесено: умолчание, объём ~250 МБ/день, сценарий маскирования промптов в [FR-149](../architecture/components/observability/prd.md) |
+| Стыки [I2](../architecture/components/agent-runner/integrations/I2.yaml), [I14](../architecture/components/llm-gateway/integrations/I14.yaml), [I20](../architecture/components/icplan/integrations/I20.yaml) | спека observability | — не требуется |
 | Поток observability | [поток](..\architecture\components\observability\docs\how.md) | — не требуется |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.

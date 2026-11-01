@@ -1,14 +1,14 @@
 # R&D: Как пользователь видит работу агента в задаче
 
-← [Все R&D](README.md) · методология R&D v3.1 · компоненты: **ICPlan, Harness, Agent Runner, Observability** · решения: [design AD-17, AD-18, AD-20](..\source\design\define-agent-platform\design.md) · спеки: observability, agent-harness, icplan-integration
+← [Все R&D](README.md) · методология R&D v3.1 · компоненты: **[ICPlan](../architecture/components/icplan/README.md), [Harness](../architecture/components/harness/README.md), [Agent Runner](../architecture/components/agent-runner/README.md), [Observability](../architecture/components/observability/README.md)** · решения: [design AD-17, AD-18, AD-20](..\source\design\define-agent-platform\design.md) · спеки: observability, agent-harness, icplan-integration
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
-Как пользователь видит в задаче, что делает агент: этапы рассуждений, действия, вопросы к нему и итог? В каком формате идут события запуска от Harness до экрана?
+Как пользователь видит в задаче, что делает агент: этапы рассуждений, действия, вопросы к нему и итог? В каком формате идут события запуска от [Harness](../architecture/components/harness/README.md) до экрана?
 
-<div class="rnd-a">Ответ: в задаче появляется **чат запуска** — тот же компонент, что чат с агентом в форке ICPlan (`AgentChatPanel`), и тот же протокол событий **AG-UI**, которым форк уже принимает ответы агента в чате. В ленте: реплики агента о том, что он делает и почему; свёрнутые рассуждения модели, если провайдер их отдаёт; шаги цикла и вызовы тулов; вопросы и подтверждения с кнопками; карточка итога с критериями приёмки и вердиктом. Все запуски по задаче — одна лента с разделителями по шагам процесса.</div>
+<div class="rnd-a">Ответ: в задаче появляется **чат запуска** — тот же компонент, что чат с агентом в форке [ICPlan](../architecture/components/icplan/README.md) (`AgentChatPanel`), и тот же протокол событий **AG-UI**, которым форк уже принимает ответы агента в чате. В ленте: реплики агента о том, что он делает и почему; свёрнутые рассуждения модели, если провайдер их отдаёт; шаги цикла и вызовы тулов; вопросы и подтверждения с кнопками; карточка итога с критериями приёмки и вердиктом. Все запуски по задаче — одна лента с разделителями по шагам процесса.</div>
 
-<span class="rnd-badge adopt">Adopt</span> решение AD-21 · меняет формат `RunEvent`, задачу 3.3 · без новых сервисов · данные 11.10.2026
+<span class="rnd-badge adopt">Adopt</span> решение [AD-21](../architecture/decisions/AD-21.yaml) · меняет формат [`RunEvent`](../architecture/data/model-RunEvent.yaml), задачу 3.3 · без новых сервисов · данные 11.10.2026
 </div>
 
 ```deck
@@ -41,7 +41,7 @@ stack Документы: 9 ok, 0 part, 0 mute
 <div markdown>
 **1. Форк уже говорит на AG-UI**
 
-Чат с внешним агентом в ICPlan принимает события AG-UI (`RUN_STARTED`, `TEXT_MESSAGE_*`, `TOOL_CALL_*`, `RUN_FINISHED`), хранит их и отдаёт в браузер по SSE. Экран `AgentChatPanel` рисует текст, блоки тулов и статус «думает / вызывает тул». Свой формат событий для запуска задачи — второй протокол и второй экран для того же ([Э3](#e3)).
+Чат с внешним агентом в [ICPlan](../architecture/components/icplan/README.md) принимает события AG-UI (`RUN_STARTED`, `TEXT_MESSAGE_*`, `TOOL_CALL_*`, `RUN_FINISHED`), хранит их и отдаёт в браузер по SSE. Экран `AgentChatPanel` рисует текст, блоки тулов и статус «думает / вызывает тул». Свой формат событий для запуска задачи — второй протокол и второй экран для того же ([Э3](#e3)).
 </div>
 <div markdown>
 **2. «Рассуждения» — это реплики агента, а не только скрытый вывод модели**
@@ -51,7 +51,7 @@ stack Документы: 9 ok, 0 part, 0 mute
 <div markdown>
 **3. Вопрос и итог — отдельные карточки**
 
-Linear выделяет вопрос к человеку (elicitation) и ответ агента (response) в свои типы. У нас вопрос и подтверждение — карточка с кнопками, итог — карточка с критериями приёмки ✓ / ✗, артефактами и вердиктом шага (AD-20). Сырые промпты и полный вывод тулов — администратору, не в чат ([Э7](#e7)).
+Linear выделяет вопрос к человеку (elicitation) и ответ агента (response) в свои типы. У нас вопрос и подтверждение — карточка с кнопками, итог — карточка с критериями приёмки ✓ / ✗, артефактами и вердиктом шага ([AD-20](../architecture/decisions/AD-20.yaml)). Сырые промпты и полный вывод тулов — администратору, не в чат ([Э7](#e7)).
 </div>
 </div>
 
@@ -68,14 +68,14 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 <div class="adapt" markdown>
 **Адаптируем**
 
-- вопрос к человеку (Linear elicitation) → `CUSTOM` `question` / `approval_request` с кнопками, ответ уходит через heartbeat (AD-17);
+- вопрос к человеку (Linear elicitation) → `CUSTOM` `question` / `approval_request` с кнопками, ответ уходит через heartbeat ([AD-17](../architecture/decisions/AD-17.yaml));
 - план работы → `ACTIVITY_SNAPSHOT` с `activityType: plan` из M3 «сделано / дальше»;
 - события платформы (guardrail, память, вызов модели) → `CUSTOM` с понятным текстом.
 </div>
 <div class="drop" markdown>
 **Не берём**
 
-- отдельный формат `RunEvent` с собственными типами;
+- отдельный формат [`RunEvent`](../architecture/data/model-RunEvent.yaml) с собственными типами;
 - сырые промпты и полный вывод тулов в чате задачи;
 - хранение каждого `delta`: сообщение сохраняется целиком на `*_END`.
 </div>
@@ -85,7 +85,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 <div class="no" markdown>
 **Отсеяны до сравнения**
 
-- **D. Полный сырой журнал в задаче** — промпты и вывод тулов нечитаемы для пользователя и раскрывают лишнее; остаётся администратору (Observability).
+- **D. Полный сырой журнал в задаче** — промпты и вывод тулов нечитаемы для пользователя и раскрывают лишнее; остаётся администратору ([Observability](../architecture/components/observability/README.md)).
 </div>
 <div class="risk" markdown>
 **Риски и пересмотр**
@@ -102,7 +102,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 <div markdown>**Э4 Аналоги**5 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I2, I7, I20 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I2](../architecture/components/agent-runner/integrations/I2.yaml), [I7](../architecture/components/agent-runner/integrations/I7.yaml), [I20](../architecture/components/icplan/integrations/I20.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**5 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**рекомендация <span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**9 <span class="gate">G10</span></div>
@@ -114,34 +114,34 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** Агент работает по задаче шаг за шагом (AD-17), события запуска пишутся всегда (AD-18, `events.level: всё`). Задача 3.3 обещает «таймлайн в задаче» из событий `RunEvent` с собственными типами.
+**Ситуация.** Агент работает по задаче шаг за шагом ([AD-17](../architecture/decisions/AD-17.yaml)), события запуска пишутся всегда ([AD-18](../architecture/decisions/AD-18.yaml), `events.level: всё`). Задача 3.3 обещает «таймлайн в задаче» из событий [`RunEvent`](../architecture/data/model-RunEvent.yaml) с собственными типами.
 
 **Осложнение.** Владелец продукта отметил: пользователь должен видеть в задаче чат с этапами рассуждений агента и итогом. Сейчас в задаче видны только строки «агент начал / закончил» и комментарии, которые агент написал тулом. При этом в форке уже есть чат с агентом на протоколе AG-UI — второй формат событий для задачи разойдётся с ним.
 
-**Вопрос.** Что и в каком виде пользователь видит в задаче во время и после работы агента, и каким протоколом события идут от Harness до экрана?
+**Вопрос.** Что и в каком виде пользователь видит в задаче во время и после работы агента, и каким протоколом события идут от [Harness](../architecture/components/harness/README.md) до экрана?
 
 **Решает:** владелец продукта. **Не решаем:** что хранится и сколько ([observability](observability.md)), права на подтверждение ([guardrails](guardrails-engine.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с замечанием владельца, AD-17, AD-18, FR-147, задачей 3.3.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с замечанием владельца, [AD-17](../architecture/decisions/AD-17.yaml), [AD-18](../architecture/decisions/AD-18.yaml), [FR-147](../architecture/components/observability/prd.md), задачей 3.3.
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | видеть, что агент делает сейчас, без перезагрузки | замечание владельца, US-ICP-02 | пользователь не знает, жив ли агент |
+| П1 | видеть, что агент делает сейчас, без перезагрузки | замечание владельца, [US-ICP-02](../architecture/components/icplan/stories/us-icp-02.yaml) | пользователь не знает, жив ли агент |
 | П2 | видеть этапы рассуждений: почему агент выбрал действие | замечание владельца | решения агента непонятны, нет доверия |
-| П3 | видеть действия (тулы) свёрнуто, с раскрытием | FR-146 | лента нечитаема или пуста |
-| П4 | отвечать на вопрос и подтверждать действие прямо в ленте | FR-4, FR-5 | агент ждёт, человек не видит вопроса |
-| П5 | писать агенту указание во время работы | FR-10, FR-28 | поправка только перезапуском |
-| П6 | видеть итог: результат, артефакты, критерии ✓ / ✗, вердикт | AD-20, FR-200 | непонятно, принят ли шаг и почему |
-| П7 | вся история задачи по шагам процесса в одном месте | FR-147 | разбор возврата по разным экранам |
-| П8 | секреты не попадают в ленту, включая рассуждения | FR-149 | утечка через рассуждения модели |
+| П3 | видеть действия (тулы) свёрнуто, с раскрытием | [FR-146](../architecture/components/observability/prd.md) | лента нечитаема или пуста |
+| П4 | отвечать на вопрос и подтверждать действие прямо в ленте | [FR-4](../architecture/components/icplan/prd.md), [FR-5](../architecture/components/icplan/prd.md) | агент ждёт, человек не видит вопроса |
+| П5 | писать агенту указание во время работы | [FR-10](../architecture/components/icplan/prd.md), [FR-28](../architecture/components/harness/prd.md) | поправка только перезапуском |
+| П6 | видеть итог: результат, артефакты, критерии ✓ / ✗, вердикт | [AD-20](../architecture/decisions/AD-20.yaml), [FR-200](../architecture/components/icplan/prd.md) | непонятно, принят ли шаг и почему |
+| П7 | вся история задачи по шагам процесса в одном месте | [FR-147](../architecture/components/observability/prd.md) | разбор возврата по разным экранам |
+| П8 | секреты не попадают в ленту, включая рассуждения | [FR-149](../architecture/components/observability/prd.md) | утечка через рассуждения модели |
 
 <span class="gate">G2</span> ✅ у потребностей есть источник.
 
 ## Э3. Опорное решение: как сейчас {#e3}
 
-Проверено по коду форка (коммит `28ea228f`) и его OpenAPI (ICPlan 1.3.0).
+Проверено по коду форка (коммит `28ea228f`) и его OpenAPI ([ICPlan](../architecture/components/icplan/README.md) 1.3.0).
 
 | # | Функция | Что делает | Потребность |
 |---|---|---|---|
@@ -150,7 +150,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 | F3 | Комментарии агента через тул `add_comment` | агент сам пишет в задачу | П6 частично |
 | F4 | Чат с агентом: `POST /agent-chats/:messageId/events` принимает события AG-UI, `GET …/chat/:messageId/stream` отдаёт их по SSE | живой чат вне задачи | П1, П3 — но не в задаче |
 | F5 | `AgentChatPanel`: текст, блоки тулов, статус «думает / вызывает тул», очередь сообщений | экран чата | П3, П5 — но не в задаче |
-| F6 | Задача 3.3: таймлайн из `RunEvent` с собственными типами | план, не реализовано | П1, П3, П7 |
+| F6 | Задача 3.3: таймлайн из [`RunEvent`](../architecture/data/model-RunEvent.yaml) с собственными типами | план, не реализовано | П1, П3, П7 |
 
 **Вывод этапа.** Протокол и экран для живой ленты агента в форке уже есть, но только для чата вне задачи. В задаче видно начало, конец и комментарии; рассуждений, вопросов с кнопками и карточки итога нет.
 
@@ -163,7 +163,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 | Аналог | Ключевые функции по вопросу | Уровень |
 |---|---|---|
 | **AG-UI** (протокол) | события `RunStarted/Finished/Error`, `TextMessage*`, `ToolCall*`, `Reasoning*` (заменили `THINKING_*`), `StepStarted/Finished`, `ActivitySnapshot/Delta`, `StateSnapshot/Delta`, `Custom`; прерывание запуска для ответа человека (черновик) | Б (документация) |
-| **Чат агента в форке ICPlan** | AG-UI для ответа внешнего агента, SSE в браузер, `AgentChatPanel` | А (код) |
+| **Чат агента в форке [ICPlan](../architecture/components/icplan/README.md)** | AG-UI для ответа внешнего агента, SSE в браузер, `AgentChatPanel` | А (код) |
 | **Linear, сессии агента** | типы активности: мысль (thought), действие (action), вопрос человеку (elicitation), ответ (response), ошибка (error), сообщение человека (prompt); временные активности заменяются следующей; состояния сессии pending → active → awaitingInput → complete / error | В (сторонний разбор API) |
 | **GitHub Copilot, журнал сессии** | из PR открывается журнал: «внутренний монолог» агента, вызванные тулы, проверки; живое обновление; кнопка «остановить сессию» | Б (документация) |
 | **LiteLLM, рассуждения** | рассуждения провайдеров приводятся к `reasoning_content` (и `thinking_blocks` у Anthropic); есть не у всех моделей | Б (документация) |
@@ -179,11 +179,11 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 | Живая лента запуска в задаче | П1, П3, П7 | видно, что агент жив и что делает | Copilot, Linear (Б, В); чат форка (А) | базовая |
 | Реплика агента о намерении перед действием | П2 | понятна причина действия у любой модели | Linear thought, Copilot monologue (Б, В) | базовая |
 | Рассуждения модели свёрнутым блоком | П2 | глубже объясняет выбор, если есть | LiteLLM `reasoning_content` (Б) | линейная |
-| Вопрос и подтверждение с кнопками в ленте | П4 | агент не ждёт впустую | Linear elicitation (В); FR-4 (А) | базовая |
-| Указание агенту из ленты | П5 | поправка без перезапуска | чат форка (А); FR-28 | линейная |
-| Карточка итога с критериями | П6 | понятно, принят ли шаг | AD-20 (А) | базовая |
+| Вопрос и подтверждение с кнопками в ленте | П4 | агент не ждёт впустую | Linear elicitation (В); [FR-4](../architecture/components/icplan/prd.md) (А) | базовая |
+| Указание агенту из ленты | П5 | поправка без перезапуска | чат форка (А); [FR-28](../architecture/components/harness/prd.md) | линейная |
+| Карточка итога с критериями | П6 | понятно, принят ли шаг | [AD-20](../architecture/decisions/AD-20.yaml) (А) | базовая |
 | План «сделано / дальше» | П2, П7 | видно, сколько осталось | M3 (А); `ActivitySnapshot` (Б) | линейная |
-| Маскирование рассуждений | П8 | рассуждения могут содержать секреты из контекста | FR-149 (А) | базовая |
+| Маскирование рассуждений | П8 | рассуждения могут содержать секреты из контекста | [FR-149](../architecture/components/observability/prd.md) (А) | базовая |
 | Сырые промпты и вывод тулов в задаче | — | нечитаемо и раскрывает лишнее | — | обратная |
 
 **Вывод этапа.** ==Базовые функции — живая лента в задаче, реплика о намерении, вопрос с кнопками, карточка итога и маскирование.== Рассуждения модели и план — линейные: чем полнее, тем понятнее.
@@ -216,23 +216,23 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 | Элемент ленты | Событие AG-UI | Откуда берётся |
 |---|---|---|
 | Разделитель шага процесса, начало и конец запуска | `RUN_STARTED` / `RUN_FINISHED` / `RUN_ERROR` | Runner, шаг процесса — из `Run.rule` |
-| Шаги цикла (чтение задачи, написание раздела) | `STEP_STARTED` / `STEP_FINISHED` | Harness, узлы цикла |
+| Шаги цикла (чтение задачи, написание раздела) | `STEP_STARTED` / `STEP_FINISHED` | [Harness](../architecture/components/harness/README.md), узлы цикла |
 | 💬 Реплика агента | `TEXT_MESSAGE_START / CONTENT / END` (`role: assistant`) | текст модели между вызовами тулов; правило промпта: одна фраза намерения перед действием |
 | 🧠 Рассуждение модели | `REASONING_START`, `REASONING_MESSAGE_*`, `REASONING_END` | `reasoning_content` из LiteLLM, если модель отдаёт; маскируется |
-| 🔧 Вызов тула | `TOOL_CALL_START / ARGS / END / RESULT` | Harness; в ленте — имя, краткие аргументы, время; полный вывод — по раскрытию, маскированный |
+| 🔧 Вызов тула | `TOOL_CALL_START / ARGS / END / RESULT` | [Harness](../architecture/components/harness/README.md); в ленте — имя, краткие аргументы, время; полный вывод — по раскрытию, маскированный |
 | 🧭 План | `ACTIVITY_SNAPSHOT` (`activityType: plan`) | M3 «сделано / дальше», обновляется агентом |
-| ❓ Вопрос, ⚠ подтверждение | `CUSTOM` (`name: question` / `approval_request`) | Harness; ответ — `ApprovalDecision` / `UserMessage` через heartbeat (I3) |
-| 👤 Указание пользователя | сообщение пользователя (как в чате форка) | ICPlan; доставка в цикл — I3 → I7 |
-| ✅ Карточка итога | `RUN_FINISHED` + `RunResult` | итог, артефакты, gate по критериям (AD-20), токены и стоимость |
-| События платформы | `CUSTOM` (`guardrail_decision`, `memory_write`, `llm_call`) | в ленте — строкой «правило запретило…», «записал состояние»; `llm_call` — только в Observability |
+| ❓ Вопрос, ⚠ подтверждение | `CUSTOM` (`name: question` / `approval_request`) | [Harness](../architecture/components/harness/README.md); ответ — [`ApprovalDecision`](../architecture/data/model-ApprovalDecision.yaml) / [`UserMessage`](../architecture/data/model-UserMessage.yaml) через heartbeat ([I3](../architecture/components/agent-runner/integrations/I3.yaml)) |
+| 👤 Указание пользователя | сообщение пользователя (как в чате форка) | [ICPlan](../architecture/components/icplan/README.md); доставка в цикл — [I3](../architecture/components/agent-runner/integrations/I3.yaml) → [I7](../architecture/components/agent-runner/integrations/I7.yaml) |
+| ✅ Карточка итога | `RUN_FINISHED` + [`RunResult`](../architecture/data/model-RunResult.yaml) | итог, артефакты, gate по критериям ([AD-20](../architecture/decisions/AD-20.yaml)), токены и стоимость |
+| События платформы | `CUSTOM` (`guardrail_decision`, `memory_write`, `llm_call`) | в ленте — строкой «правило запретило…», «записал состояние»; `llm_call` — только в [Observability](../architecture/components/observability/README.md) |
 
 | Функция | Решение | Где |
 |---|---|---|
-| Лента запуска на AG-UI | брать | FR-146, FR-147, FR-24, AD-21 |
-| Реплика о намерении | адаптировать (правило промпта) | FR-24 |
-| Рассуждения модели | брать при наличии | FR-24, FR-149 |
-| Вопрос, подтверждение, указание | адаптировать (`CUSTOM` + heartbeat) | FR-4, FR-10 |
-| Карточка итога | адаптировать (AD-20) | FR-147 |
+| Лента запуска на AG-UI | брать | [FR-146](../architecture/components/observability/prd.md), [FR-147](../architecture/components/observability/prd.md), [FR-24](../architecture/components/harness/prd.md), [AD-21](../architecture/decisions/AD-21.yaml) |
+| Реплика о намерении | адаптировать (правило промпта) | [FR-24](../architecture/components/harness/prd.md) |
+| Рассуждения модели | брать при наличии | [FR-24](../architecture/components/harness/prd.md), [FR-149](../architecture/components/observability/prd.md) |
+| Вопрос, подтверждение, указание | адаптировать (`CUSTOM` + heartbeat) | [FR-4](../architecture/components/icplan/prd.md), [FR-10](../architecture/components/icplan/prd.md) |
+| Карточка итога | адаптировать ([AD-20](../architecture/decisions/AD-20.yaml)) | [FR-147](../architecture/components/observability/prd.md) |
 | Сырой журнал в задаче | не брать | — |
 
 **Критерии выбора:**
@@ -252,7 +252,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 | Вариант | M1 живая лента | M2 причины у любой модели | M3 маскирование | Итог |
 |---|---|---|---|---|
 | C. Чат запуска на AG-UI | да | да (реплики) | да | проходит |
-| B. Таймлайн `RunEvent` (задача 3.3) | да | частично: только тулы и статусы | да | проходит, но второй протокол и экран |
+| B. Таймлайн [`RunEvent`](../architecture/data/model-RunEvent.yaml) (задача 3.3) | да | частично: только тулы и статусы | да | проходит, но второй протокол и экран |
 | A. Как сейчас | **нет** | нет | да | ✗ |
 
 ```
@@ -268,13 +268,13 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 
 | Стык | Что меняется |
 |---|---|
-| I7 Harness → Runner | `RunEvent.event` — событие AG-UI; типы платформы — `CUSTOM` |
-| I2 Runner → ICPlan | тело `POST /agent-runs/:runId/events` = `{events: AG-UI[]}`, как у `POST /agent-chats/:messageId/events` |
-| I20 ICPlan api ↔ web | новый `GET /agent-runs/:runId/stream` (SSE) и `GET /issues/:issueId/agent-feed` (история по шагам) |
+| [I7](../architecture/components/agent-runner/integrations/I7.yaml) [Harness](../architecture/components/harness/README.md) → Runner | `RunEvent.event` — событие AG-UI; типы платформы — `CUSTOM` |
+| [I2](../architecture/components/agent-runner/integrations/I2.yaml) Runner → [ICPlan](../architecture/components/icplan/README.md) | тело `POST /agent-runs/:runId/events` = `{events: AG-UI[]}`, как у `POST /agent-chats/:messageId/events` |
+| [I20](../architecture/components/icplan/integrations/I20.yaml) [ICPlan](../architecture/components/icplan/README.md) api ↔ web | новый `GET /agent-runs/:runId/stream` (SSE) и `GET /issues/:issueId/agent-feed` (история по шагам) |
 | S3 `run_event` | хранит событие AG-UI; `*_CONTENT` собираются в сообщение на `*_END` |
-| Harness | правило промпта «реплика перед действием»; передача `reasoning_content` в `REASONING_*` |
+| [Harness](../architecture/components/harness/README.md) | правило промпта «реплика перед действием»; передача `reasoning_content` в `REASONING_*` |
 
-**Изменения у соседей:** observability (FR-146, FR-147), harness (FR-24), модель `RunEvent`, каталог API ICPlan, потоки ICPlan, Harness, Observability, задача 3.3. Новых сервисов нет: протокол и экран — из форка.
+**Изменения у соседей:** observability ([FR-146](../architecture/components/observability/prd.md), [FR-147](../architecture/components/observability/prd.md)), harness ([FR-24](../architecture/components/harness/prd.md)), модель [`RunEvent`](../architecture/data/model-RunEvent.yaml), каталог API [ICPlan](../architecture/components/icplan/README.md), потоки [ICPlan](../architecture/components/icplan/README.md), [Harness](../architecture/components/harness/README.md), [Observability](../architecture/components/observability/README.md), задача 3.3. Новых сервисов нет: протокол и экран — из форка.
 
 **Вывод этапа.** ==Чат запуска встаёт в существующие стыки: меняется формат события и добавляются поток SSE и лента задачи.==
 
@@ -286,7 +286,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 |---|---|---|---|---|
 | Пользователь 🤖 | C | вижу, что делает агент и почему, отвечаю в той же ленте | лента длинная | тулы и рассуждения свёрнуты, план сверху |
 | Тестировщик 🤖 | C | разбор возврата по шагам и критериям | реплики агента могут «сочинять» | реплика — намерение, факты — из тулов и gate |
-| Безопасность 🤖 | C | маскирование одно для всего | рассуждения модели содержат секреты из контекста | `REASONING_*` проходят то же маскирование, что промпты (FR-149) |
+| Безопасность 🤖 | C | маскирование одно для всего | рассуждения модели содержат секреты из контекста | `REASONING_*` проходят то же маскирование, что промпты ([FR-149](../architecture/components/observability/prd.md)) |
 | Разработчик 🤖 | C | протокол и экран уже есть в форке | AG-UI меняется | только устойчивые события; версия фиксируется |
 | Эксплуатация 🤖 | B | меньше событий | каждая дельта — строка в БД | хранить собранное сообщение на `*_END`, дельты — только в SSE |
 
@@ -298,7 +298,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 
 ## Э9. Выбор {#e9}
 
-- **Утверждение.** Чат запуска на протоколе AG-UI в карточке задачи, на компоненте чата форка (вариант C) — решение AD-21.
+- **Утверждение.** Чат запуска на протоколе AG-UI в карточке задачи, на компоненте чата форка (вариант C) — решение [AD-21](../architecture/decisions/AD-21.yaml).
 - **Основание.** Покрытие П1–П8 полное; протокол и экран уже в форке (А); у аналогов та же лента (Б, В).
 - **Оговорка.** Рассуждения модели — только если провайдер их отдаёт; основа — реплики агента.
 - **Когда неверно.** Если пользователи не раскрывают ленту и смотрят только итог — упростить до карточки итога и вопросов; проверяется на пилоте по числу раскрытий.
@@ -309,13 +309,13 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 
 | Изменение | Документ | Статус |
 |---|---|---|
-| Решение AD-21: чат запуска на AG-UI | [design](..\source\design\define-agent-platform\design.md) | ✅ внесено |
-| События запуска — AG-UI, платформенные — `CUSTOM` | FR-146 | ✅ внесено |
-| Чат запуска в задаче | FR-147 | ✅ внесено |
-| Реплика перед действием, рассуждения модели в поток | FR-24 | ✅ внесено |
-| Модель `RunEvent` = событие AG-UI | Модель данных | ✅ внесено |
-| `POST /agent-runs/:runId/events`, `GET /agent-runs/:runId/stream`, `GET /issues/:issueId/agent-feed` | каталог API ICPlan | ✅ внесено |
-| Поток «Как пользователь видит работу агента» | потоки ICPlan | ✅ внесено |
+| Решение [AD-21](../architecture/decisions/AD-21.yaml): чат запуска на AG-UI | [design](..\source\design\define-agent-platform\design.md) | ✅ внесено |
+| События запуска — AG-UI, платформенные — `CUSTOM` | [FR-146](../architecture/components/observability/prd.md) | ✅ внесено |
+| Чат запуска в задаче | [FR-147](../architecture/components/observability/prd.md) | ✅ внесено |
+| Реплика перед действием, рассуждения модели в поток | [FR-24](../architecture/components/harness/prd.md) | ✅ внесено |
+| Модель [`RunEvent`](../architecture/data/model-RunEvent.yaml) = событие AG-UI | Модель данных | ✅ внесено |
+| `POST /agent-runs/:runId/events`, `GET /agent-runs/:runId/stream`, `GET /issues/:issueId/agent-feed` | каталог API [ICPlan](../architecture/components/icplan/README.md) | ✅ внесено |
+| Поток «Как пользователь видит работу агента» | потоки [ICPlan](../architecture/components/icplan/README.md) | ✅ внесено |
 | Задача 3.3: чат запуска вместо таймлайна | [3.3](..\source\tasks\3.3-run-events-timeline.md) | ✅ внесено |
 | Хранение: сообщение целиком на `*_END` | [потоки Observability](..\architecture\components\observability\docs\how.md) | ✅ внесено |
 
@@ -324,7 +324,7 @@ Linear выделяет вопрос к человеку (elicitation) и отв
 ## Источники
 
 - AG-UI, типы событий — [docs.ag-ui.com/concepts/events](https://docs.ag-ui.com/concepts/events) (11.10.2026).
-- Форк ICPlan: `apps/api/src/modules/agents/chat/model.ts` (AG-UI), `apps/api/src/modules/agents/runner/service.ts` (`finishRun`), `apps/web/src/components/common/agent-chat/` (`AgentChatPanel`); OpenAPI ICPlan 1.3.0 (`html-view/icplan_openapi.json`).
+- Форк [ICPlan](../architecture/components/icplan/README.md): `apps/api/src/modules/agents/chat/model.ts` (AG-UI), `apps/api/src/modules/agents/runner/service.ts` (`finishRun`), `apps/web/src/components/common/agent-chat/` (`AgentChatPanel`); OpenAPI [ICPlan](../architecture/components/icplan/README.md) 1.3.0 (`html-view/icplan_openapi.json`).
 - GitHub Copilot, журнал сессии агента — [docs.github.com: using the copilot coding agent logs](https://docs.github.com/en/copilot/using-github-copilot/coding-agent/using-the-copilot-coding-agent-logs).
 - Linear Agent API, типы активности (сторонний разбор) — [skills.sh/5dlabs/cto/linear-agent-api](https://skills.sh/5dlabs/cto/linear-agent-api).
 - LiteLLM, рассуждения — [docs.litellm.ai/docs/reasoning_content](https://docs.litellm.ai/docs/reasoning_content).

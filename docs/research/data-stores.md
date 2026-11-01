@@ -1,12 +1,12 @@
 # R&D: Хранилища данных (Postgres и объектное хранилище)
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Инфраструктура** · решение: [design AD-4, AD-15, AD-18](..\source\design\define-agent-platform\design.md) · спека: platform-infrastructure
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Инфраструктура](../architecture/components/infrastructure/README.md)** · решение: [design AD-4, AD-15, AD-18](..\source\design\define-agent-platform\design.md) · спека: platform-infrastructure
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
-На чём держать реляционные данные (ICPlan, схемы платформы, LiteLLM, checkpoint) и объекты (вложения, артефакты, бэкапы), чтобы бэкапы и пул соединений были из коробки, а ICPlan не пришлось перенастраивать?
+На чём держать реляционные данные ([ICPlan](../architecture/components/icplan/README.md), схемы платформы, LiteLLM, checkpoint) и объекты (вложения, артефакты, бэкапы), чтобы бэкапы и пул соединений были из коробки, а [ICPlan](../architecture/components/icplan/README.md) не пришлось перенастраивать?
 
-<div class="rnd-a">Ответ: PostgreSQL 17 под CloudNativePG (стандартный образ с pgvector, PgBouncer в режиме transaction, WAL и копии в S3 вне узла) и RustFS как в ICPlan. MinIO отпал: репозиторий архивирован.</div>
+<div class="rnd-a">Ответ: PostgreSQL 17 под CloudNativePG (стандартный образ с pgvector, PgBouncer в режиме transaction, WAL и копии в S3 вне узла) и RustFS как в [ICPlan](../architecture/components/icplan/README.md). MinIO отпал: репозиторий архивирован.</div>
 
 <span class="rnd-badge adopt">Adopt</span> PostgreSQL 17, RustFS 1.0.x · <span class="rnd-badge trial">Trial</span> CloudNativePG v1.30.1 · 0 $ · данные 11.10.2026
 </div>
@@ -52,17 +52,17 @@ stack Документы: 3 ok, 0 part, 4 mute
 <div markdown>
 **1. Бэкап и пулер — объекты оператора**
 
-CloudNativePG держит непрерывный архив WAL и базовые копии в S3 вне узла и пулер PgBouncer как ресурс `Pooler`. С обычным StatefulSet из чарта ICPlan бэкапы пришлось бы писать скриптами — это главный риск своего сервера (AD-18) ([Э9](#e9)).
+CloudNativePG держит непрерывный архив WAL и базовые копии в S3 вне узла и пулер PgBouncer как ресурс `Pooler`. С обычным StatefulSet из чарта [ICPlan](../architecture/components/icplan/README.md) бэкапы пришлось бы писать скриптами — это главный риск своего сервера ([AD-18](../architecture/decisions/AD-18.yaml)) ([Э9](#e9)).
 </div>
 <div markdown>
-**2. С ICPlan совпадает всё, кроме запуска Postgres**
+**2. С [ICPlan](../architecture/components/icplan/README.md) совпадает всё, кроме запуска Postgres**
 
-ICPlan уже работает с RustFS и pgvector. Меняется только то, как поднят Postgres: кластер CNPG вместо StatefulSet. ICPlan подключается через PgBouncer в режиме transaction: `postgres-js` с `prepare:false`, LiteLLM — Prisma с `pgbouncer=true` (AD-18) ([Э7](#e7)).
+[ICPlan](../architecture/components/icplan/README.md) уже работает с RustFS и pgvector. Меняется только то, как поднят Postgres: кластер CNPG вместо StatefulSet. [ICPlan](../architecture/components/icplan/README.md) подключается через PgBouncer в режиме transaction: `postgres-js` с `prepare:false`, LiteLLM — Prisma с `pgbouncer=true` ([AD-18](../architecture/decisions/AD-18.yaml)) ([Э7](#e7)).
 </div>
 <div markdown>
 **3. Объектное хранилище — без смены**
 
-MinIO архивирован (последний релиз — 15.10.2025). RustFS и SeaweedFS живы, но SeaweedFS потребовал бы перенастройки ICPlan. Garage интересен репликацией между площадками, но для копий вне узла хватает любого S3 ([Э4](#e4)).
+MinIO архивирован (последний релиз — 15.10.2025). RustFS и SeaweedFS живы, но SeaweedFS потребовал бы перенастройки [ICPlan](../architecture/components/icplan/README.md). Garage интересен репликацией между площадками, но для копий вне узла хватает любого S3 ([Э4](#e4)).
 </div>
 </div>
 
@@ -72,20 +72,20 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 
 - PostgreSQL 17, одна инстанция: БД `itsaplan` (схемы `public`, `platform`, `harness_ckpt`) и `litellm`;
 - CloudNativePG: WAL, копии, `Pooler`;
-- RustFS (S3 API) как в ICPlan;
+- RustFS (S3 API) как в [ICPlan](../architecture/components/icplan/README.md);
 - pgvector из стандартного образа.
 </div>
 <div class="adapt" markdown>
 **Адаптируем**
 
 - восстановление на момент времени (PITR, есть у всех операторов) → проверка восстановления в задаче инфраструктуры;
-- репликация между площадками (Garage) → копии вне узла — любой S3 на другой площадке (AD-18).
+- репликация между площадками (Garage) → копии вне узла — любой S3 на другой площадке ([AD-18](../architecture/decisions/AD-18.yaml)).
 </div>
 <div class="drop" markdown>
 **Не берём**
 
 - MinIO: архивирован;
-- HA Postgres на этапах 1–3: один узел (AD-18), HA — этап 4;
+- HA Postgres на этапах 1–3: один узел ([AD-18](../architecture/decisions/AD-18.yaml)), HA — этап 4;
 - Ceph: тяжело для одного узла.
 </div>
 </div>
@@ -95,7 +95,7 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 **Отсеяны до сравнения**
 
 - **MinIO** — репозиторий архивирован 24.04.2026.
-- **Облачные БД и S3** — своё размещение (AD-18).
+- **Облачные БД и S3** — своё размещение ([AD-18](../architecture/decisions/AD-18.yaml)).
 </div>
 <div class="risk" markdown>
 **Риски и пересмотр**
@@ -113,7 +113,7 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 <div markdown>**Э4 Альтернативы**9 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I14, I19, I22 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I14](../architecture/components/llm-gateway/integrations/I14.yaml), [I19](../architecture/components/agent-runner/integrations/I19.yaml), [I22](../architecture/integrations/I22.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**5 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**7 <span class="gate">G10</span></div>
@@ -125,27 +125,27 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** ICPlan уже использует Postgres с pgvector (`pgvector/pgvector:pg17`) и RustFS (`rustfs/rustfs:1.0.0`). Платформа добавляет свои схемы, БД LiteLLM и checkpoint.
+**Ситуация.** [ICPlan](../architecture/components/icplan/README.md) уже использует Postgres с pgvector (`pgvector/pgvector:pg17`) и RustFS (`rustfs/rustfs:1.0.0`). Платформа добавляет свои схемы, БД LiteLLM и checkpoint.
 
-**Осложнение.** Сервер свой (AD-18): бэкапы вне узла, восстановление и пул соединений — наша ответственность. MinIO, который часто берут для S3, перестал развиваться.
+**Осложнение.** Сервер свой ([AD-18](../architecture/decisions/AD-18.yaml)): бэкапы вне узла, восстановление и пул соединений — наша ответственность. MinIO, который часто берут для S3, перестал развиваться.
 
 **Вопрос.** На чём держать Postgres и объекты?
 
 **Решает:** владелец продукта с DevOps. **Не решаем:** кластер Kubernetes ([K8s](kubernetes-runtime.md)), профиль нагрузки ([нагрузка](load-profile.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-4, AD-15, AD-18.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-4](../architecture/decisions/AD-4.yaml), [AD-15](../architecture/decisions/AD-15.yaml), [AD-18](../architecture/decisions/AD-18.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | бэкап вне узла и восстановление на момент времени | FR-165, AD-18 | потеря узла = потеря данных |
-| П2 | пул соединений для api ICPlan, LiteLLM, Runner, Memory | FR-163 | исчерпание `max_connections` |
-| П3 | совместимость с ICPlan без перенастройки | AD-18 | правки форка ради хранилища |
-| П4 | pgvector для M4 и RAG позже | AD-13, FR-41 | второй движок векторов |
-| П5 | роль БД на схему (наименьшие права) | FR-163, хранилища спек | сервис читает чужие таблицы |
-| П6 | объектное хранилище S3 с живым проектом | FR-164 | хранилище без обновлений безопасности |
-| П7 | эксплуатация одной командой на одном узле | AD-15 | тяжёлые распределённые системы |
+| П1 | бэкап вне узла и восстановление на момент времени | [FR-165](../architecture/components/infrastructure/prd.md), [AD-18](../architecture/decisions/AD-18.yaml) | потеря узла = потеря данных |
+| П2 | пул соединений для api [ICPlan](../architecture/components/icplan/README.md), LiteLLM, Runner, [Memory](../architecture/components/memory/README.md) | [FR-163](../architecture/components/infrastructure/prd.md) | исчерпание `max_connections` |
+| П3 | совместимость с [ICPlan](../architecture/components/icplan/README.md) без перенастройки | [AD-18](../architecture/decisions/AD-18.yaml) | правки форка ради хранилища |
+| П4 | pgvector для M4 и RAG позже | [AD-13](../architecture/decisions/AD-13.yaml), [FR-41](../architecture/components/memory/prd.md) | второй движок векторов |
+| П5 | роль БД на схему (наименьшие права) | [FR-163](../architecture/components/infrastructure/prd.md), хранилища спек | сервис читает чужие таблицы |
+| П6 | объектное хранилище S3 с живым проектом | [FR-164](../architecture/components/infrastructure/prd.md) | хранилище без обновлений безопасности |
+| П7 | эксплуатация одной командой на одном узле | [AD-15](../architecture/decisions/AD-15.yaml) | тяжёлые распределённые системы |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования и решения.
 
@@ -160,9 +160,9 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 | F5 | Роли и БД декларативно | роль на схему | П5 |
 | F6 | RustFS (S3 API) | вложения, артефакты, цель бэкапов | П3, П6 |
 
-**Вывод этапа.** Опорное решение закрывает все потребности функциями оператора и тем, что уже есть в ICPlan.
+**Вывод этапа.** Опорное решение закрывает все потребности функциями оператора и тем, что уже есть в [ICPlan](../architecture/components/icplan/README.md).
 
-<span class="gate">G3</span> ✅ функции из документации CNPG (Б) и AD-18 (А).
+<span class="gate">G3</span> ✅ функции из документации CNPG (Б) и [AD-18](../architecture/decisions/AD-18.yaml) (А).
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
@@ -172,10 +172,10 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 |---|---|---|---|
 | **Crunchy PGO** (Apache-2.0, 4 450★, v6.0.2) | оператор Postgres; бэкапы pgBackRest (полные, разностные, PITR); PgBouncer | pgBackRest | Б |
 | **Zalando postgres-operator** (MIT, 5 254★, v2.0.3) | Patroni / Spilo, логические копии, пулер | — | Б |
-| **StatefulSet из чарта ICPlan** | Postgres как обычный под; бэкапы — свои скрипты | — | А |
+| **StatefulSet из чарта [ICPlan](../architecture/components/icplan/README.md)** | Postgres как обычный под; бэкапы — свои скрипты | — | А |
 | **SeaweedFS** (Apache-2.0, 35 387★, 4.48) | распределённое хранилище с S3 API, много объектов | масштаб | Б |
 | **Garage** (AGPL-3.0, 4 670★, v2.4.1) | лёгкий S3 с репликацией между площадками | гео-репликация | Б |
-| **RustFS** (Apache-2.0, 34 706★, 1.0.1) | S3 на Rust; уже в ICPlan | — | Б |
+| **RustFS** (Apache-2.0, 34 706★, 1.0.1) | S3 на Rust; уже в [ICPlan](../architecture/components/icplan/README.md) | — | Б |
 | **MinIO** (AGPL-3.0, 61 328★) | S3; **репозиторий архивирован 24.04.2026**, последний релиз 15.10.2025 | — | Б |
 | **Ceph RGW** | S3 поверх Ceph | — | Б |
 | **Облачные БД и S3** | управляемые сервисы | — | Б |
@@ -190,14 +190,14 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 |---|---|---|---|---|
 | Бэкап WAL вне узла, PITR | П1 | RPO — минуты | CNPG, PGO, Zalando (Б) | базовая |
 | Пулер как ресурс | П2 | не нужен отдельный деплой | CNPG `Pooler`, PGO (Б) | базовая |
-| Совместимость с ICPlan | П3 | форк не меняется | RustFS и pgvector в ICPlan (А) | базовая |
+| Совместимость с [ICPlan](../architecture/components/icplan/README.md) | П3 | форк не меняется | RustFS и pgvector в [ICPlan](../architecture/components/icplan/README.md) (А) | базовая |
 | Живой проект S3 | П6 | обновления безопасности | MinIO архивирован (Б) | базовая |
-| pgvector в образе | П4 | без второго движка | CNPG (Б), AD-18 | линейная |
+| pgvector в образе | П4 | без второго движка | CNPG (Б), [AD-18](../architecture/decisions/AD-18.yaml) | линейная |
 | pgBackRest (разностные копии) | П1 | быстрее восстановление больших БД | PGO (Б) | линейная |
 | Гео-репликация объектов | П1 | копии на другой площадке | Garage (Б) | привлекательная |
-| HA Postgres | — | — | этап 4 (AD-18) | безразличная на этапах 1–3 |
+| HA Postgres | — | — | этап 4 ([AD-18](../architecture/decisions/AD-18.yaml)) | безразличная на этапах 1–3 |
 
-**Вывод этапа.** Базовые функции у CNPG и PGO есть; у StatefulSet нет бэкапа из коробки. Объектное хранилище должно быть живым и совместимым с ICPlan.
+**Вывод этапа.** Базовые функции у CNPG и PGO есть; у StatefulSet нет бэкапа из коробки. Объектное хранилище должно быть живым и совместимым с [ICPlan](../architecture/components/icplan/README.md).
 
 <span class="gate">G5</span> ✅ у функций есть доказательство уровня Б и выше.
 
@@ -205,9 +205,9 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| CNPG: WAL, копии, `Pooler`, pgvector | оставить | AD-18 | FR-163, FR-165 |
+| CNPG: WAL, копии, `Pooler`, pgvector | оставить | [AD-18](../architecture/decisions/AD-18.yaml) | [FR-163](../architecture/components/infrastructure/prd.md), [FR-165](../architecture/components/infrastructure/prd.md) |
 | PITR | адаптировать | проверка восстановления на момент времени в задаче инфраструктуры | [задача 4.7](..\source\tasks\4.7-postgres-storage-backup.md) (подзадача 4.7.6) |
-| Гео-репликация (Garage) | не брать | копии вне узла — любой S3 на другой площадке | AD-18 |
+| Гео-репликация (Garage) | не брать | копии вне узла — любой S3 на другой площадке | [AD-18](../architecture/decisions/AD-18.yaml) |
 | MinIO, HA, Ceph | не брать | Э5 | — |
 
 **Критерии:**
@@ -216,8 +216,8 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 |---|---|---|
 | **M1** бэкап вне узла с PITR | П1 → базовая | документация оператора |
 | **M2** живой проект | П6 | не архивирован |
-| **M3** своё размещение | AD-18 | без облака |
-| **К1** совместимость с ICPlan | П3 | что перенастраивать |
+| **M3** своё размещение | [AD-18](../architecture/decisions/AD-18.yaml) | без облака |
+| **К1** совместимость с [ICPlan](../architecture/components/icplan/README.md) | П3 | что перенастраивать |
 | **К2** пулер | П2 | ресурс или отдельно |
 | **К3** эксплуатация на одном узле | П7 | компоненты |
 
@@ -233,7 +233,7 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 | Crunchy PGO + RustFS | да | да | да | проходит |
 | Zalando + RustFS | да | да | да | проходит |
 | CloudNativePG + SeaweedFS | да | да | да | проходит |
-| StatefulSet ICPlan + RustFS | **нет**: свои скрипты | да | да | ✗ |
+| StatefulSet [ICPlan](../architecture/components/icplan/README.md) + RustFS | **нет**: свои скрипты | да | да | ✗ |
 | … + MinIO | да | **нет** | да | ✗ |
 | Облачные сервисы | да | да | **нет** | ✗ |
 
@@ -250,14 +250,14 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 
 | Стык | CNPG + RustFS | PGO + RustFS | Zalando + RustFS | CNPG + SeaweedFS |
 |---|---|---|---|---|
-| I22 через PgBouncer | И2: transaction проверен по коду ICPlan и Prisma (AD-18) | И2 | И2 | И2 |
-| I14 LiteLLM → БД | И2 | И2 | И2 | И2 |
-| I19 S3 | И4: RustFS как в ICPlan | И4 | И4 | И1: перенастроить ICPlan |
+| [I22](../architecture/integrations/I22.yaml) через PgBouncer | И2: transaction проверен по коду [ICPlan](../architecture/components/icplan/README.md) и Prisma ([AD-18](../architecture/decisions/AD-18.yaml)) | И2 | И2 | И2 |
+| [I14](../architecture/components/llm-gateway/integrations/I14.yaml) LiteLLM → БД | И2 | И2 | И2 | И2 |
+| [I19](../architecture/components/agent-runner/integrations/I19.yaml) S3 | И4: RustFS как в [ICPlan](../architecture/components/icplan/README.md) | И4 | И4 | И1: перенастроить [ICPlan](../architecture/components/icplan/README.md) |
 | Бэкап в S3 вне узла | И2: `barmanObjectStore` | И2: pgBackRest | И2: WAL-G | И2 |
 
-**Изменения у соседей:** при любом операторе — чарт ICPlan подключается к внешнему кластеру вместо своего StatefulSet (техспека ICPlan, инфраструктура). При SeaweedFS — ещё и настройки S3 в ICPlan.
+**Изменения у соседей:** при любом операторе — чарт [ICPlan](../architecture/components/icplan/README.md) подключается к внешнему кластеру вместо своего StatefulSet (техспека [ICPlan](../architecture/components/icplan/README.md), инфраструктура). При SeaweedFS — ещё и настройки S3 в [ICPlan](../architecture/components/icplan/README.md).
 
-**Вывод этапа.** ==Все операторы встают одинаково; отличие — в инструменте бэкапа.== RustFS совпадает с ICPlan, поэтому объектное хранилище не меняем.
+**Вывод этапа.** ==Все операторы встают одинаково; отличие — в инструменте бэкапа.== RustFS совпадает с [ICPlan](../architecture/components/icplan/README.md), поэтому объектное хранилище не меняем.
 
 <span class="gate">G7</span> ✅ отсев; готовность стыков; изменения у соседей.
 
@@ -269,14 +269,14 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 |---|---|---|---|---|
 | DevOps 🤖 | CNPG | WAL, копии и пулер — ресурсы оператора; CNCF | — | — |
 | Архитектор 🤖 | CNPG | одна инстанция для всех схем, роли на схему | — | — |
-| Разработчик 🤖 | нейтрально | transaction-режим проверен по коду ICPlan и Prisma | миграции через пулер | миграции — прямым подключением (AD-18) |
+| Разработчик 🤖 | нейтрально | transaction-режим проверен по коду [ICPlan](../architecture/components/icplan/README.md) и Prisma | миграции через пулер | миграции — прямым подключением ([AD-18](../architecture/decisions/AD-18.yaml)) |
 | Безопасность 🤖 | нейтрально | роли на схему у всех операторов | — | — |
 | Тестировщик 🤖 (оппонент) | Crunchy PGO | pgBackRest зрелее для восстановления | восстановление не проверено | проверка PITR в задаче бэкапов |
 
 | Спор | Разрешение |
 |---|---|
 | Тестировщик: «восстановление не проверено» | **условие:** CNPG — Trial до проверки PITR в задаче бэкапов; провал → PGO |
-| Адвокат дьявола: «один экземпляр — единая точка отказа» | **условие:** RPO минуты за счёт WAL, HA — этап 4 (AD-18) |
+| Адвокат дьявола: «один экземпляр — единая точка отказа» | **условие:** RPO минуты за счёт WAL, HA — этап 4 ([AD-18](../architecture/decisions/AD-18.yaml)) |
 
 **Вывод этапа.** Спор о восстановлении сведён к проверке; статус CNPG — Trial до неё.
 
@@ -288,14 +288,14 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 |---|---|---|---|---|---|
 | П1 бэкап, PITR | закрывает | закрывает | закрывает | закрывает | не закрывает |
 | П2 пулер | закрывает | закрывает | закрывает | закрывает | с доработкой |
-| П3 совместимость с ICPlan | закрывает | закрывает | закрывает | частично: S3 | закрывает |
+| П3 совместимость с [ICPlan](../architecture/components/icplan/README.md) | закрывает | закрывает | закрывает | частично: S3 | закрывает |
 | П4 pgvector | закрывает | закрывает: свой образ | частично: Spilo | закрывает | закрывает |
 | П5 роли на схему | закрывает | закрывает | закрывает | закрывает | с доработкой |
 | П6 живой S3 | закрывает | закрывает | закрывает | закрывает | закрывает |
 | П7 один узел, одна команда | закрывает | с доработкой: больше компонентов | частично: Patroni | закрывает | закрывает |
 
-- **Утверждение.** PostgreSQL 17 под CloudNativePG и RustFS (AD-18).
-- **Основания.** Закрывает все 7 потребностей; совпадает с ICPlan по S3 и pgvector.
+- **Утверждение.** PostgreSQL 17 под CloudNativePG и RustFS ([AD-18](../architecture/decisions/AD-18.yaml)).
+- **Основания.** Закрывает все 7 потребностей; совпадает с [ICPlan](../architecture/components/icplan/README.md) по S3 и pgvector.
 - **Связка.** Бэкап вне узла — главная обязанность своего сервера. Операторы дают его из коробки, а CNPG проще на одном узле.
 - **Опровержение.** Вывод неверен, если проверка PITR покажет, что восстановление не укладывается в целевое время. Тогда — Crunchy PGO с pgBackRest.
 
@@ -307,9 +307,9 @@ MinIO архивирован (последний релиз — 15.10.2025). Rus
 |---|---|---|
 | MinIO — архивирован 24.04.2026 | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | ✅ внесено |
 | CloudNativePG — Trial до проверки PITR; проверка — на момент времени, с замером времени восстановления | TECHNOLOGIES, [задача 4.7](..\source\tasks\4.7-postgres-storage-backup.md) | ✅ внесено: уточнена подзадача 4.7.6 |
-| Решения AD-4, AD-15, AD-18 | design | ✅ подтверждено, без изменений |
-| Стыки I14, I19, I22 | спека platform-infrastructure | — не требуется |
-| Бэкапы и восстановление | FR-165 | — не требуется: PITR уже в требовании |
+| Решения [AD-4](../architecture/decisions/AD-4.yaml), [AD-15](../architecture/decisions/AD-15.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | design | ✅ подтверждено, без изменений |
+| Стыки [I14](../architecture/components/llm-gateway/integrations/I14.yaml), [I19](../architecture/components/agent-runner/integrations/I19.yaml), [I22](../architecture/integrations/I22.yaml) | спека platform-infrastructure | — не требуется |
+| Бэкапы и восстановление | [FR-165](../architecture/components/infrastructure/prd.md) | — не требуется: PITR уже в требовании |
 | Техспека инфраструктуры | [техспека](..\architecture\components\infrastructure\docs\techspec.md) | — не требуется |
 | Поток инфраструктуры | [поток](..\architecture\components\infrastructure\docs\how.md) | — не требуется |
 

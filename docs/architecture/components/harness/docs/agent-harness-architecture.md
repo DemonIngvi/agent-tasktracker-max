@@ -50,12 +50,12 @@ flowchart TB
 
 | Блок | Задача | Статус |
 |---|---|---|
-| Bootstrap | определение агента (YAML / ICPlan), скиллы, лимиты | ⬜ не начато |
+| Bootstrap | определение агента (YAML / [ICPlan](../../icplan/README.md)), скиллы, лимиты | ⬜ не начато |
 | Context Manager | промпт, сжатие истории, M0 + M2/M3 | ⬜ не начато |
 | LLM client | только через LiteLLM, алиас модели | ⬜ не начато |
 | Tool Executor | MCP через прокси Runner, allowlist, таймауты | ⬜ не начато |
 | Hooks | before/after llm и tool, on_stop | ⬜ не начато |
-| Pause / resume | interrupt на approve и вопрос, checkpoint через Runner (I12) | ⬜ не начато |
+| Pause / resume | interrupt на approve и вопрос, checkpoint через Runner ([I12](../integrations/I12.yaml)) | ⬜ не начато |
 | Policy / stop | лимиты шагов, времени, токенов | ⬜ не начато |
 | Event stream | шаги для чата запуска | ⬜ не начато |
 

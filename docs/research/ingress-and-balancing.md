@@ -1,6 +1,6 @@
 # R&D: Вход и балансировка
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Инфраструктура** · решение: [design AD-15, AD-18](..\source\design\define-agent-platform\design.md) · спека: platform-infrastructure
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Инфраструктура](../architecture/components/infrastructure/README.md)** · решение: [design AD-15, AD-18](..\source\design\define-agent-platform\design.md) · спека: platform-infrastructure
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
@@ -77,7 +77,7 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 **Не берём**
 
 - ingress-nginx: архивирован;
-- сервисную сеть (mesh) и mTLS до этапа 4 (AD-18);
+- сервисную сеть (mesh) и mTLS до этапа 4 ([AD-18](../architecture/decisions/AD-18.yaml));
 - внешний балансировщик: один узел.
 </div>
 </div>
@@ -103,7 +103,7 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 <div markdown>**Э4 Альтернативы**6 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I21, I22 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I21](../architecture/integrations/I21.yaml), [I22](../architecture/integrations/I22.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**4 роли <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**6 <span class="gate">G10</span></div>
@@ -115,7 +115,7 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 
 ## Э1. Вопрос {#e1}
 
-**Ситуация.** Платформа на k3s (AD-15). Наружу смотрят web и api ICPlan и MCP ICPlan; у api и LiteLLM по две реплики.
+**Ситуация.** Платформа на k3s ([AD-15](../architecture/decisions/AD-15.yaml)). Наружу смотрят web и api [ICPlan](../architecture/components/icplan/README.md) и MCP [ICPlan](../architecture/components/icplan/README.md); у api и LiteLLM по две реплики.
 
 **Осложнение.** ingress-nginx, самый распространённый контроллер, архивирован. Стандарт Gateway API вытесняет Ingress.
 
@@ -123,18 +123,18 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 
 **Решает:** владелец продукта с DevOps. **Не решаем:** кластер ([Kubernetes](kubernetes-runtime.md)), Postgres ([хранилища](data-stores.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-15, AD-18.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-15](../architecture/decisions/AD-15.yaml), [AD-18](../architecture/decisions/AD-18.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | HTTPS с автоматическими сертификатами | FR-161 | ручное продление, просроченный сертификат |
-| П2 | маршруты web, api, mcp | FR-161 | пользователи и MCP-клиенты не попадают |
-| П3 | распределение по репликам | FR-162 | одна реплика держит всю нагрузку |
-| П4 | админки закрыты | FR-161, AD-18 | LiteLLM и OPA доступны снаружи |
+| П1 | HTTPS с автоматическими сертификатами | [FR-161](../architecture/components/infrastructure/prd.md) | ручное продление, просроченный сертификат |
+| П2 | маршруты web, api, mcp | [FR-161](../architecture/components/infrastructure/prd.md) | пользователи и MCP-клиенты не попадают |
+| П3 | распределение по репликам | [FR-162](../architecture/components/infrastructure/prd.md) | одна реплика держит всю нагрузку |
+| П4 | админки закрыты | [FR-161](../architecture/components/infrastructure/prd.md), [AD-18](../architecture/decisions/AD-18.yaml) | LiteLLM и OPA доступны снаружи |
 | П5 | живой проект контроллера | — | вход без обновлений безопасности |
-| П6 | без лишних компонентов на одном узле | AD-15 | ещё контроллеры |
+| П6 | без лишних компонентов на одном узле | [AD-15](../architecture/decisions/AD-15.yaml) | ещё контроллеры |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования.
 
@@ -187,10 +187,10 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| Traefik, ACME, Service, PgBouncer | оставить | AD-15, AD-18 | FR-161 – FR-163 |
+| Traefik, ACME, Service, PgBouncer | оставить | [AD-15](../architecture/decisions/AD-15.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | [FR-161](../architecture/components/infrastructure/prd.md) – [FR-163](../architecture/components/infrastructure/prd.md) |
 | Маршруты Gateway API | адаптировать | HTTPRoute для web, api, mcp; включить провайдер Gateway API в Traefik через HelmChartConfig k3s | подзадача 4.6.3 |
 | Политики трафика | не брать сейчас | при необходимости — middleware Traefik | — |
-| ingress-nginx, mesh | не брать | Э5, AD-18 | — |
+| ingress-nginx, mesh | не брать | Э5, [AD-18](../architecture/decisions/AD-18.yaml) | — |
 
 **Критерии:**
 
@@ -223,8 +223,8 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 
 | Стык | Traefik | Envoy Gateway | HAProxy Ingress |
 |---|---|---|---|
-| I21 вход | И2: в k3s | И1: контроллер, cert-manager | И1 |
-| I22 к Postgres | И2: PgBouncer, не зависит от входа | И2 | И2 |
+| [I21](../architecture/integrations/I21.yaml) вход | И2: в k3s | И1: контроллер, cert-manager | И1 |
+| [I22](../architecture/integrations/I22.yaml) к Postgres | И2: PgBouncer, не зависит от входа | И2 | И2 |
 
 **Изменения у соседей:** нет; Gateway API меняет только манифесты маршрутов в чартах (задача 4.6).
 
@@ -259,7 +259,7 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 | П5 жив | закрывает | закрывает | закрывает | закрывает |
 | П6 без компонентов | закрывает | частично | частично | частично |
 
-- **Утверждение.** Traefik из k3s, маршруты на Gateway API (AD-15, AD-18).
+- **Утверждение.** Traefik из k3s, маршруты на Gateway API ([AD-15](../architecture/decisions/AD-15.yaml), [AD-18](../architecture/decisions/AD-18.yaml)).
 - **Основания.** Закрывает все 6 потребностей без новых компонентов.
 - **Связка.** Архивация ingress-nginx показала цену привязки к контроллеру; стандарт маршрутов её снимает.
 - **Опровержение.** Вывод неверен, если понадобятся политики трафика уровня Envoy. Тогда — Envoy Gateway с теми же HTTPRoute.
@@ -272,10 +272,10 @@ LiteLLM UI, OPA и админ-API не получают маршрутов: до
 |---|---|---|
 | Маршруты web, api, mcp — Gateway API HTTPRoute | [задача 4.6](..\source\tasks\4.6-k8s-helm-ingress.md) (подзадача 4.6.3) | ✅ внесено |
 | Gateway API — Adopt; ingress-nginx — архивирован 23.03.2026 | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | ✅ внесено |
-| Решения AD-15, AD-18 | design | ✅ подтверждено, без изменений |
-| Стыки I21, I22 | спека platform-infrastructure | — не требуется |
+| Решения [AD-15](../architecture/decisions/AD-15.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | design | ✅ подтверждено, без изменений |
+| Стыки [I21](../architecture/integrations/I21.yaml), [I22](../architecture/integrations/I22.yaml) | спека platform-infrastructure | — не требуется |
 | Техспека инфраструктуры | [техспека](..\architecture\components\infrastructure\docs\techspec.md) | — не требуется |
-| Требование «Ingress и TLS» | FR-161 | — не требуется: формат маршрутов не задан требованием |
+| Требование «Ingress и TLS» | [FR-161](../architecture/components/infrastructure/prd.md) | — не требуется: формат маршрутов не задан требованием |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.
 

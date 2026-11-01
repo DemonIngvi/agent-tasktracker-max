@@ -1,6 +1,6 @@
 # R&D: Изоляция запусков (Sandbox)
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Sandbox** · решение: [design AD-18](..\source\design\define-agent-platform\design.md) · спека: agent-sandbox
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Sandbox](../architecture/components/sandbox/README.md)** · решение: [design AD-18](..\source\design\define-agent-platform\design.md) · спека: agent-sandbox
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
@@ -61,7 +61,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 <div markdown>
 **3. Провайдер заменяем, этап 4 уже виден**
 
-Среда создаётся через интерфейс `SandboxProvider` (I6 / I23). На этапе 4 им может стать kubernetes-sigs/agent-sandbox: тёплый пул как объект K8s и runtime gVisor или Kata через RuntimeClass. Тогда свой код пула не нужен ([Э6](#e6)).
+Среда создаётся через интерфейс `SandboxProvider` ([I6](../architecture/components/agent-runner/integrations/I6.yaml) / [I23](../architecture/components/agent-runner/integrations/I23.yaml)). На этапе 4 им может стать kubernetes-sigs/agent-sandbox: тёплый пул как объект K8s и runtime gVisor или Kata через RuntimeClass. Тогда свой код пула не нужен ([Э6](#e6)).
 </div>
 </div>
 
@@ -71,7 +71,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 
 - одноразовый контейнер на запуск;
 - тёплый пул (`pool.size` 2);
-- rootless Docker (AD-18);
+- rootless Docker ([AD-18](../architecture/decisions/AD-18.yaml));
 - сеть только через egress-прокси Squid;
 - профиль ресурсов.
 </div>
@@ -115,7 +115,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 <div markdown>**Э4 Альтернативы**10 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I6, I7, I17, I23 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I6](../architecture/components/agent-runner/integrations/I6.yaml), [I7](../architecture/components/agent-runner/integrations/I7.yaml), [I17](../architecture/components/sandbox/integrations/I17.yaml), [I23](../architecture/components/agent-runner/integrations/I23.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**6 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**8 <span class="gate">G10</span></div>
@@ -133,23 +133,23 @@ stack Документы: 6 ok, 0 part, 2 mute
 
 **Вопрос.** Какая среда и какой жизненный цикл у среды запуска?
 
-**Решает:** владелец продукта с ролью «Безопасность». **Не решаем:** egress-прокси (AD-18: Squid), доступ к репозиториям ([рабочее пространство](agent-workspace.md)).
+**Решает:** владелец продукта с ролью «Безопасность». **Не решаем:** egress-прокси ([AD-18](../architecture/decisions/AD-18.yaml): Squid), доступ к репозиториям ([рабочее пространство](agent-workspace.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-18 и требованиями agent-sandbox.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-18](../architecture/decisions/AD-18.yaml) и требованиями agent-sandbox.
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | своя среда на каждый запуск, без следов предыдущих | FR-82, FR-84 | файлы и токены одного запуска видны другому |
-| П2 | старт < 1 с | FR-83 | пользователь ждёт секунды на каждый шаг процесса |
-| П3 | граница с хостом для кода агента | FR-82, AD-18 | побег из среды даёт доступ к узлу |
-| П4 | сеть только через allowlist egress-прокси | FR-87, I17 | агент выносит данные или скачивает лишнее |
-| П5 | секретов в среде нет | FR-88 | ключи утекают в логи и ответы модели |
-| П6 | профиль ресурсов | FR-86 | один запуск съедает узел |
-| П7 | рабочее пространство по манифесту | FR-89, FR-85 | агент без кода и файлов задачи |
-| П8 | свой сервер: этапы 1–3 на Docker, этап 4 на Kubernetes | AD-15, `provider` | привязка к облаку или к одному оркестратору |
-| П9 | эксплуатация силами одной команды | AD-15 | отдельная экспертиза под гипервизор |
+| П1 | своя среда на каждый запуск, без следов предыдущих | [FR-82](../architecture/components/sandbox/prd.md), [FR-84](../architecture/components/sandbox/prd.md) | файлы и токены одного запуска видны другому |
+| П2 | старт < 1 с | [FR-83](../architecture/components/sandbox/prd.md) | пользователь ждёт секунды на каждый шаг процесса |
+| П3 | граница с хостом для кода агента | [FR-82](../architecture/components/sandbox/prd.md), [AD-18](../architecture/decisions/AD-18.yaml) | побег из среды даёт доступ к узлу |
+| П4 | сеть только через allowlist egress-прокси | [FR-87](../architecture/components/sandbox/prd.md), [I17](../architecture/components/sandbox/integrations/I17.yaml) | агент выносит данные или скачивает лишнее |
+| П5 | секретов в среде нет | [FR-88](../architecture/components/sandbox/prd.md) | ключи утекают в логи и ответы модели |
+| П6 | профиль ресурсов | [FR-86](../architecture/components/sandbox/prd.md) | один запуск съедает узел |
+| П7 | рабочее пространство по манифесту | [FR-89](../architecture/components/sandbox/prd.md), [FR-85](../architecture/components/sandbox/prd.md) | агент без кода и файлов задачи |
+| П8 | свой сервер: этапы 1–3 на Docker, этап 4 на Kubernetes | [AD-15](../architecture/decisions/AD-15.yaml), `provider` | привязка к облаку или к одному оркестратору |
+| П9 | эксплуатация силами одной команды | [AD-15](../architecture/decisions/AD-15.yaml) | отдельная экспертиза под гипервизор |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования и решения.
 
@@ -158,7 +158,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 | # | Функция | Что делает | Потребность |
 |---|---|---|---|
 | F1 | Namespaces и cgroups | отдельные процессы, сеть, файлы; лимиты CPU и памяти | П1, П6 |
-| F2 | Rootless-демон | демон без root; Runner под отдельным пользователем (AD-18) | П3 |
+| F2 | Rootless-демон | демон без root; Runner под отдельным пользователем ([AD-18](../architecture/decisions/AD-18.yaml)) | П3 |
 | F3 | Контейнер на запуск | создаётся на запуск, удаляется с диском `/workspace` | П1 |
 | F4 | Тёплый пул | заранее созданные контейнеры, каждый — на один запуск | П2 |
 | F5 | Сети Docker | доступ только к egress-прокси и сервисам платформы | П4 |
@@ -167,7 +167,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 
 **Вывод этапа.** Docker закрывает одноразовость, пул, сеть и ресурсы. Слабое место — общее ядро (П3), его закрывает другой runtime через F6.
 
-<span class="gate">G3</span> ✅ функции из документации Docker (Б) и AD-18 (А).
+<span class="gate">G3</span> ✅ функции из документации Docker (Б) и [AD-18](../architecture/decisions/AD-18.yaml) (А).
 
 ## Э4. Альтернативы и их ключевые функции {#e4}
 
@@ -178,7 +178,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 | **gVisor** (Apache-2.0, 19 632★, release-20261005.0) | своё ядро в user space перехватывает системные вызовы; OCI runtime `runsc` для Docker и K8s; без KVM | своя граница ядра | Б |
 | **Kata Containers** (Apache-2.0, 8 916★, 4.2.0) | лёгкая VM на под; OCI runtime; RuntimeClass в K8s; нужен KVM | граница VM | Б |
 | **Firecracker** (Apache-2.0, 37 283★, v1.17.0) | microVM, старт ~125 мс, основа Lambda; нужен KVM и своя обвязка | граница VM, снимки | Б |
-| **kubernetes-sigs/agent-sandbox** (Apache-2.0, 4 218★, v1.0.6) | CRD Sandbox, SandboxTemplate, SandboxClaim, SandboxWarmPool; изоляция через RuntimeClass (gVisor, Kata); пауза и продолжение; API v1beta1 | пул как объект K8s | Б |
+| **kubernetes-sigs/agent-sandbox** (Apache-2.0, 4 218★, v1.0.6) | CRD [Sandbox](../architecture/components/sandbox/README.md), SandboxTemplate, [SandboxClaim](../architecture/data/model-SandboxClaim.yaml), SandboxWarmPool; изоляция через RuntimeClass (gVisor, Kata); пауза и продолжение; API v1beta1 | пул как объект K8s | Б |
 | **E2B** (Apache-2.0; runtime 1 708★) | песочницы для агентов на Firecracker, снимки; self-host — своя инфраструктура под облако | снимки | Б / В |
 | **Sysbox** (Apache-2.0, 3 902★, v0.7.1) | контейнеры с вложенным Docker без привилегий | Docker внутри среды | Б |
 | **Daytona** (71 572★) | песочницы для агентов; **репозиторий архивирован 24.07.2026**, лицензия API не определена | — | Б |
@@ -194,10 +194,10 @@ stack Документы: 6 ok, 0 part, 2 mute
 
 | Функция | Потребность | Почему ценна | Доказательство | Класс |
 |---|---|---|---|---|
-| Одноразовая среда на запуск | П1 | следы запуска не переживают его | FR-82 (А); так делают E2B, Firecracker-песочницы (Б) | базовая |
+| Одноразовая среда на запуск | П1 | следы запуска не переживают его | [FR-82](../architecture/components/sandbox/prd.md) (А); так делают E2B, Firecracker-песочницы (Б) | базовая |
 | Тёплый пул | П2 | старт < 1 с без снимков VM | пулы у E2B, Modal, agent-sandbox (Б) | базовая |
 | Своё размещение | П8 | код и данные не уходят наружу | ограничение проекта (А) | базовая |
-| Граница ядра в user space (gVisor) | П3 | побег через уязвимость ядра хоста труднее | gVisor docs (Б); используется в Google Cloud Run, GKE Sandbox (Б) | линейная |
+| Граница ядра в user space (gVisor) | П3 | побег через уязвимость ядра хоста труднее | gVisor docs (Б); используется в Google Cloud [Run](../architecture/data/model-Run.yaml), GKE [Sandbox](../architecture/components/sandbox/README.md) (Б) | линейная |
 | Граница VM (Kata, Firecracker) | П3 | самая сильная изоляция | Lambda, Fargate на Firecracker (Б) | линейная, требует KVM |
 | Пул как объект K8s | П2, П8 | на этапе 4 не нужен свой код пула | agent-sandbox (Б) | привлекательная |
 | Снимки microVM | П2 | старт с готовым состоянием | E2B, Firecracker (Б) | привлекательная |
@@ -212,8 +212,8 @@ stack Документы: 6 ok, 0 part, 2 mute
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| Одноразовый контейнер, пул, rootless | брать | как в AD-18 | задачи 2.2, 4.1 |
-| gVisor | адаптировать | проверка в 2.2: образ Harness под runsc — git, Python, тесты, сеть через Squid, время старта; при успехе — параметр профиля `runtime` | задача 2.2 (подзадача 2.2.8); FR-86 |
+| Одноразовый контейнер, пул, rootless | брать | как в [AD-18](../architecture/decisions/AD-18.yaml) | задачи 2.2, 4.1 |
+| gVisor | адаптировать | проверка в 2.2: образ [Harness](../architecture/components/harness/README.md) под runsc — git, Python, тесты, сеть через Squid, время старта; при успехе — параметр профиля `runtime` | задача 2.2 (подзадача 2.2.8); [FR-86](../architecture/components/sandbox/prd.md) |
 | Пул как объект K8s (agent-sandbox) | адаптировать | провайдер этапа 4 | [R&D Kubernetes](kubernetes-runtime.md) |
 | Kata, Firecracker, снимки | не брать сейчас | Assess: нужен KVM; вернуться при внешнем недоверенном коде | TECHNOLOGIES |
 | Вложенный Docker | не брать | нет истории | — |
@@ -229,7 +229,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 | **К1** сила границы | П3 | общее ядро / своё ядро / VM |
 | **К2** старт | П2 | с пулом, без пула |
 | **К3** требования к железу и эксплуатация | П8, П9 | KVM, новые службы |
-| **К4** совместимость с образом Harness | П7 | git, Python, тесты, сеть через прокси |
+| **К4** совместимость с образом [Harness](../architecture/components/harness/README.md) | П7 | git, Python, тесты, сеть через прокси |
 
 <span class="gate">G6</span> ✅ у функций есть решения; критерии с цепочкой.
 
@@ -262,9 +262,9 @@ stack Документы: 6 ok, 0 part, 2 mute
 
 | Стык | runc | gVisor | Kata | Firecracker | agent-sandbox | E2B self-host |
 |---|---|---|---|---|---|---|
-| I6 / I23 создание среды | И2 | И2: `--runtime=runsc` | И1: RuntimeClass, KVM | И1: своя обвязка | И1: CRD, только K8s | И1: свой API |
-| I7 Runner ↔ Harness | И2 | И2 | И2 | И1: сеть VM | И2 | И1 |
-| I17 egress через Squid | И2 | И1: сетевой стек gVisor с прокси — проверить | И2 | И1 | И2 | И1 |
+| [I6](../architecture/components/agent-runner/integrations/I6.yaml) / [I23](../architecture/components/agent-runner/integrations/I23.yaml) создание среды | И2 | И2: `--runtime=runsc` | И1: RuntimeClass, KVM | И1: своя обвязка | И1: CRD, только K8s | И1: свой API |
+| [I7](../architecture/components/agent-runner/integrations/I7.yaml) Runner ↔ [Harness](../architecture/components/harness/README.md) | И2 | И2 | И2 | И1: сеть VM | И2 | И1 |
+| [I17](../architecture/components/sandbox/integrations/I17.yaml) egress через Squid | И2 | И1: сетевой стек gVisor с прокси — проверить | И2 | И1 | И2 | И1 |
 | S10 `/workspace` | И2 | И2 | И2 | И1: диск VM | И2 | И1 |
 
 **Изменения у соседей:**
@@ -272,9 +272,9 @@ stack Документы: 6 ok, 0 part, 2 mute
 | Кандидат | Что меняется |
 |---|---|
 | runc | ничего |
-| gVisor | установка runsc на узле (техспека Sandbox, инфраструктура); параметр `runtime` в профиле (спека Sandbox, Platform module) |
+| gVisor | установка runsc на узле (техспека [Sandbox](../architecture/components/sandbox/README.md), инфраструктура); параметр `runtime` в профиле (спека [Sandbox](../architecture/components/sandbox/README.md), [Platform module](../architecture/components/platform-module/README.md)) |
 | Kata, Firecracker | KVM на сервере (инфраструктура); для Firecracker — свой провайдер, сеть и диски VM |
-| agent-sandbox | этап 4: CRD в кластере; Runner создаёт `SandboxClaim` вместо Pod |
+| agent-sandbox | этап 4: CRD в кластере; Runner создаёт [`SandboxClaim`](../architecture/data/model-SandboxClaim.yaml) вместо Pod |
 | E2B self-host | отдельная инфраструктура песочниц, новый I-код |
 
 **Вывод этапа.** ==gVisor — единственный способ усилить границу без нового железа и без смены провайдера; меняется только параметр профиля и установка runsc.== Стык с Squid под gVisor надо проверить.
@@ -288,7 +288,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 | Роль | За | Довод | Опасение | Согласится, если |
 |---|---|---|---|---|
 | DevOps 🤖 | контейнер + пул | Docker уже в стеке; KVM на сервере не подтверждён | runsc — ещё один компонент узла | установка runsc описана в техспеке |
-| Разработчик 🤖 | контейнер + пул | образ Harness проверен на runc | совместимость под gVisor | проверка 2.2.8 |
+| Разработчик 🤖 | контейнер + пул | образ [Harness](../architecture/components/harness/README.md) проверен на runc | совместимость под gVisor | проверка 2.2.8 |
 | Архитектор 🤖 | контейнер + пул | провайдер за `SandboxProvider`, смена без переделки Runner | — | — |
 | Владелец продукта 🤖 | контейнер + пул | сроки этапов 2 и 4 | — | — |
 | Тестировщик 🤖 | нейтрально | тесты изоляции одинаковы для всех | — | тест «два запуска не видят файлы» на каждом runtime |
@@ -298,7 +298,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 |---|---|
 | Безопасность: «общее ядро — недопустимо» | ✅ **внесено:** проверка gVisor в 2.2.8; параметр `runtime` в профиле |
 | Адвокат дьявола: «пул держит ресурсы впустую» | **условие:** `pool.size` 2 при `global_max` 4; 0 — без пула (параметр уже есть) |
-| DevOps: «а если runsc сломает сеть через Squid?» | **условие:** проверка I17 в 2.2.8; при провале — runc + seccomp-профиль по умолчанию |
+| DevOps: «а если runsc сломает сеть через Squid?» | **условие:** проверка [I17](../architecture/components/sandbox/integrations/I17.yaml) в 2.2.8; при провале — runc + seccomp-профиль по умолчанию |
 
 **Вывод этапа.** Спор «контейнер против microVM» разрешён промежуточным шагом — gVisor, без смены железа. Решение по нему — после проверки.
 
@@ -318,7 +318,7 @@ stack Документы: 6 ok, 0 part, 2 mute
 | П8 Docker → K8s | закрывает | закрывает | частично: KVM | не закрывает: своя обвязка | не закрывает |
 | П9 одна команда | закрывает | закрывает | частично | не закрывает | не закрывает |
 
-- **Утверждение.** Одноразовый контейнер на запуск с тёплым пулом на rootless Docker (AD-18). gVisor — Assess до проверки в 2.2.
+- **Утверждение.** Одноразовый контейнер на запуск с тёплым пулом на rootless Docker ([AD-18](../architecture/decisions/AD-18.yaml)). gVisor — Assess до проверки в 2.2.
 - **Основания.** Одноразовость закрывает главный риск — утечку между запусками. Пул даёт старт < 1 с. gVisor усиливает границу ядра без KVM и без смены провайдера.
 - **Связка.** Сильнее граница — больше требований к железу и эксплуатации. На этапах 1–3 агент работает с кодом своей команды, поэтому шаг «runc → gVisor» соразмерен риску.
 - **Опровержение.** Вывод неверен:
@@ -331,13 +331,13 @@ stack Документы: 6 ok, 0 part, 2 mute
 
 | Изменение | Документ | Статус |
 |---|---|---|
-| Проверка gVisor: образ Harness под runsc, сеть через Squid, время старта | [задача 2.2](..\source\tasks\2.2-sandbox-docker-oneshot.md) (подзадача 2.2.8) | ✅ внесено |
+| Проверка gVisor: образ [Harness](../architecture/components/harness/README.md) под runsc, сеть через Squid, время старта | [задача 2.2](..\source\tasks\2.2-sandbox-docker-oneshot.md) (подзадача 2.2.8) | ✅ внесено |
 | gVisor — Assess; Daytona архивирован (не используем) | [TECHNOLOGIES](..\source\TECHNOLOGIES.md) | ✅ внесено |
 | Версия Squid: TECHNOLOGIES 7.7 против образа `ubuntu/squid:6` в техспеке | TECHNOLOGIES, [техспека Sandbox](..\architecture\components\sandbox\docs\techspec.md) | ✅ внесено: в TECHNOLOGIES — образ `ubuntu/squid` 6.x (upstream 7.7) |
-| Параметр профиля `runtime`: runc / runsc | [interfaces agent-sandbox](..\architecture\components\sandbox\docs\agent-sandbox-interfaces.md), FR-86 | ✅ внесено: по умолчанию runc; значение по умолчанию пересматривается после 2.2.8 |
+| Параметр профиля `runtime`: runc / runsc | [interfaces agent-sandbox](..\architecture\components\sandbox\docs\agent-sandbox-interfaces.md), [FR-86](../architecture/components/sandbox/prd.md) | ✅ внесено: по умолчанию runc; значение по умолчанию пересматривается после 2.2.8 |
 | agent-sandbox (пул как объект K8s) — провайдер этапа 4 | [R&D Kubernetes](kubernetes-runtime.md) | ✅ учтено при переводе R&D Kubernetes |
-| Решение AD-18 (rootless Docker, Squid) | design | ✅ подтверждено, без изменений |
-| Стыки I6, I7, I17, I23 | спека agent-sandbox, [поток Sandbox](..\architecture\components\sandbox\docs\how.md) | — не требуется |
+| Решение [AD-18](../architecture/decisions/AD-18.yaml) (rootless Docker, Squid) | design | ✅ подтверждено, без изменений |
+| Стыки [I6](../architecture/components/agent-runner/integrations/I6.yaml), [I7](../architecture/components/agent-runner/integrations/I7.yaml), [I17](../architecture/components/sandbox/integrations/I17.yaml), [I23](../architecture/components/agent-runner/integrations/I23.yaml) | спека agent-sandbox, [поток Sandbox](..\architecture\components\sandbox\docs\how.md) | — не требуется |
 | Тёплый пул | [задача 4.1](..\source\tasks\4.1-sandbox-warm-pool.md) | — не требуется |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.
@@ -357,7 +357,7 @@ GitHub API на 11.10.2026.
 | E2B runtime | Apache-2.0 | 1 708 | 2026.30 | 11.10.2026 |
 | Daytona | не определена | 71 572 | v0.190.0 | **архивирован**, 24.07.2026 |
 
-Ориентиры: Harness 150–300 МБ, агент-разработчик 0,5–2 ГБ; 80–95% времени — ожидание LLM. Старт: контейнер Docker 0,5–2 с, под 2–10 с, microVM 0,1–0,3 с (Firecracker ~125 мс).
+Ориентиры: [Harness](../architecture/components/harness/README.md) 150–300 МБ, агент-разработчик 0,5–2 ГБ; 80–95% времени — ожидание LLM. Старт: контейнер Docker 0,5–2 с, под 2–10 с, microVM 0,1–0,3 с (Firecracker ~125 мс).
 </details>
 
 ## Источники

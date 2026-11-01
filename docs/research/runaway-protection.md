@@ -1,12 +1,12 @@
 # R&D: Защита от разгона агента
 
-← [Все R&D](README.md) · методология R&D v3.1 · компонент: **Guardrails, Harness** · решение: [design AD-6, AD-18](..\source\design\define-agent-platform\design.md) · спека: guardrails (FR-118 – FR-124)
+← [Все R&D](README.md) · методология R&D v3.1 · компонент: **[Guardrails](../architecture/components/guardrails/README.md), [Harness](../architecture/components/harness/README.md)** · решение: [design AD-6, AD-18](..\source\design\define-agent-platform\design.md) · спека: guardrails ([FR-118](../architecture/components/guardrails/prd.md) – [FR-124](../architecture/components/guardrails/prd.md))
 
 <div class="rnd-hero" markdown>
 <div class="rnd-q">Вопрос</div>
 Как остановить агента, который зациклился, тратит без меры или сыплет ошибками, — до того, как уйдут деньги, и предсказуемо?
 
-<div class="rnd-a">Ответ: детерминированные проверки в Harness и Runner (повторы, шаги без прогресса, лимиты шагов и времени, аномальный расход, серия ошибок, аварийная остановка) плюс бюджеты и лимиты ключа в LiteLLM. Разбор практик уточнил правило цикла: сравнивать не только аргументы, но и результат.</div>
+<div class="rnd-a">Ответ: детерминированные проверки в [Harness](../architecture/components/harness/README.md) и Runner (повторы, шаги без прогресса, лимиты шагов и времени, аномальный расход, серия ошибок, аварийная остановка) плюс бюджеты и лимиты ключа в LiteLLM. Разбор практик уточнил правило цикла: сравнивать не только аргументы, но и результат.</div>
 
 <span class="rnd-badge adopt">Adopt</span> проверки в коде + LiteLLM · 0 $ · данные 11.10.2026
 </div>
@@ -51,7 +51,7 @@ stack Документы: 4 ok, 0 part, 3 mute
 <div markdown>
 **2. Опрос — не цикл**
 
-Агент может законно повторять вызов: ждать статус CI, опрашивать очередь. Аргументы те же, а результат меняется. Практики отличают цикл от опроса по «новому состоянию»: отпечаток аргументов **и** результата. Наше правило FR-118 смотрит только на аргументы — предлагаем уточнить ([Э6](#e6)).
+Агент может законно повторять вызов: ждать статус CI, опрашивать очередь. Аргументы те же, а результат меняется. Практики отличают цикл от опроса по «новому состоянию»: отпечаток аргументов **и** результата. Наше правило [FR-118](../architecture/components/guardrails/prd.md) смотрит только на аргументы — предлагаем уточнить ([Э6](#e6)).
 </div>
 <div markdown>
 **3. LLM-судья — дорого и вероятностно**
@@ -73,7 +73,7 @@ stack Документы: 4 ok, 0 part, 3 mute
 <div class="adapt" markdown>
 **Адаптируем**
 
-- отпечаток аргументов и результата (практики) → уточнение FR-118;
+- отпечаток аргументов и результата (практики) → уточнение [FR-118](../architecture/components/guardrails/prd.md);
 - два порога: предупреждение и остановка (OpenClaw: 3 и 6) → предупредить агента перед остановкой — в бэклог;
 - поиск циклов в графе исполнения (статья arXiv 2607.01641) → идея для разбора запусков.
 </div>
@@ -95,7 +95,7 @@ stack Документы: 4 ok, 0 part, 3 mute
 <div class="risk" markdown>
 **Риски и пересмотр**
 
-- Ложная остановка опроса — уточнение FR-118.
+- Ложная остановка опроса — уточнение [FR-118](../architecture/components/guardrails/prd.md).
 - Пересмотр: в разборах запусков много циклов, которые правила не поймали → LLM-судья выборочно, на остановленных запусках.
 </div>
 </div>
@@ -107,7 +107,7 @@ stack Документы: 4 ok, 0 part, 3 mute
 <div markdown>**Э4 Альтернативы**8 <span class="gate">G4</span></div>
 <div markdown>**Э5 Ценность**<span class="gate">G5</span></div>
 <div markdown>**Э6 Перенос**3 MUST <span class="gate">G6</span></div>
-<div markdown>**Э7 Встраивание**I5, I7, I8, I10 <span class="gate">G7</span></div>
+<div markdown>**Э7 Встраивание**[I5](../architecture/components/agent-runner/integrations/I5.yaml), [I7](../architecture/components/agent-runner/integrations/I7.yaml), [I8](../architecture/components/harness/integrations/I8.yaml), [I10](../architecture/components/harness/integrations/I10.yaml) <span class="gate">G7</span></div>
 <div markdown>**Э8 Спор**5 ролей <span class="gate">G8</span></div>
 <div markdown>**Э9 Выбор**<span class="gate">G9</span></div>
 <div markdown>**Э10 Последствия**6 <span class="gate">G10</span></div>
@@ -127,19 +127,19 @@ stack Документы: 4 ok, 0 part, 3 mute
 
 **Решает:** владелец продукта с администратором. **Не решаем:** движок правил ([guardrails](guardrails-engine.md)), шлюз ([LLM gateway](llm-gateway.md)).
 
-<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с AD-6, AD-18.
+<span class="gate">G1</span> ✅ вопрос — выбор; есть владелец; связан с [AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml).
 
 ## Э2. Потребности {#e2}
 
 | # | Потребность | Откуда | Что ломается без неё |
 |---|---|---|---|
-| П1 | остановить цикл до траты бюджета | FR-118 | деньги уходят на повторы |
-| П2 | лимит шагов и времени, простой | FR-119 | запуск висит |
-| П3 | бюджеты: запуск, агент, проект | FR-120 | один агент тратит месячный бюджет |
-| П4 | скачок расхода — к человеку | FR-121 | огромный контекст молча оплачивается |
-| П5 | серия ошибок — стоп | FR-122 | повторы при сбое провайдера |
-| П6 | аварийная остановка агента или платформы | FR-124 | нельзя остановить при инциденте |
-| П7 | предсказуемо и тестируемо, без лишних трат | AD-6 | ложные срабатывания, цена проверки |
+| П1 | остановить цикл до траты бюджета | [FR-118](../architecture/components/guardrails/prd.md) | деньги уходят на повторы |
+| П2 | лимит шагов и времени, простой | [FR-119](../architecture/components/guardrails/prd.md) | запуск висит |
+| П3 | бюджеты: запуск, агент, проект | [FR-120](../architecture/components/guardrails/prd.md) | один агент тратит месячный бюджет |
+| П4 | скачок расхода — к человеку | [FR-121](../architecture/components/guardrails/prd.md) | огромный контекст молча оплачивается |
+| П5 | серия ошибок — стоп | [FR-122](../architecture/components/guardrails/prd.md) | повторы при сбое провайдера |
+| П6 | аварийная остановка агента или платформы | [FR-124](../architecture/components/guardrails/prd.md) | нельзя остановить при инциденте |
+| П7 | предсказуемо и тестируемо, без лишних трат | [AD-6](../architecture/decisions/AD-6.yaml) | ложные срабатывания, цена проверки |
 
 <span class="gate">G2</span> ✅ у потребностей есть требования.
 
@@ -147,13 +147,13 @@ stack Документы: 4 ok, 0 part, 3 mute
 
 | # | Функция | Где | Потребность |
 |---|---|---|---|
-| F1 | Повтор вызова с теми же аргументами (`loop.repeat_calls` 3) | Harness | П1 |
-| F2 | Шаги без прогресса (`loop.no_progress_steps` 8) | Harness | П1 |
-| F3 | `limits.max_steps` 30, `timeout_s`, `limits.idle_s` 300 | Harness, Runner | П2 |
+| F1 | Повтор вызова с теми же аргументами (`loop.repeat_calls` 3) | [Harness](../architecture/components/harness/README.md) | П1 |
+| F2 | Шаги без прогресса (`loop.no_progress_steps` 8) | [Harness](../architecture/components/harness/README.md) | П1 |
+| F3 | `limits.max_steps` 30, `timeout_s`, `limits.idle_s` 300 | [Harness](../architecture/components/harness/README.md), Runner | П2 |
 | F4 | `budget.run / agent_day / project_month` | Runner (G1), LiteLLM | П3 |
-| F5 | `anomaly.step_x_median` 5 → `waiting_approval` | Harness | П4 |
-| F6 | `circuit.max_errors` 3 | Harness | П5 |
-| F7 | `kill_switch` | Runner, Platform module | П6 |
+| F5 | `anomaly.step_x_median` 5 → `waiting_approval` | [Harness](../architecture/components/harness/README.md) | П4 |
+| F6 | `circuit.max_errors` 3 | [Harness](../architecture/components/harness/README.md) | П5 |
+| F7 | `kill_switch` | Runner, [Platform module](../architecture/components/platform-module/README.md) | П6 |
 
 **Вывод этапа.** Опорное решение закрывает все потребности; вопрос — точность правила цикла.
 
@@ -183,7 +183,7 @@ stack Документы: 4 ok, 0 part, 3 mute
 | Функция | Потребность | Почему ценна | Доказательство | Класс |
 |---|---|---|---|---|
 | Детерминированный порог повтора | П1, П7 | раньше денег, бесплатно, тестируется | OpenClaw, Cursor (Б, В) | базовая |
-| Отпечаток аргументов **и** результата | П1, П7 | опрос не останавливается ложно | практики (В); логика FR-118 (А) | базовая |
+| Отпечаток аргументов **и** результата | П1, П7 | опрос не останавливается ложно | практики (В); логика [FR-118](../architecture/components/guardrails/prd.md) (А) | базовая |
 | Потолок шагов | П2 | гарантированный конец | LangGraph, OpenAI SDK (Б) | базовая |
 | Бюджеты | П3 | потолок денег | LiteLLM (Б) | базовая |
 | Два порога: предупреждение и стоп | П1 | агент может сам выйти из цикла | OpenClaw (Б) | привлекательная |
@@ -198,8 +198,8 @@ stack Документы: 4 ok, 0 part, 3 mute
 
 | Функция | Решение | Как | Где |
 |---|---|---|---|
-| Проверки F1–F7, бюджеты LiteLLM | оставить | AD-6, AD-18 | FR-118 – FR-124 |
-| Отпечаток аргументов и результата | адаптировать | повтор считается, если совпали тул, аргументы **и** результат; сценарий «опрос с меняющимся результатом — не цикл» | FR-118, подзадача 1.6.5 |
+| Проверки F1–F7, бюджеты LiteLLM | оставить | [AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | [FR-118](../architecture/components/guardrails/prd.md) – [FR-124](../architecture/components/guardrails/prd.md) |
+| Отпечаток аргументов и результата | адаптировать | повтор считается, если совпали тул, аргументы **и** результат; сценарий «опрос с меняющимся результатом — не цикл» | [FR-118](../architecture/components/guardrails/prd.md), подзадача 1.6.5 |
 | Предупреждение перед остановкой | не брать сейчас | сообщение агенту на пороге N, стоп на 2N | [BACKLOG](..\source\BACKLOG.md) |
 | LLM-судья, поиск в графе | не брать сейчас | выборочно на остановленных запусках | — |
 
@@ -232,9 +232,9 @@ stack Документы: 4 ok, 0 part, 3 mute
   * — уточнение FR-118
 ```
 
-**Изменения у соседей:** уточнение FR-118 меняет только Harness (задача 1.6) — проверку повтора.
+**Изменения у соседей:** уточнение [FR-118](../architecture/components/guardrails/prd.md) меняет только [Harness](../architecture/components/harness/README.md) (задача 1.6) — проверку повтора.
 
-**Вывод этапа.** ==Проверки живут в Harness и Runner без новых стыков; уточнение затрагивает одну функцию Harness.==
+**Вывод этапа.** ==Проверки живут в [Harness](../architecture/components/harness/README.md) и Runner без новых стыков; уточнение затрагивает одну функцию [Harness](../architecture/components/harness/README.md).==
 
 <span class="gate">G7</span> ✅ отсев; встраивание; изменения у соседей.
 
@@ -243,14 +243,14 @@ stack Документы: 4 ok, 0 part, 3 mute
 | Роль | За | Довод | Опасение | Согласится, если |
 |---|---|---|---|---|
 | Владелец продукта 🤖 | проверки | ноль затрат на проверку | — | — |
-| Тестировщик 🤖 | проверки | детерминированно, тест на каждый порог | ложная остановка опроса | уточнение FR-118 |
+| Тестировщик 🤖 | проверки | детерминированно, тест на каждый порог | ложная остановка опроса | уточнение [FR-118](../architecture/components/guardrails/prd.md) |
 | Администратор 🤖 | проверки | пороги понятны и настраиваются | — | — |
 | Пользователь 🤖 | нейтрально | агент не должен «умирать» на ожидании CI | — | опрос — не цикл |
 | Разработчик 🤖 (оппонент) | LLM-судья | хитрые циклы правилами не поймать | — | выборочный разбор остановленных запусков |
 
 | Спор | Разрешение |
 |---|---|
-| Тестировщик и Пользователь: «опрос остановится ложно» | ✅ **внесено:** уточнение FR-118 и подзадача 1.6.5 |
+| Тестировщик и Пользователь: «опрос остановится ложно» | ✅ **внесено:** уточнение [FR-118](../architecture/components/guardrails/prd.md) и подзадача 1.6.5 |
 | Разработчик: «нужен судья» | **условие:** пересмотр по данным разборов запусков |
 
 <span class="gate">G8</span> ✅ у каждого спора есть разрешение.
@@ -267,7 +267,7 @@ stack Документы: 4 ok, 0 part, 3 mute
 | П6 аварийная остановка | закрывает | частично | не закрывает | не закрывает |
 | П7 предсказуемо, дёшево | закрывает | закрывает | не закрывает | закрывает |
 
-- **Утверждение.** Детерминированные проверки в Harness и Runner + бюджеты LiteLLM (AD-6, AD-18), с уточнением FR-118.
+- **Утверждение.** Детерминированные проверки в [Harness](../architecture/components/harness/README.md) и Runner + бюджеты LiteLLM ([AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml)), с уточнением [FR-118](../architecture/components/guardrails/prd.md).
 - **Основания.** Закрывает 6 из 7 потребностей; П1 — после уточнения.
 - **Связка.** Цикл дешевле поймать по поведению, а деньги ограничить бюджетом; судья нужен только там, где правила промахиваются.
 - **Опровержение.** Вывод неверен, если в разборах запусков много циклов, не пойманных правилами.
@@ -278,12 +278,12 @@ stack Документы: 4 ok, 0 part, 3 mute
 
 | Изменение | Документ | Статус |
 |---|---|---|
-| Цикл = тот же тул, те же аргументы **и** тот же результат; сценарий «опрос — не цикл» | FR-118, [задача 1.6](..\source\tasks\1.6-harness-limits-context.md) | ✅ внесено: текст и сценарий «Опрос»; подзадача 1.6.5 (в задаче 1.6 не было подзадачи на зацикливание — оценка 1.6 и итоги ROADMAP пересчитаны) |
+| Цикл = тот же тул, те же аргументы **и** тот же результат; сценарий «опрос — не цикл» | [FR-118](../architecture/components/guardrails/prd.md), [задача 1.6](..\source\tasks\1.6-harness-limits-context.md) | ✅ внесено: текст и сценарий «Опрос»; подзадача 1.6.5 (в задаче 1.6 не было подзадачи на зацикливание — оценка 1.6 и итоги ROADMAP пересчитаны) |
 | Предупреждение агенту перед остановкой | [BACKLOG](..\source\BACKLOG.md) | ✅ внесено в бэклог |
-| Решения AD-6, AD-18 | design | ✅ подтверждено, без изменений |
+| Решения [AD-6](../architecture/decisions/AD-6.yaml), [AD-18](../architecture/decisions/AD-18.yaml) | design | ✅ подтверждено, без изменений |
 | Параметры `loop.*`, `limits.*`, `budget.*` | [interfaces guardrails](..\architecture\components\guardrails\docs\guardrails-interfaces.md) | — не требуется |
 | Поток guardrails | [поток](..\architecture\components\guardrails\docs\how.md) | — не требуется |
-| Статусы запуска | FR-72 | — не требуется |
+| Статусы запуска | [FR-72](../architecture/components/agent-runner/prd.md) | — не требуется |
 
 <span class="gate">G10</span> ✅ у каждого изменения есть документ и статус.
 

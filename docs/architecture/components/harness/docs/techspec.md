@@ -8,22 +8,22 @@
 
 | Образ | База | Что внутри | Как собирается | Откуда берём | Тег | Пользователь | Порты | Проверка готовности |
 |---|---|---|---|---|---|---|---|---|
-| agent-harness | `python:3.12-slim` (закреплён digest) | Harness, LangGraph 1.2.14, `langchain[mcp]` 1.4.4, системный промпт платформы (`prompt.platform_version`), инструменты агента | `harness/Dockerfile`: `uv sync --frozen` по `uv.lock` → копия в slim | `ghcr.io/demoningvi/agent-harness` | semver Harness = версия системного промпта | uid 10001 | 8090 (HTTP I7) | `GET /ready` |
+| agent-harness | `python:3.12-slim` (закреплён digest) | [Harness](../README.md), LangGraph 1.2.14, `langchain[mcp]` 1.4.4, системный промпт платформы (`prompt.platform_version`), инструменты агента | `harness/Dockerfile`: `uv sync --frozen` по `uv.lock` → копия в slim | `ghcr.io/demoningvi/agent-harness` | semver [Harness](../README.md) = версия системного промпта | uid 10001 | 8090 (HTTP [I7](../../agent-runner/integrations/I7.yaml)) | `GET /ready` |
 
 ## Запуск
 
 | | |
 |---|---|
-| **Запуск** | Runner стартует контейнер на запуск (или берёт из пула) и передаёт `RunBundle` по I7 |
-| **Сеть** | LiteLLM, MCP, OPA, Memory API — внутри кластера; внешнее — через прокси |
-| **Состояние** | checkpoint только через Runner (I12) |
+| **Запуск** | Runner стартует контейнер на запуск (или берёт из пула) и передаёт [`RunBundle`](../../../data/model-RunBundle.yaml) по [I7](../../agent-runner/integrations/I7.yaml) |
+| **Сеть** | LiteLLM, MCP, OPA, [Memory](../../memory/README.md) API — внутри кластера; внешнее — через прокси |
+| **Состояние** | checkpoint только через Runner ([I12](../integrations/I12.yaml)) |
 
 ## Переменные и секреты
 
 | Переменная | Зачем | Откуда |
 |---|---|---|
 | `RUNNER_URL`, `RUN_TOKEN` | связь с Runner | Runner на запуск |
-| `LITELLM_URL`, ключ агента | вызов моделей (I8) | Runner на запуск |
+| `LITELLM_URL`, ключ агента | вызов моделей ([I8](../integrations/I8.yaml)) | Runner на запуск |
 | `OPA_URL`, `MEMORY_URL` | G2, память | values |
 
 ## Сборка и поставка
@@ -39,13 +39,13 @@
 
 ## Обновление и откат
 
-Своих данных и миграций у Harness нет: рабочие файлы — в `/workspace` среды (S10, удаляется с контейнером), состояние цикла — таблица `run_checkpoint` схемы `harness_ckpt` (S5), которую пишет и мигрирует Agent Runner (I12, FR-32).
+Своих данных и миграций у [Harness](../README.md) нет: рабочие файлы — в `/workspace` среды (S10, удаляется с контейнером), состояние цикла — таблица `run_checkpoint` схемы `harness_ckpt` (S5), которую пишет и мигрирует [Agent Runner](../../agent-runner/README.md) ([I12](../integrations/I12.yaml), [FR-32](../prd.md)).
 
-1. Обновление — новый образ `agent-harness:<версия>` в `HARNESS_IMAGE` (values Agent Runner): новые запуски идут на новом образе, активные доделываются на прежнем (FR-35); тёплый пул пересоздаёт контейнеры (FR-94).
+1. Обновление — новый образ `agent-harness:<версия>` в `HARNESS_IMAGE` (values [Agent Runner](../../agent-runner/README.md)): новые запуски идут на новом образе, активные доделываются на прежнем ([FR-35](../prd.md)); тёплый пул пересоздаёт контейнеры ([FR-94](../../sandbox/prd.md)).
 2. Откат образа — прежний тег и digest в `HARNESS_IMAGE`; новые запуски стартуют на прежнем образе, пул пересоздаётся.
 3. Откат после миграции схемы `harness_ckpt` — по Deploy [Agent Runner](..\..\agent-runner\docs\techspec.md): миграции и точка восстановления — у него.
-4. Запуск на паузе, начатый новой версией и продолженный прежней, восстанавливается из checkpoint этой версии; совместимость формата checkpoint между версиями Harness в документах не задана — проверять на тестовых задачах перед откатом (LangGraph закреплён, 1.2.14).
-5. Ключей шифрования у Harness нет: секретов в checkpoint и `/workspace` нет (FR-32).
+4. Запуск на паузе, начатый новой версией и продолженный прежней, восстанавливается из checkpoint этой версии; совместимость формата checkpoint между версиями [Harness](../README.md) в документах не задана — проверять на тестовых задачах перед откатом (LangGraph закреплён, 1.2.14).
+5. Ключей шифрования у [Harness](../README.md) нет: секретов в checkpoint и `/workspace` нет ([FR-32](../prd.md)).
 
 ## Проверка после развёртывания
 
@@ -55,7 +55,7 @@
 
 Как настройки лежат в развёртывании. Значения и границы параметров — в `interfaces.md` спеки (здесь новых не вводится); поля контрактов — в Модели данных.
 
-Параметры уровня L0 (S9, `values.yaml` Agent Runner, в git, без секретов):
+Параметры уровня L0 (S9, `values.yaml` [Agent Runner](../../agent-runner/README.md), в git, без секретов):
 
 ```yaml
 harness:
