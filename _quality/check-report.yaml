@@ -1,6 +1,6 @@
 ok: false
 blockers: 46
-warnings: 88
+warnings: 99
 findings:
 - gate: G08
   level: warning
@@ -545,6 +545,50 @@ findings:
   level: warning
   where: I22
   problem: 'Параметры канала не решены: timeout или idempotent'
+- gate: ROLE
+  level: warning
+  where: agent-runner
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: guardrails
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: harness
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: icplan
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: infrastructure
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: llm-gateway
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: mcp-tools
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: memory
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: observability
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: platform-module
+  problem: Подтверждения перенесены и на этой версии не проверялись
+- gate: ROLE
+  level: warning
+  where: sandbox
+  problem: Подтверждения перенесены и на этой версии не проверялись
 - gate: G02
   level: warning
   where: ошибки

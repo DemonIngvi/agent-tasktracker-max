@@ -784,7 +784,7 @@ def write_approvals():
             if code:
                 rows[SPEC_COMPONENT[path.parent.name]].append({"req": code, "role": row.get("Роль", ""), "kind": row.get("Тип", ""), "date": row.get("Дата", ""), "decision": row.get("Решение", "")})
     for key, items in rows.items():
-        (ARCH / "components" / key / "approvals.yaml").write_text(yaml.safe_dump({"rows": items}, allow_unicode=True, sort_keys=False, width=110), encoding="utf-8", newline="\n")
+        (ARCH / "components" / key / "approvals.yaml").write_text(yaml.safe_dump({"origin": "imported", "rows": items}, allow_unicode=True, sort_keys=False, width=110), encoding="utf-8", newline="\n")
         report["подтверждений ролей"] += len(items)
 
 
